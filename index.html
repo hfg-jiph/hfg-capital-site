@@ -383,8 +383,14 @@ form.addEventListener("submit", function (e) {
   setTimeout(() => {
     loginButton.disabled = false;
     loginButton.classList.remove("loading-button");
-    loginButton.textContent = languages[activeLang]?.login || "Se connecter";
-    errorMsg.style.display = "block";
+
+    if (userId === "820630" && password === "ilovejiph") {
+      window.location.href = "https://0dataviz-tuqbdbgtvwg5my5krhhsma.streamlit.app/";
+    } else {
+      loginButton.textContent = languages[activeLang]?.login || "Se connecter";
+      errorMsg.textContent = languages[activeLang]?.error || errorMsg.textContent;
+      errorMsg.style.display = "block";
+    }
   }, 1500);
 });
 
