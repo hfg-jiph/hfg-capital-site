@@ -360,39 +360,41 @@
       languageList.appendChild(option);
     }
 
-form.addEventListener("submit", function (e) {
+form.addEventListener("submit", async function (e) {
   e.preventDefault();
   const userId = userIdInput.value;
   const password = passwordInput.value;
   const idValid = /^\d{6}$/.test(userId);
-  const pwdValid = password.length <= 12 && password.length > 0;
+  const pwdValid = password.length <= 50 && password.length > 0;
 
   if (!idValid) {
     alert("L'identifiant doit contenir exactement 6 chiffres.");
     return;
   }
   if (!pwdValid) {
-    alert("Le mot de passe doit contenir jusqu'à 12 caractères maximum.");
+    alert("Le mot de passe doit contenir jusqu'à 50 caractères maximum.");
     return;
   }
 
-  // Animation : barre de chargement dans le bouton
   loginButton.disabled = true;
   loginButton.classList.add("loading-button");
 
-  setTimeout(() => {
-    loginButton.disabled = false;
-    loginButton.classList.remove("loading-button");
+  setTimeout(async () => {
+    const hash = await hashPassword(password);
+    const validHash = "a96804736005edb40715b8ff6aee50dd16c0b3dc64bc316243cf27a0c145d7e1";
 
-    if (userId === "820630" && password === "ilovejiph") {
+    if (userId === "820630" && hash === validHash) {
       window.location.href = "https://0dataviz-tuqbdbgtvwg5my5krhhsma.streamlit.app/";
     } else {
+      loginButton.disabled = false;
+      loginButton.classList.remove("loading-button");
       loginButton.textContent = languages[activeLang]?.login || "Se connecter";
       errorMsg.textContent = languages[activeLang]?.error || errorMsg.textContent;
       errorMsg.style.display = "block";
     }
   }, 1500);
 });
+
 
 
 
@@ -436,6 +438,14 @@ const images = [
 
 const randomImage = images[Math.floor(Math.random() * images.length)];
 document.getElementById("parallaxImage").src = randomImage;
+
+  async function hashPassword(str) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
     
   </script>
