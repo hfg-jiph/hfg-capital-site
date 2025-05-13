@@ -398,6 +398,7 @@ form.addEventListener("submit", async function (e) {
 
 
 
+
     window.addEventListener('scroll', function() {
       const scrolled = window.scrollY;
       const parallax = document.getElementById('parallaxImage');
@@ -439,7 +440,7 @@ const images = [
 const randomImage = images[Math.floor(Math.random() * images.length)];
 document.getElementById("parallaxImage").src = randomImage;
 
-  async function hashPassword(str) {
+async function hashPassword(str) {
   const encoder = new TextEncoder();
   const data = encoder.encode(str);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
