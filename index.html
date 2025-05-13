@@ -363,7 +363,7 @@
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
   const userId = userIdInput.value;
-  const password = passwordInput.value;
+  const password = passwordInput.value.trim();
   const idValid = /^\d{6}$/.test(userId);
   const pwdValid = password.length <= 50 && password.length > 0;
 
@@ -381,7 +381,7 @@ form.addEventListener("submit", async function (e) {
 
   setTimeout(async () => {
     const hash = await hashPassword(password);
-    const validHash = "a96804736005edb40715b8ff6aee50dd16c0b3dc64bc316243cf27a0c145d7e1";
+    const validHash = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182";
 
     if (userId === "820630" && hash === validHash) {
       window.location.href = "https://0dataviz-tuqbdbgtvwg5my5krhhsma.streamlit.app/";
