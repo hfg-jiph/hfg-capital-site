@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>HFG CAPITAL | Patrimonium Custodire, Augere et Tradere</title>
-  <meta name="description" content="HFG CAPITAL - Family Office" />
+  <meta name="description" content="HFG CAPITAL - Private Investment Office" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
@@ -20,7 +20,6 @@
       --primary-dark: #1a1a1a;
       --gold-accent: #D4AF37;
       --text-light: #ffffff;
-      --overlay-color: rgba(0, 0, 0, 0.4);
       --font-serif: 'Cormorant Garamond', serif;
       --font-sans: 'Montserrat', sans-serif;
     }
@@ -30,7 +29,7 @@
     body {
       font-family: var(--font-sans);
       height: 100vh;
-      overflow: hidden; /* Empêche le scroll global, on veut un écran fixe immersif */
+      overflow: hidden;
       background-color: #000;
     }
 
@@ -53,7 +52,7 @@
       to { transform: scale(1.1); }
     }
 
-    /* --- HEADER (Transparene) --- */
+    /* --- HEADER --- */
     header {
       position: absolute;
       top: 0; left: 0; width: 100%;
@@ -70,7 +69,7 @@
     .lang-btn {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
       padding: 8px 15px;
@@ -84,47 +83,61 @@
 
     .lang-btn:hover { background: rgba(255, 255, 255, 0.2); }
     
-    .lang-btn img { width: 20px; border-radius: 2px; }
+    /* Coins arrondis pour les drapeaux */
+    .lang-btn img, .lang-option img { 
+        width: 24px; 
+        height: 16px; /* Force la dimension pour uniformité */
+        object-fit: cover;
+        border-radius: 4px; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
 
     .lang-menu {
       position: absolute;
-      top: 45px; left: 0;
+      top: 50px; left: 0;
       background: rgba(20, 20, 20, 0.95);
       border: 1px solid var(--gold-accent);
       border-radius: 8px;
       padding: 10px 0;
       display: none;
       flex-direction: column;
-      min-width: 140px;
+      min-width: 160px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      max-height: 300px; /* Scroll si l'écran est petit */
+      overflow-y: auto;
     }
+
+    /* Scrollbar fine pour le menu langue */
+    .lang-menu::-webkit-scrollbar { width: 4px; }
+    .lang-menu::-webkit-scrollbar-thumb { background: var(--gold-accent); border-radius: 4px; }
 
     .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
 
     .lang-option {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 15px;
+      gap: 12px;
+      padding: 10px 20px;
       color: #ccc;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       transition: 0.2s;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
-    .lang-option:hover { background: rgba(212, 175, 55, 0.2); color: white; }
-    .lang-option img { width: 20px; }
+    .lang-option:last-child { border-bottom: none; }
+    .lang-option:hover { background: rgba(212, 175, 55, 0.15); color: white; }
 
-    /* --- LOGIN BUTTON (Header) --- */
+    /* --- LOGIN BUTTON --- */
     .login-trigger {
       background: transparent;
       color: white;
       border: 1px solid var(--gold-accent);
-      padding: 10px 25px;
+      padding: 10px 30px;
       font-family: var(--font-sans);
       text-transform: uppercase;
       font-size: 0.75rem;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       cursor: pointer;
       transition: all 0.4s ease;
     }
@@ -132,10 +145,10 @@
     .login-trigger:hover {
       background: var(--gold-accent);
       color: var(--primary-dark);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
     }
 
-    /* --- MAIN CONTENT (Center) --- */
+    /* --- MAIN CONTENT --- */
     main {
       position: absolute;
       top: 50%; left: 50%;
@@ -148,18 +161,18 @@
     }
 
     .logo-main {
-      max-width: 250px; /* Ajuster selon votre logo */
+      max-width: 280px;
       height: auto;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
     }
     
-    /* Si pas de logo image, on utilise du texte stylisé */
     .logo-text {
         font-family: var(--font-serif);
-        font-size: 4rem;
-        letter-spacing: 5px;
-        margin-bottom: 10px;
+        font-size: 3.5rem;
+        letter-spacing: 6px;
+        margin-bottom: 15px;
+        display: none; /* Activé si l'image manque */
     }
 
     .motto {
@@ -167,8 +180,8 @@
       font-style: italic;
       font-size: 1.8rem;
       color: #f0f0f0;
-      margin-top: 10px;
-      font-weight: 300;
+      font-weight: 400;
+      letter-spacing: 0.5px;
     }
 
     /* --- FOOTER --- */
@@ -177,17 +190,18 @@
       bottom: 20px;
       width: 100%;
       text-align: center;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255,255,255,0.5);
       font-size: 0.7rem;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
 
-    /* --- MODAL (Login) --- */
+    /* --- MODAL --- */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px); /* Flou plus intense pour l'intimité */
       z-index: 1000;
       display: none;
       justify-content: center;
@@ -200,14 +214,14 @@
 
     .modal-box {
       background: #fff;
-      width: 90%; max-width: 400px;
-      padding: 40px;
-      border-radius: 4px;
+      width: 90%; max-width: 420px;
+      padding: 50px 40px;
       text-align: center;
       position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
       transform: translateY(20px);
       transition: transform 0.4s ease;
+      border: 1px solid rgba(0,0,0,0.1);
     }
 
     .modal-overlay.active .modal-box { transform: translateY(0); }
@@ -215,86 +229,96 @@
     .close-modal {
       position: absolute;
       top: 15px; right: 20px;
-      font-size: 24px;
+      font-size: 28px;
       cursor: pointer;
-      color: #999;
+      color: #bbb;
+      transition: color 0.3s;
     }
+    
+    .close-modal:hover { color: var(--primary-dark); }
 
     .modal-title {
       font-family: var(--font-serif);
       font-size: 1.8rem;
       color: var(--primary-dark);
-      margin-bottom: 30px;
+      margin-bottom: 35px;
+      letter-spacing: 1px;
     }
 
-    .input-group { margin-bottom: 20px; text-align: left; }
+    .input-group { margin-bottom: 25px; text-align: left; }
     
     .input-group input {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 0;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      background: #fafafa;
+      border-radius: 0; /* Carré strict pour le style institutionnel */
       font-family: var(--font-sans);
       font-size: 0.9rem;
       outline: none;
-      transition: border 0.3s;
+      transition: all 0.3s;
+      color: #333;
     }
 
-    .input-group input:focus { border-color: var(--gold-accent); }
+    .input-group input:focus { 
+        border-color: var(--gold-accent); 
+        background: #fff;
+    }
 
     .btn-submit {
       width: 100%;
-      padding: 12px;
+      padding: 15px;
       background: var(--primary-dark);
       color: white;
       border: none;
       font-family: var(--font-sans);
       text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 1px;
+      font-weight: 500;
+      letter-spacing: 2px;
       cursor: pointer;
       transition: 0.3s;
       position: relative;
       overflow: hidden;
+      margin-top: 10px;
     }
 
-    .btn-submit:hover { background: #333; }
+    .btn-submit:hover { background: #2c2c2c; }
+    .btn-submit:disabled { opacity: 0.8; cursor: wait; }
 
-    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
-
-    /* Loading Animation inside button */
     .loader {
-      height: 2px;
+      height: 3px;
       width: 0%;
-      background: var(--gold-accent);
+      background: linear-gradient(90deg, var(--gold-accent), #fff);
       position: absolute;
       bottom: 0; left: 0;
-      transition: width 1.5s linear;
+      transition: width 1.5s ease-in-out;
     }
 
     .error-msg {
-      color: #b30000;
+      color: #9e1b1b;
       font-size: 0.8rem;
-      margin-top: 15px;
+      margin-top: 20px;
       display: none;
-      line-height: 1.4;
+      line-height: 1.5;
+      font-weight: 500;
     }
 
     /* --- RESPONSIVE --- */
     @media (max-width: 600px) {
       header { padding: 15px 20px; }
-      .motto { font-size: 1.4rem; }
-      .logo-main { max-width: 180px; }
-      .modal-box { padding: 30px 20px; }
+      .motto { font-size: 1.4rem; padding: 0 10px; }
+      .logo-main { max-width: 200px; }
+      .modal-box { padding: 40px 25px; width: 95%; }
+      .lang-btn span { display: none; } /* Cache le texte "FR" sur mobile, garde le drapeau */
     }
     
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
   <div class="bg-container">
-    <img src="" id="bgImage" class="bg-image" alt="Landscape">
+    <img src="" id="bgImage" class="bg-image" alt="Atmosphere">
   </div>
 
   <header>
@@ -308,69 +332,74 @@
     </div>
 
     <button class="login-trigger" id="openLoginBtn" onclick="openModal()">
-      Se Connecter
+      Accès
     </button>
   </header>
 
   <main>
     <img src="logo.jpeg" alt="HFG CAPITAL" class="logo-main" onerror="this.style.display='none'; document.querySelector('.logo-text').style.display='block'">
-    <h1 class="logo-text" style="display:none; color:white;">HFG CAPITAL</h1>
+    
+    <h1 class="logo-text" style="color:white;">HFG CAPITAL</h1>
     
     <h2 class="motto">"Patrimonium Custodire, Augere et Tradere"</h2>
   </main>
 
   <footer>
-    © 2025 HFG CAPITAL | Paris | Private Investment
+    © 2025 HFG CAPITAL | Private Investment Office
   </footer>
 
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
       <span class="close-modal" onclick="closeModal()">&times;</span>
+      
       <h3 class="modal-title" id="modalTitle">Espace Privé</h3>
       
       <form id="loginForm">
         <div class="input-group">
-          <input type="text" id="userId" maxlength="6" pattern="\d{6}" placeholder="Identifiant (6 chiffres)" required autocomplete="off">
+          <input type="text" id="userId" maxlength="6" pattern="\d{6}" placeholder="Identifiant" required autocomplete="off">
         </div>
         <div class="input-group">
           <input type="password" id="password" maxlength="50" placeholder="Mot de passe" required>
         </div>
         
         <button type="submit" class="btn-submit" id="submitBtn">
-          <span id="btnText">Valider</span>
+          <span id="btnText">Entrer</span>
           <div class="loader" id="btnLoader"></div>
         </button>
 
         <div class="error-msg" id="errorMsg">
-          La combinaison saisie n’a pas permis votre identification.
+          Identification impossible.
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // --- CONFIGURATION & DONNÉES ---
+    /* --- CONFIGURATION DES LANGUES --- */
+    // btnOpen = Le texte du bouton en haut à droite (Maintenant "Accès")
+    // title   = Le titre dans la fenêtre blanche
     const languages = {
-      fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Se connecter", placeholders: ["Identifiant (6 chiffres)", "Mot de passe"], btnSubmit: "Valider", error: "La combinaison saisie n’a pas permis votre identification. Contactez votre gestionnaire." },
-      en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", title: "Private Area", btnOpen: "Client Login", placeholders: ["ID (6 digits)", "Password"], btnSubmit: "Submit", error: "Invalid credentials. Please contact your manager." },
-      cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", title: "私人专区", btnOpen: "登录", placeholders: ["ID (6位数字)", "密码"], btnSubmit: "提交", error: "凭据无效。请联系您的经理。" },
-      es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", title: "Área Privada", btnOpen: "Acceso Cliente", placeholders: ["ID (6 dígitos)", "Contraseña"], btnSubmit: "Validar", error: "Credenciales inválidas. Contacte a su gestor." },
-      de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", title: "Privatbereich", btnOpen: "Anmelden", placeholders: ["ID (6 Ziffern)", "Passwort"], btnSubmit: "Bestätigen", error: "Ungültige Zugangsdaten. Bitte kontaktieren Sie Ihren Manager." },
-      it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", title: "Area Riservata", btnOpen: "Accedi", placeholders: ["ID (6 cifre)", "Password"], btnSubmit: "Conferma", error: "Credenziali non valide. Contattare il gestore." },
-      ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", title: "Личный кабинет", btnOpen: "Войти", placeholders: ["ID (6 цифр)", "Пароль"], btnSubmit: "Войти", error: "Неверные данные. Свяжитесь с менеджером." },
-      jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", title: "プライベートエリア", btnOpen: "ログイン", placeholders: ["ID (6桁)", "パスワード"], btnSubmit: "送信", error: "認証情報が無効です。担当者にご連絡ください。" },
-      vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", title: "Khu vực riêng", btnOpen: "Đăng nhập", placeholders: ["ID (6 chữ số)", "Mật khẩu"], btnSubmit: "Gửi", error: "Thông tin không hợp lệ. Vui lòng liên hệ quản lý." }
+      fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible. Veuillez contacter votre Family Officer." },
+      en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", title: "Private Access", btnOpen: "Access", placeholders: ["ID Code", "Password"], btnSubmit: "Enter", error: "Identification failed. Please contact your Family Officer." },
+      cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", title: "私人专区", btnOpen: "进入", placeholders: ["识别码", "密码"], btnSubmit: "进入", error: "验证失败。请联系您的家族办公室负责人。" },
+      es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", title: "Acceso Privado", btnOpen: "Acceso", placeholders: ["Identificación", "Contraseña"], btnSubmit: "Entrar", error: "Identificación fallida. Contacte a su Family Officer." },
+      de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", title: "Privater Zugang", btnOpen: "Zugang", placeholders: ["Kennung", "Passwort"], btnSubmit: "Eintreten", error: "Identifizierung fehlgeschlagen. Bitte kontaktieren Sie Ihren Family Officer." },
+      it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", title: "Accesso Riservato", btnOpen: "Accesso", placeholders: ["Identificativo", "Password"], btnSubmit: "Entra", error: "Identificazione fallita. Contattare il Family Officer." },
+      ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", title: "Частный доступ", btnOpen: "Вход", placeholders: ["Идентификатор", "Пароль"], btnSubmit: "Войти", error: "Ошибка идентификации. Свяжитесь с вашим менеджером." },
+      jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", title: "プライベートアクセス", btnOpen: "アクセス", placeholders: ["IDコード", "パスワード"], btnSubmit: "入る", error: "認証に失敗しました。担当者にご連絡ください。" },
+      vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", title: "Truy cập riêng", btnOpen: "Truy cập", placeholders: ["Mã ID", "Mật khẩu"], btnSubmit: "Vào", error: "Xác thực thất bại. Vui lòng liên hệ quản lý." },
+      id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", title: "Akses Pribadi", btnOpen: "Akses", placeholders: ["ID Pengguna", "Kata Sandi"], btnSubmit: "Masuk", error: "Identifikasi gagal. Silakan hubungi Family Officer Anda." }
     };
 
     let activeLang = "fr";
 
-    // --- IMAGES DE FOND (Paysages) ---
-    // J'ai mis des liens Unsplash pour la démo, mais remplacez par vos chemins locaux "background/bg1.jpg"
+    // --- IMAGES DE FOND ---
+    // Remplacez par vos liens locaux : ["background/montagne.jpg", "background/vignes.jpg"]
     const bgImages = [
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80", // Montagne / Lac
-      "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1920&q=80", // Vallée verte
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=80", // Mer / Lac calme
-      "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=1920&q=80"  // Forêt sombre
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80", // Montagne nuit
+      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=80", // Nature matin
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80", // Lac
+      "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=1920&q=80"  // Orage / Puissant
     ];
 
     // --- DOM ELEMENTS ---
@@ -381,21 +410,22 @@
     const errorMsg = document.getElementById('errorMsg');
     const btnSubmit = document.getElementById('submitBtn');
     const btnLoader = document.getElementById('btnLoader');
+    const openLoginBtn = document.getElementById('openLoginBtn');
 
     // --- INITIALISATION ---
     window.addEventListener('load', () => {
-      // 1. Set Random Background
+      // 1. Image aléatoire
       const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
       bgElement.src = randomBg;
       
-      // 2. Generate Language Menu
+      // 2. Générer menu langues
       generateLangMenu();
       
-      // 3. Start Scrolling Title
+      // 3. Titre défilant
       scrollTitle();
     });
 
-    // --- LOGIQUE DE MODAL ---
+    // --- MODAL ---
     function openModal() {
       modal.classList.add('active');
       document.getElementById('userId').focus();
@@ -404,19 +434,22 @@
     function closeModal() {
       modal.classList.remove('active');
       errorMsg.style.display = 'none';
+      resetBtnState();
     }
-
-    // Fermer si clic dehors
+    
+    // Fermer si clic à l'extérieur
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
     });
 
-    // --- LOGIQUE DE LANGUE ---
+    // --- GESTION LANGUES ---
     function generateLangMenu() {
+      langMenu.innerHTML = '';
       for (const code in languages) {
         const opt = document.createElement('div');
         opt.className = 'lang-option';
-        opt.innerHTML = `<img src="${languages[code].flag}"> ${languages[code].full}`;
+        // Image avec le style arrondi défini dans le CSS
+        opt.innerHTML = `<img src="${languages[code].flag}" alt="${code}"> ${languages[code].full}`;
         opt.onclick = () => setLanguage(code);
         langMenu.appendChild(opt);
       }
@@ -430,12 +463,14 @@
       activeLang = lang;
       const data = languages[lang];
 
-      // Update Header
+      // Header
       document.getElementById('currentFlag').src = data.flag;
       document.getElementById('currentLangLabel').innerText = data.label;
-      document.getElementById('openLoginBtn').innerText = data.btnOpen;
+      
+      // Mise à jour du texte du bouton "Accès"
+      openLoginBtn.innerText = data.btnOpen;
 
-      // Update Modal
+      // Modal
       document.getElementById('modalTitle').innerText = data.title;
       document.getElementById('userId').placeholder = data.placeholders[0];
       document.getElementById('password').placeholder = data.placeholders[1];
@@ -445,14 +480,14 @@
       langMenu.classList.remove('show');
     }
 
-    // Fermer menu langue si clic ailleurs
+    // Fermeture menu langue au clic externe
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.lang-container')) {
         langMenu.classList.remove('show');
       }
     });
 
-    // --- LOGIQUE DE CONNEXION (SHA-256) ---
+    // --- SECURITE & LOGIN ---
     async function hashPassword(str) {
       const encoder = new TextEncoder();
       const data = encoder.encode(str);
@@ -461,18 +496,26 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
+    function resetBtnState() {
+        btnSubmit.disabled = false;
+        btnLoader.style.width = "0%";
+        // On remet le texte original si besoin
+        const data = languages[activeLang];
+        document.getElementById('btnText').innerText = data.btnSubmit;
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const userId = document.getElementById('userId').value;
       const password = document.getElementById('password').value.trim();
       
-      // UI Loading State
+      // Animation
       btnSubmit.disabled = true;
-      btnLoader.style.width = "100%"; // Start animation
+      btnLoader.style.width = "100%";
       errorMsg.style.display = 'none';
 
-      // Simulate network delay logic (1.5s)
+      // Simulation latence serveur sécurisé (1.5s)
       setTimeout(async () => {
         const hash = await hashPassword(password);
         const validHash = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182";
@@ -480,16 +523,17 @@
         if (userId === "820630" && hash === validHash) {
           window.location.href = "https://0dataviz-tuqbdbgtvwg5my5krhhsma.streamlit.app/";
         } else {
-          // Reset UI on Error
-          btnSubmit.disabled = false;
-          btnLoader.style.width = "0%";
+          resetBtnState();
           errorMsg.style.display = 'block';
-          // Shake effect logic could go here
+          // Effet visuel de secousse en cas d'erreur
+          const box = document.querySelector('.modal-box');
+          box.style.animation = "shake 0.5s";
+          setTimeout(() => box.style.animation = "", 500);
         }
       }, 1500);
     });
 
-    // --- TITRE DÉFILANT ---
+    // --- TITRE DEFILANT ---
     const baseTitle = "HFG CAPITAL | ";
     const scrollText = "Patrimonium Custodire, Augere et Tradere    ";
     let pos = 0;
@@ -499,6 +543,19 @@
       if (pos > scrollText.length) pos = 0;
       setTimeout(scrollTitle, 300);
     }
+
+    // Animation Shake CSS injection
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+      @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+      }
+    `;
+    document.head.appendChild(styleSheet);
 
   </script>
 </body>
