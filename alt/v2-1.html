@@ -44,7 +44,7 @@
       width: 100%; height: 100%;
       object-fit: cover;
       transition: transform 0.2s ease-out, opacity 1s ease;
-      animation: zoomIn 20s infinite alternate;
+      animation: zoomIn 30s infinite alternate; /* Animation plus lente pour plus de calme */
     }
 
     @keyframes zoomIn {
@@ -86,9 +86,9 @@
     /* Coins arrondis pour les drapeaux */
     .lang-btn img, .lang-option img { 
         width: 24px; 
-        height: 16px; /* Force la dimension pour uniformité */
+        height: 16px;
         object-fit: cover;
-        border-radius: 4px; 
+        border-radius: 4px; /* ARRONDI ICI */
         box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
@@ -101,13 +101,12 @@
       padding: 10px 0;
       display: none;
       flex-direction: column;
-      min-width: 160px;
+      min-width: 170px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      max-height: 300px; /* Scroll si l'écran est petit */
+      max-height: 300px;
       overflow-y: auto;
     }
 
-    /* Scrollbar fine pour le menu langue */
     .lang-menu::-webkit-scrollbar { width: 4px; }
     .lang-menu::-webkit-scrollbar-thumb { background: var(--gold-accent); border-radius: 4px; }
 
@@ -160,25 +159,19 @@
       text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
+    /* Style du logo image */
     .logo-main {
-      max-width: 280px;
+      max-width: 300px; /* Ajustez si votre logo est plus grand ou plus petit */
       height: auto;
       margin-bottom: 30px;
-      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-    }
-    
-    .logo-text {
-        font-family: var(--font-serif);
-        font-size: 3.5rem;
-        letter-spacing: 6px;
-        margin-bottom: 15px;
-        display: none; /* Activé si l'image manque */
+      /* Ombre portée subtile pour détacher le logo du fond */
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); 
     }
 
     .motto {
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: #f0f0f0;
       font-weight: 400;
       letter-spacing: 0.5px;
@@ -200,8 +193,8 @@
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(10px); /* Flou plus intense pour l'intimité */
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(12px);
       z-index: 1000;
       display: none;
       justify-content: center;
@@ -218,10 +211,9 @@
       padding: 50px 40px;
       text-align: center;
       position: relative;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
       transform: translateY(20px);
       transition: transform 0.4s ease;
-      border: 1px solid rgba(0,0,0,0.1);
     }
 
     .modal-overlay.active .modal-box { transform: translateY(0); }
@@ -252,7 +244,7 @@
       padding: 15px;
       border: 1px solid #e0e0e0;
       background: #fafafa;
-      border-radius: 0; /* Carré strict pour le style institutionnel */
+      border-radius: 0;
       font-family: var(--font-sans);
       font-size: 0.9rem;
       outline: none;
@@ -306,10 +298,10 @@
     /* --- RESPONSIVE --- */
     @media (max-width: 600px) {
       header { padding: 15px 20px; }
-      .motto { font-size: 1.4rem; padding: 0 10px; }
-      .logo-main { max-width: 200px; }
+      .motto { font-size: 1.5rem; padding: 0 10px; }
+      .logo-main { max-width: 220px; }
       .modal-box { padding: 40px 25px; width: 95%; }
-      .lang-btn span { display: none; } /* Cache le texte "FR" sur mobile, garde le drapeau */
+      .lang-btn span { display: none; }
     }
     
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -337,9 +329,7 @@
   </header>
 
   <main>
-    <img src="logo.jpeg" alt="HFG CAPITAL" class="logo-main" onerror="this.style.display='none'; document.querySelector('.logo-text').style.display='block'">
-    
-    <h1 class="logo-text" style="color:white;">HFG CAPITAL</h1>
+    <img src="logo.jpeg" alt="HFG CAPITAL" class="logo-main">
     
     <h2 class="motto">"Patrimonium Custodire, Augere et Tradere"</h2>
   </main>
@@ -375,9 +365,7 @@
   </div>
 
   <script>
-    /* --- CONFIGURATION DES LANGUES --- */
-    // btnOpen = Le texte du bouton en haut à droite (Maintenant "Accès")
-    // title   = Le titre dans la fenêtre blanche
+    /* --- CONFIGURATION DES LANGUES (Mise à jour avec ID) --- */
     const languages = {
       fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible. Veuillez contacter votre Family Officer." },
       en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", title: "Private Access", btnOpen: "Access", placeholders: ["ID Code", "Password"], btnSubmit: "Enter", error: "Identification failed. Please contact your Family Officer." },
@@ -394,12 +382,11 @@
     let activeLang = "fr";
 
     // --- IMAGES DE FOND ---
-    // Remplacez par vos liens locaux : ["background/montagne.jpg", "background/vignes.jpg"]
+    // REMPLACEZ PAR VOS FICHIERS LOCAUX EX: ["background/montagne.jpg", "background/lac.jpg"]
     const bgImages = [
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80", // Montagne nuit
-      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=80", // Nature matin
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80", // Lac
-      "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=1920&q=80"  // Orage / Puissant
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1542224566-6e85f264b136?auto=format&fit=crop&w=1920&q=80"
     ];
 
     // --- DOM ELEMENTS ---
@@ -414,21 +401,17 @@
 
     // --- INITIALISATION ---
     window.addEventListener('load', () => {
-      // 1. Image aléatoire
       const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
       bgElement.src = randomBg;
-      
-      // 2. Générer menu langues
       generateLangMenu();
-      
-      // 3. Titre défilant
       scrollTitle();
     });
 
     // --- MODAL ---
     function openModal() {
       modal.classList.add('active');
-      document.getElementById('userId').focus();
+      // Petit délai pour que le focus fonctionne bien avec l'animation CSS
+      setTimeout(() => document.getElementById('userId').focus(), 100);
     }
 
     function closeModal() {
@@ -437,7 +420,6 @@
       resetBtnState();
     }
     
-    // Fermer si clic à l'extérieur
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
     });
@@ -448,7 +430,6 @@
       for (const code in languages) {
         const opt = document.createElement('div');
         opt.className = 'lang-option';
-        // Image avec le style arrondi défini dans le CSS
         opt.innerHTML = `<img src="${languages[code].flag}" alt="${code}"> ${languages[code].full}`;
         opt.onclick = () => setLanguage(code);
         langMenu.appendChild(opt);
@@ -462,25 +443,17 @@
     function setLanguage(lang) {
       activeLang = lang;
       const data = languages[lang];
-
-      // Header
       document.getElementById('currentFlag').src = data.flag;
       document.getElementById('currentLangLabel').innerText = data.label;
-      
-      // Mise à jour du texte du bouton "Accès"
       openLoginBtn.innerText = data.btnOpen;
-
-      // Modal
       document.getElementById('modalTitle').innerText = data.title;
       document.getElementById('userId').placeholder = data.placeholders[0];
       document.getElementById('password').placeholder = data.placeholders[1];
       document.getElementById('btnText').innerText = data.btnSubmit;
       errorMsg.innerText = data.error;
-
       langMenu.classList.remove('show');
     }
 
-    // Fermeture menu langue au clic externe
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.lang-container')) {
         langMenu.classList.remove('show');
@@ -499,23 +472,19 @@
     function resetBtnState() {
         btnSubmit.disabled = false;
         btnLoader.style.width = "0%";
-        // On remet le texte original si besoin
         const data = languages[activeLang];
         document.getElementById('btnText').innerText = data.btnSubmit;
     }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
       const userId = document.getElementById('userId').value;
       const password = document.getElementById('password').value.trim();
       
-      // Animation
       btnSubmit.disabled = true;
       btnLoader.style.width = "100%";
       errorMsg.style.display = 'none';
 
-      // Simulation latence serveur sécurisé (1.5s)
       setTimeout(async () => {
         const hash = await hashPassword(password);
         const validHash = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182";
@@ -525,7 +494,6 @@
         } else {
           resetBtnState();
           errorMsg.style.display = 'block';
-          // Effet visuel de secousse en cas d'erreur
           const box = document.querySelector('.modal-box');
           box.style.animation = "shake 0.5s";
           setTimeout(() => box.style.animation = "", 500);
@@ -544,14 +512,11 @@
       setTimeout(scrollTitle, 300);
     }
 
-    // Animation Shake CSS injection
     const styleSheet = document.createElement("style");
     styleSheet.innerText = `
       @keyframes shake {
-        0% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        50% { transform: translateX(5px); }
-        75% { transform: translateX(-5px); }
+        0% { transform: translateX(0); } 25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); } 75% { transform: translateX(-5px); }
         100% { transform: translateX(0); }
       }
     `;
