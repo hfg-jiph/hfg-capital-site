@@ -44,7 +44,7 @@
       width: 100%; height: 100%;
       object-fit: cover;
       transition: transform 0.2s ease-out, opacity 1s ease;
-      animation: zoomIn 30s infinite alternate; /* Animation plus lente pour plus de calme */
+      animation: zoomIn 30s infinite alternate;
     }
 
     @keyframes zoomIn {
@@ -69,59 +69,55 @@
     .lang-btn {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
-      padding: 8px 15px;
+      padding: 6px 12px; /* Padding réduit */
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.2);
       color: white;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.75rem; /* Police plus petite */
       transition: all 0.3s;
     }
 
     .lang-btn:hover { background: rgba(255, 255, 255, 0.2); }
     
-    /* Coins arrondis pour les drapeaux */
+    /* Coins arrondis pour les drapeaux - Taille légèrement réduite */
     .lang-btn img, .lang-option img { 
-        width: 24px; 
-        height: 16px;
+        width: 20px;  /* Réduit de 24 à 20 */
+        height: 13px; /* Réduit de 16 à 13 */
         object-fit: cover;
-        border-radius: 4px; /* ARRONDI ICI */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        border-radius: 3px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
 
     .lang-menu {
       position: absolute;
-      top: 50px; left: 0;
+      top: 45px; left: 0;
       background: rgba(20, 20, 20, 0.95);
       border: 1px solid var(--gold-accent);
       border-radius: 8px;
-      padding: 10px 0;
+      padding: 5px 0; /* Padding vertical réduit */
       display: none;
       flex-direction: column;
-      min-width: 170px;
+      min-width: 150px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      max-height: 300px;
-      overflow-y: auto;
+      /* SUPPRESSION DU SCROLLBAR (max-height et overflow retirés) */
     }
-
-    .lang-menu::-webkit-scrollbar { width: 4px; }
-    .lang-menu::-webkit-scrollbar-thumb { background: var(--gold-accent); border-radius: 4px; }
 
     .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
 
     .lang-option {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 20px;
+      gap: 10px;
+      padding: 8px 15px; /* Padding réduit pour être plus compact */
       color: #ccc;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.75rem; /* Police réduite */
       transition: 0.2s;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
     }
 
     .lang-option:last-child { border-bottom: none; }
@@ -159,12 +155,13 @@
       text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
-    /* Style du logo image */
+    /* Style du logo image - MODIFIÉ POUR ÊTRE PLUS GRAND */
     .logo-main {
-      max-width: 300px; /* Ajustez si votre logo est plus grand ou plus petit */
+      width: 90%; /* Prend 90% de la largeur disponible */
+      max-width: 850px; /* Mais ne dépasse pas 850px pour ne pas être absurde sur écran géant */
       height: auto;
-      margin-bottom: 30px;
-      /* Ombre portée subtile pour détacher le logo du fond */
+      margin-bottom: 25px;
+      /* Ombre portée pour détacher le logo du fond */
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); 
     }
 
@@ -175,6 +172,8 @@
       color: #f0f0f0;
       font-weight: 400;
       letter-spacing: 0.5px;
+      max-width: 900px; /* S'assure que le texte ne soit pas plus large que le logo max */
+      margin: 0 auto; /* Centre le bloc de texte */
     }
 
     /* --- FOOTER --- */
@@ -299,9 +298,12 @@
     @media (max-width: 600px) {
       header { padding: 15px 20px; }
       .motto { font-size: 1.5rem; padding: 0 10px; }
-      .logo-main { max-width: 220px; }
+      /* Sur mobile, on laisse le logo prendre presque toute la largeur */
+      .logo-main { max-width: 95%; } 
       .modal-box { padding: 40px 25px; width: 95%; }
       .lang-btn span { display: none; }
+      /* Sur mobile, le menu langue peut être trop long pour l'écran sans scroll */
+       .lang-menu { max-height: 60vh; overflow-y: auto; }
     }
     
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -365,7 +367,7 @@
   </div>
 
   <script>
-    /* --- CONFIGURATION DES LANGUES (Mise à jour avec ID) --- */
+    /* --- CONFIGURATION DES LANGUES --- */
     const languages = {
       fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible. Veuillez contacter votre Family Officer." },
       en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", title: "Private Access", btnOpen: "Access", placeholders: ["ID Code", "Password"], btnSubmit: "Enter", error: "Identification failed. Please contact your Family Officer." },
@@ -381,8 +383,7 @@
 
     let activeLang = "fr";
 
-    // --- IMAGES DE FOND ---
-    // REMPLACEZ PAR VOS FICHIERS LOCAUX EX: ["background/montagne.jpg", "background/lac.jpg"]
+    // --- IMAGES DE FOND (REMPLACEZ PAR VOS IMAGES LOCALES) ---
     const bgImages = [
       "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80",
       "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=80",
@@ -410,7 +411,6 @@
     // --- MODAL ---
     function openModal() {
       modal.classList.add('active');
-      // Petit délai pour que le focus fonctionne bien avec l'animation CSS
       setTimeout(() => document.getElementById('userId').focus(), 100);
     }
 
