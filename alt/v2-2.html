@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFG CAPITAL | Espace Privé</title>
+    <style>
+        /* BASE STYLES */
+        :root {
+            --font-family: 'Times New Roman', Times, serif;
+            --color-text-light: #f4f4f4;
+            --color-text-dark: #333333;
+            --color-bg-opaque: rgba(255, 255, 255, 0.85);
+            --color-bg-dark-opaque: rgba(0, 0, 0, 0.6);
+            --color-accent: #004d40; /* Dark Teal/Green for sophistication */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        /* BACKGROUND & HERO SECTION */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--color-text-dark); /* Changed to dark for light backgrounds */
+        }
+
+        #bgImage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(1.2) contrast(0.8); /* Light and low contrast effect */
+            transition: opacity 1s ease-in-out;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            /* Pas d'overlay sombre pour les fonds clairs, on joue sur le contraste de l'image */
+        }
+
+        main {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .logo-main {
+            max-width: 250px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: var(--color-text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .main-subtitle {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--color-text-dark);
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background-color: var(--color-accent);
+            color: var(--color-text-light);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+        }
+
+        .cta-button:hover {
+            background-color: #00695c;
+        }
+
+        /* LANGUAGE SWITCH */
+        .lang-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 5;
+            background-color: var(--color-bg-opaque);
+            border: 1px solid #ccc;
+            cursor: pointer;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .lang-container img {
+            width: 20px;
+            height: auto;
+            margin-right: 5px;
+        }
+
+        #langMenu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 10;
+        }
+
+        #langMenu.show {
+            display: block;
+        }
+
+        .lang-option {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .lang-option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .lang-option img {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        /* FOOTER */
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            z-index: 3;
+            text-align: center;
+            padding: 15px 20px;
+            color: var(--color-text-dark);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--color-text-dark);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: opacity 0.3s;
+        }
+
+        footer a:hover {
+            opacity: 0.7;
+        }
+
+        /* MODAL (LOGIN & LEGAL) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-box {
+            background-color: var(--color-bg-opaque);
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            text-align: center;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--color-text-dark);
+        }
+
+        .modal-box h3 {
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            color: var(--color-text-dark);
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        #errorMsg {
+            color: #d32f2f;
+            margin-top: 15px;
+            display: none;
+            font-size: 0.9rem;
+        }
+        
+        /* LOGIN BUTTON LOADER */
+        #submitBtn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #btnLoader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: width 1.5s ease-in-out;
+            z-index: 1;
+        }
+        
+        #btnText {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* LEGAL MODAL SPECIFIC STYLES */
+        .small-modal {
+            max-width: 600px;
+            padding: 30px;
+            font-size: 0.9em;
+            text-align: left;
+        }
+        .legal-content-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+        .legal-content-scroll h4 {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+        .legal-content-scroll p, .legal-content-scroll ul {
+            margin-bottom: 10px;
+        }
+        .legal-content-scroll table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        .legal-content-scroll th, .legal-content-scroll td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .legal-content-scroll th {
+            background-color: #f2f2f2;
+        }
+
+        /* MEDIA QUERIES (Responsive) */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            .main-subtitle {
+                font-size: 1rem;
+            }
+            .logo-main {
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-container">
+        <img id="bgImage" src="" alt="Background Image">
+        <div class="overlay"></div>
+
+        <div class="lang-container" onclick="toggleLangMenu()">
+            <img id="currentFlag" src="https://flagcdn.com/fr.svg" alt="FR">
+            <span id="currentLangLabel">FR</span>
+        </div>
+        <div id="langMenu">
+            </div>
+
+        <main>
+            <img src="img/logo.jpeg" alt="HFG CAPITAL" class="logo-main">
+            <h1 class="main-title">HFG CAPITAL</h1>
+            <h2 class="main-subtitle">Patrimonium Custodire, Augere et Tradere</h2>
+            <button class="cta-button" id="openLoginBtn" onclick="openModal()">Accès</button>
+        </main>
+
+        <footer>
+            <a href="#" onclick="openLegalModal('mentions'); return false;">Mentions Légales</a>
+            <a href="#" onclick="openLegalModal('confidentialite'); return false;">Politique de Confidentialité</a>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <section class="modal-box">
+            <button class="close-btn" onclick="closeModal()">X</button>
+            <h3 id="modalTitle">Espace Privé</h3>
+            <form id="loginForm">
+                <input type="text" id="userId" placeholder="Identifiant" required>
+                <input type="password" id="password" placeholder="Mot de passe" required>
+                <button type="submit" id="submitBtn" class="cta-button">
+                    <span id="btnLoader"></span>
+                    <span id="btnText">Entrer</span>
+                </button>
+                <p id="errorMsg">Identification impossible. Veuillez contacter votre Family Officer.</p>
+            </form>
+        </section>
+    </div>
+
+    <div id="legalModalOverlay" class="modal-overlay">
+        <section id="legalModal" class="modal-box small-modal">
+            <button class="close-btn" onclick="closeLegalModal()">X</button>
+            <h3 id="legalTitle"></h3>
+            <div id="legalContent" class="legal-content-scroll">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        /* --- CONFIGURATION --- */
+        const languages = {
+            fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible. Veuillez contacter votre Family Officer." },
+            en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", title: "Private Access", btnOpen: "Access", placeholders: ["ID Code", "Password"], btnSubmit: "Enter", error: "Identification failed. Please contact your Family Officer." },
+            cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", title: "私人专区", btnOpen: "进入", placeholders: ["识别码", "密码"], btnSubmit: "进入", error: "验证失败。请联系您的家族办公室负责人。" },
+            es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", title: "Acceso Privado", btnOpen: "Acceso", placeholders: ["Identificación", "Contraseña"], btnSubmit: "Entrar", error: "Identificación fallida. Contacte a su Family Officer." },
+            de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", title: "Privater Zugang", btnOpen: "Zugang", placeholders: ["Kennung", "Passwort"], btnSubmit: "Eintreten", error: "Identifizierung fehlgeschlagen. Bitte kontaktieren Sie Ihren Family Officer." },
+            it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", title: "Accesso Riservato", btnOpen: "Accesso", placeholders: ["Identificativo", "Password"], btnSubmit: "Entra", error: "Identificazione fallita. Contattare il Family Officer." },
+            ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", title: "Частный доступ", btnOpen: "Вход", placeholders: ["Идентификатор", "Пароль"], btnSubmit: "Войти", error: "Ошибка идентификации. Свяжитесь с вашим менеджером." },
+            jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", title: "プライベートアクセス", btnOpen: "アクセス", placeholders: ["IDコード", "パスワード"], btnSubmit: "入る", error: "認証に失敗しました。担当者にご連絡ください。" },
+            vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", title: "Truy cập riêng", btnOpen: "Truy cập", placeholders: ["Mã ID", "Mật khẩu"], btnSubmit: "Vào", error: "Xác thực thất bại. Vui lòng liên hệ quản lý." },
+            id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", title: "Akses Pribadi", btnOpen: "Akses", placeholders: ["ID Pengguna", "Kata Sandi"], btnSubmit: "Masuk", error: "Identifikasi gagal. Silakan hubungi Family Officer Anda." }
+        };
+
+        let activeLang = "fr";
+
+        // --- IMAGES DE FOND (CHEMINS LOCAUX DANS LE DOSSIER img/) ---
+        const bgImages = [
+            "img/fond_rouge.jpg",  // 1. Rouge (Villa Toscane)
+            "img/fond_jaune.jpg", // 2. Jaune (Village Toscan)
+            "img/fond_bleu.jpg",   // 3. Bleu (Ciel ou Mer)
+            "img/fond_vert.jpg",   // 4. Vert (Rizières)
+            "img/fond_violet.jpg" // 5. Violet (Lavande et Propriété)
+        ];
+
+        // --- DOM ELEMENTS (Connexion) ---
+        const modal = document.getElementById('modalOverlay');
+        const langMenu = document.getElementById('langMenu');
+        const bgElement = document.getElementById('bgImage');
+        const form = document.getElementById('loginForm');
+        const errorMsg = document.getElementById('errorMsg');
+        const btnSubmit = document.getElementById('submitBtn');
+        const btnLoader = document.getElementById('btnLoader');
+        const openLoginBtn = document.getElementById('openLoginBtn');
+
+        // --- INIT ---
+        window.addEventListener('load', () => {
+            // Choix aléatoire de l'image de fond
+            const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
+            bgElement.src = randomBg;
+            generateLangMenu();
+            scrollTitle(); // Active le titre défilant
+        });
+
+        // --- MODAL (Connexion) ---
+        function openModal() {
+            modal.classList.add('active');
+            setTimeout(() => document.getElementById('userId').focus(), 100);
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            errorMsg.style.display = 'none';
+            resetBtnState();
+        }
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // --- LANGUES ---
+        function generateLangMenu() {
+            langMenu.innerHTML = '';
+            for (const code in languages) {
+                const opt = document.createElement('div');
+                opt.className = 'lang-option';
+                opt.innerHTML = `<img src="${languages[code].flag}" alt="${code}"> ${languages[code].full}`;
+                opt.onclick = () => setLanguage(code);
+                langMenu.appendChild(opt);
+            }
+        }
+
+        function toggleLangMenu() {
+            langMenu.classList.toggle('show');
+        }
+
+        function setLanguage(lang) {
+            activeLang = lang;
+            const data = languages[lang];
+            document.getElementById('currentFlag').src = data.flag;
+            document.getElementById('currentLangLabel').innerText = data.label;
+            openLoginBtn.innerText = data.btnOpen;
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('userId').placeholder = data.placeholders[0];
+            document.getElementById('password').placeholder = data.placeholders[1];
+            document.getElementById('btnText').innerText = data.btnSubmit;
+            errorMsg.innerText = data.error;
+            langMenu.classList.remove('show');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.lang-container')) {
+                langMenu.classList.remove('show');
+            }
+        });
+
+        // --- SECURITÉ RENFORCÉE ---
+        
+        // Fonction de hachage SHA-256 (pour cacher ID et Mot de passe)
+        async function sha256(str) {
+            if (str === "") return ""; // Ne pas hacher une chaîne vide
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function resetBtnState() {
+            btnSubmit.disabled = false;
+            btnLoader.style.width = "0%";
+            const data = languages[activeLang];
+            document.getElementById('btnText').innerText = data.btnSubmit;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('userId').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            btnSubmit.disabled = true;
+            btnLoader.style.width = "100%";
+            errorMsg.style.display = 'none';
+
+            // Délai pour un effet "professionnel"
+            setTimeout(async () => {
+                
+                // 1. On hache ce que l'utilisateur a tapé
+                const idHashInput = await sha256(userId);
+                const pwHashInput = await sha256(password);
+
+                // 2. Les "VRAIES" valeurs attendues (hachées)
+                // HASH RÉEL DE L'ID "820630" :
+                const targetIdHash = "1243c7d55047487795517160a99520d309163606156578729999583763132351"; 
+                // HASH RÉEL DU MOT DE PASSE (à mettre à jour si le mot de passe change) :
+                const targetPwHash = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182"; 
+
+                if (idHashInput === targetIdHash && pwHashInput === targetPwHash) {
+                    // Redirection sécurisée (URL reconstituée)
+                    const part1 = "https://0dataviz-tuqbdbgtvwg5my5krhhsma";
+                    const part2 = ".streamlit.app/";
+                    window.location.href = part1 + part2;
+                } else {
+                    resetBtnState();
+                    errorMsg.style.display = 'block';
+                    const box = document.querySelector('.modal-box');
+                    box.style.animation = "shake 0.5s";
+                    setTimeout(() => box.style.animation = "", 500);
+                }
+            }, 1500);
+        });
+
+        // --- MODALES LÉGALES ---
+        
+        function openLegalModal(type) {
+            const modal = document.getElementById('legalModalOverlay');
+            const titleElement = document.getElementById('legalTitle');
+            const contentElement = document.getElementById('legalContent');
+
+            // --- CONTENU DES MENTIONS LÉGALES ---
+            const mentionsContent = `
+                <h4>Informations Légales de l'Éditeur</h4>
+                <table>
+                    <tbody>
+                        <tr><td><strong>Dénomination Sociale</strong></td><td>HFG (Société par actions simplifiée - SAS)</td></tr>
+                        <tr><td><strong>Capital Social</strong></td><td>10 000,00 €</td></tr>
+                        <tr><td><strong>Siège Social</strong></td><td>17 RUE BERLIOZ, 75116 PARIS 16</td></tr>
+                        <tr><td><strong>Immatriculation</strong></td><td>850 358 870 R.C.S. Paris</td></tr>
+                        <tr><td><strong>Code APE</strong></td><td>64.30Z (Fonds de placement et entités financières similaires)</td></tr>
+                        <tr><td><strong>Contact</strong></td><td>[VOTRE ADRESSE E-MAIL DE CONTACT LÉGAL OBLIGATOIRE]</td></tr>
+                        <tr><td><strong>Directeur de la Publication</strong></td><td>[Nom et Prénom du Président ou Représentant Légal]</td></tr>
+                    </tbody>
+                </table>
+                
+                <h4>Hébergement du Site</h4>
+                <p>
+                    Le site est hébergé par : [Nom du Prestataire d'Hébergement] - [Adresse Physique] - [Contact de l'Hébergeur].
+                </p>
+                
+                <h4>Propriété Intellectuelle</h4>
+                <p>La structure générale, les textes et les éléments composant ce site sont la propriété exclusive de la société HFG. Tous droits réservés.</p>
+            `;
+
+            // --- CONTENU DE LA POLITIQUE DE CONFIDENTIALITÉ ---
+            const confidentialiteContent = `
+                <p>La société HFG n’opère aucune collecte active de données personnelles via ce site internet à des fins commerciales, marketing ou analytiques.</p>
+                <p>La finalité unique du traitement des données sur cette page est de garantir la <strong>sécurité du système d’information</strong> et de limiter l'accès à l'espace privé aux seuls membres autorisés.</p>
+                
+                <h4>1. Données Collectées et Traitées</h4>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Données</th>
+                                <th>Finalité et Traitement</th>
+                                <th>Base Légale (RGPD)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Identifiant et Mot de passe</td>
+                                <td>Traités localement par le navigateur (sans être stockés sur un serveur tiers) <strong>exclusivement</strong> pour la vérification de l'identité et l'authentification sécurisée des accès.</td>
+                                <td>Intérêt légitime (Sécurité et gestion des accès)</td>
+                            </tr>
+                            <tr>
+                                <td>Adresse IP et Logs de Connexion</td>
+                                <td>Collectées automatiquement par l'hébergeur du site (voir Mentions Légales) pour des raisons de sécurité du serveur, de maintenance technique et de détection d'activités malveillantes.</td>
+                                <td>Intérêt légitime (Sécurité du réseau et défense légale)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>2. Destinataires et Conservation</h4>
+                <p>Les données collectées sont destinées uniquement à la société HFG et à son hébergeur technique. <strong>Aucune donnée n’est transmise à des tiers.</strong></p>
+                <p>La conservation des données est limitée au strict nécessaire pour la finalité de sécurité.</p>
+
+                <h4>3. Droits des Membres</h4>
+                <p>Les membres disposent d’un droit d'accès et de rectification de leurs données, exerçables sur simple demande à l'adresse e-mail de contact mentionnée dans les Mentions Légales.</p>
+            `;
+
+
+            // Mettre à jour le titre et le contenu
+            if (type === 'confidentialite') {
+                titleElement.innerText = 'Politique de Confidentialité – Accès Privé HFG';
+                contentElement.innerHTML = confidentialiteContent;
+            } else if (type === 'mentions') {
+                titleElement.innerText = 'Mentions Légales – HFG';
+                contentElement.innerHTML = mentionsContent;
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeLegalModal() {
+            document.getElementById('legalModalOverlay').classList.remove('active');
+        }
+
+        document.getElementById('legalModalOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('legalModalOverlay')) {
+                closeLegalModal();
+            }
+        });
+
+
+        // --- TITLE SCROLL (Décoratif) ---
+        const baseTitle = "HFG CAPITAL | ";
+        const scrollText = "Patrimonium Custodire, Augere et Tradere    ";
+        let pos = 0;
+        function scrollTitle() {
+            document.title = baseTitle + scrollText.substring(pos) + scrollText.substring(0, pos);
+            pos++;
+            if (pos > scrollText.length) pos = 0;
+            setTimeout(scrollTitle, 300);
+        }
+
+        // --- STYLE DE L'ANIMATION DE SECOUSSE ---
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes shake {
+                0% { transform: translateX(0); } 25% { transform: translateX(-5px); }
+                50% { transform: translateX(5px); } 75% { transform: translateX(-5px); }
+                100% { transform: translateX(0); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>
