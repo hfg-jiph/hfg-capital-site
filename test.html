@@ -136,8 +136,8 @@
     .main-menu-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.50);        /* léger assombrissement hors panneau */
-      backdrop-filter: blur(6px);
+      background: transparent;        /* léger assombrissement hors panneau */
+     /* backdrop-filter: blur(6px);*/
       display: none;
       align-items: stretch;                 /* occupe toute la hauteur */
       justify-content: flex-start;          /* aligne le panneau à gauche */
@@ -151,8 +151,8 @@
       width: 320px;                         /* petite partie de l’écran */
       max-width: calc(100% - 80px);
       height: 100%;
-      background: rgba(10,10,10,0.92);
-      border-right: 1px solid var(--gold-accent);
+      background: transparent;
+      border-right: none;
       padding: 24px 24px;
       text-align: left;                     /* alignement gauche */
       transform: translateX(-100%);         /* caché par défaut */
