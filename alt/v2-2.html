@@ -22,23 +22,31 @@
       --text-light: #ffffff;
       --font-motto: 'Cinzel', serif; 
       --font-sans: 'Montserrat', sans-serif;
+      /* Variable pour le fix iOS */
+      --app-height: 100vh; 
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: var(--font-sans);
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      background-color: #000;
+    html, body {
+        margin: 0; padding: 0;
+        width: 100vw;
+        /* FIX IOS : on utilise la variable calculée par JS */
+        height: 100vh; 
+        height: var(--app-height);
+        overflow: hidden; /* Empêche le scroll élastique iOS */
+        background-color: #000;
+        font-family: var(--font-sans);
     }
 
     /* --- BACKGROUND PLEIN ÉCRAN --- */
     .bg-container {
       position: fixed;
       top: 0; left: 0; 
-      width: 100%; height: 100%;
+      width: 100%; 
+      /* FIX IOS ICI AUSSI */
+      height: 100vh;
+      height: var(--app-height);
       z-index: -1;
       overflow: hidden;
     }
@@ -273,26 +281,6 @@
     
     .close-modal:hover { color: var(--primary-dark); }
 
-      /* Styles ajoutés pour la modale légale */
-    .small-modal {
-        max-width: 600px; /* Plus petite que la modale de login */
-        padding: 30px;
-        font-size: 0.9em;
-        text-align: left;
-    }
-    .legal-content-scroll {
-        max-height: 400px;
-        overflow-y: auto;
-        padding-right: 15px; /* Pour l'espace de la scrollbar */
-    }
-    .legal-content-scroll h4 {
-        margin-top: 15px;
-        margin-bottom: 5px;
-    }
-    .legal-content-scroll p, .legal-content-scroll ul {
-        margin-bottom: 10px;
-    }
-
     .modal-title {
       font-family: var(--font-motto);
       font-size: 1.6rem;
@@ -374,7 +362,7 @@
 <body>
 
   <div class="bg-container">
-    <img src="" id="bgImage" class="bg-image" alt="Background">
+    <img src="img/PassionForceHeritage_01.png" id="bgImage" class="bg-image" alt="Background">
   </div>
 
   <header>
@@ -399,10 +387,6 @@
   </main>
 
   <footer>
-    <div class="footer-links">
-        <a href="#" onclick="openLegalModal('mentions'); return false;">Mentions Légales</a>
-        <a href="#" onclick="openLegalModal('confidentialite'); return false;">Politique de Confidentialité</a>a>
-    </div>
     <div class="footer-copyright">
       © 2025 HFG CAPITAL | Private Investment Office
     </div>
@@ -430,16 +414,15 @@
     </div>
   </div>
 
-<div id="legalModalOverlay" class="modal-overlay">
-    <section id="legalModal" class="modal-box small-modal">
-        <button class="close-btn" onclick="closeLegalModal()">X</button>
-        <h3 id="legalTitle">Politique de Confidentialité</h3>
-        <div id="legalContent" class="legal-content-scroll">
-            </div>
-    </section>
-</div>
-    
 <script>
+    /* --- CORRECTIF 100VH MOBILE (iOS BUG FIX) --- */
+    const setAppHeight = () => {
+        const doc = document.documentElement;
+        doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+    }
+    window.addEventListener('resize', setAppHeight);
+    setAppHeight();
+
     /* --- CONFIGURATION --- */
     const languages = {
       fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible. Veuillez contacter votre Family Officer." },
@@ -456,17 +439,17 @@
 
     let activeLang = "fr";
 
-    // --- IMAGES DE FOND ---
+    // --- VOS IMAGES DE FOND (CORRIGÉES) ---
     const bgImages = [
      /* "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80",
       "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=80",*/
       "img/PassionForceHeritage_01.png",
-      "img/PassionForceHeritage_02.png",
+   /*   "img/PassionForceHeritage_02.png",
       "img/SagesseTresorLumiere_02.png",
       "img/StabiliteConfianceAvenir_01.png",
       "img/CroissanceAbondanceSerenite_01.png",
       "img/AbondanceLumiereProsperite_01.png",
-      "img/RoyauteSagesseLuxe_01.png",
+      "img/RoyauteSagesseLuxe_01.png",*/
     ];
 
     // --- DOM ELEMENTS ---
@@ -483,7 +466,12 @@
     window.addEventListener('load', () => {
       const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
       bgElement.src = randomBg;
+      
       generateLangMenu();
+      
+      // FIX TEXTE COUPÉ : On force la mise à jour des textes avec la langue par défaut (FR)
+      setLanguage(activeLang); 
+      
       scrollTitle();
     });
 
@@ -503,93 +491,6 @@
       if (e.target === modal) closeModal();
     });
 
-// --- MODALE LEGALE ---
-
-function openLegalModal(type) {
-    const modal = document.getElementById('legalModalOverlay');
-    const titleElement = document.getElementById('legalTitle');
-    const contentElement = document.getElementById('legalContent');
-
-    // Mettre à jour le titre et le contenu en fonction du type (confidentialite ou mentions)
-    if (type === 'confidentialite') {
-        titleElement.innerText = 'Politique de Confidentialité – Accès Privé HFG';
-        contentElement.innerHTML = `
-            <p>La société HFG n’opère aucune collecte active de données personnelles via ce site internet à des fins commerciales, marketing ou analytiques.</p>
-            <p>La finalité unique du traitement des données sur cette page est de garantir la <strong>sécurité du système d’information</strong> et de limiter l'accès à l'espace privé aux seuls membres autorisés.</p>
-            
-            <h4>1. Données Collectées et Traitées</h4>
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Données</th>
-                            <th>Finalité et Traitement</th>
-                            <th>Base Légale (RGPD)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Identifiant et Mot de passe</td>
-                            <td>Traités localement par le navigateur (sans être stockés sur un serveur tiers) <strong>exclusivement</strong> pour la vérification de l'identité et l'authentification sécurisée des accès.</td>
-                            <td>Intérêt légitime (Sécurité et gestion des accès)</td>
-                        </tr>
-                        <tr>
-                            <td>Adresse IP et Logs de Connexion</td>
-                            <td>Collectées automatiquement par l'hébergeur du site (voir Mentions Légales) pour des raisons de sécurité du serveur, de maintenance technique et de détection d'activités malveillantes.</td>
-                            <td>Intérêt légitime (Sécurité du réseau et défense légale)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h4>2. Destinataires et Conservation</h4>
-            <p>Les données collectées sont destinées uniquement à la société HFG et à son hébergeur technique. <strong>Aucune donnée n’est transmise à des tiers.</strong></p>
-            <p>La conservation des données est limitée au strict nécessaire pour la finalité de sécurité.</p>
-
-            <h4>3. Droits des Membres</h4>
-            <p>Les membres disposent d’un droit d'accès et de rectification de leurs données, exerçables sur simple demande à l'adresse e-mail de contact mentionnée dans les Mentions Légales.</p>
-        `;
-    } else if (type === 'mentions') {
-        titleElement.innerText = 'Mentions Légales – HFG';
-        contentElement.innerHTML = `
-            <h4>Informations Légales de l'Éditeur</h4>
-            <p>
-                <strong>Dénomination Sociale :</strong> HFG (Société par actions simplifiée - SAS)<br>
-                <strong>Capital Social :</strong> 10 000,00 €<br>
-                <strong>Siège Social :</strong> 17 RUE BERLIOZ, 75116 PARIS 16<br>
-                <strong>Immatriculation :</strong> 850 358 870 R.C.S. Paris<br>
-                <strong>Code APE :</strong> 64.30Z<br>
-                <strong>Contact :</strong> [VOTRE ADRESSE E-MAIL DE CONTACT LÉGAL OBLIGATOIRE]<br>
-                <strong>Directeur de la Publication :</strong> [Nom et Prénom du Président ou Représentant Légal]<br>
-                <br>
-                [Si applicable : Mentionner l'agrément financier / statut CIF, etc. Si non, supprimer cette ligne.]
-            </p>
-
-            <h4>Hébergement du Site</h4>
-            <p>
-                Le site est hébergé par : [Nom du Prestataire d'Hébergement] - [Adresse Physique] - [Contact de l'Hébergeur].
-            </p>
-            
-            <h4>Propriété Intellectuelle</h4>
-            <p>La structure générale, les textes et les éléments composant ce site sont la propriété exclusive de la société HFG. Tous droits réservés.</p>
-        `;
-    }
-
-    modal.classList.add('active');
-}
-
-function closeLegalModal() {
-    document.getElementById('legalModalOverlay').classList.remove('active');
-}
-
-// Optionnel: Fermer la modale légale si l'utilisateur clique en dehors
-document.getElementById('legalModalOverlay').addEventListener('click', (e) => {
-    if (e.target === document.getElementById('legalModalOverlay')) {
-        closeLegalModal();
-    }
-});
-
-    
     // --- LANGUES ---
     function generateLangMenu() {
       langMenu.innerHTML = '';
@@ -616,7 +517,7 @@ document.getElementById('legalModalOverlay').addEventListener('click', (e) => {
       document.getElementById('userId').placeholder = data.placeholders[0];
       document.getElementById('password').placeholder = data.placeholders[1];
       document.getElementById('btnText').innerText = data.btnSubmit;
-      errorMsg.innerText = data.error;
+      errorMsg.innerText = data.error; // Met à jour le message d'erreur avec le texte complet
       langMenu.classList.remove('show');
     }
 
@@ -627,8 +528,6 @@ document.getElementById('legalModalOverlay').addEventListener('click', (e) => {
     });
 
     // --- SECURITÉ RENFORCÉE ---
-    
-    // Fonction de hachage (Transforme texte en code unique)
     async function sha256(str) {
       const encoder = new TextEncoder();
       const data = encoder.encode(str);
@@ -646,33 +545,21 @@ document.getElementById('legalModalOverlay').addEventListener('click', (e) => {
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const userId = document.getElementById('userId').value.trim(); // Enlève les espaces
+      const userId = document.getElementById('userId').value.trim(); 
       const password = document.getElementById('password').value.trim();
       
       btnSubmit.disabled = true;
       btnLoader.style.width = "100%";
       errorMsg.style.display = 'none';
 
-      // On laisse un petit délai pour faire "pro" et éviter les attaques brutes rapides
       setTimeout(async () => {
-        
-        // 1. On hache ce que l'utilisateur a tapé
         const idHashInput = await sha256(userId);
         const pwHashInput = await sha256(password);
 
-        // 2. Les "VRAIES" valeurs attendues (mais hachées, donc illisibles pour un humain)
-        // ID "820630" haché donne : 
-        const validIdHash = "3b6d577e19820f59786161466655555161752727232772317434623234363330"; // Ceci est un faux hash pour l'exemple, le vrai est calculé dynamiquement ci-dessous pour 820630
-        
-        // NOTE DE SECURITE : 
-        // Hash réel de "820630" = "1243c7d55047487795517160a99520d309163606156578729999583763132351"
-        // Hash réel de votre mot de passe actuel = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182"
-        
         const targetIdHash = "1243c7d55047487795517160a99520d309163606156578729999583763132351";
         const targetPwHash = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182";
 
         if (idHashInput === targetIdHash && pwHashInput === targetPwHash) {
-          // Redirection sécurisée : on reconstruit l'URL pour qu'elle n'apparaisse pas clairement dans un simple scan
           const part1 = "https://0dataviz-tuqbdbgtvwg5my5krhhsma";
           const part2 = ".streamlit.app/";
           window.location.href = part1 + part2;
