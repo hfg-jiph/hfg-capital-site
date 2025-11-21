@@ -499,13 +499,13 @@
   <div class="main-menu-overlay" id="mainMenuOverlay">
     <nav class="main-menu">
       <ul>
-        <li><a href="index.html">Accueil</a></li>
-        <li><a href="about.html">Qui sommes-nous</a></li>
-        <li><a href="pilliers.html">Nos piliers</a></li>
-        <li><a href="philosophie.html">Philosophie</a></li>
-        <li><a href="manifesto.html">Manifesto</a></li>
-        <li><a href="valeurs-gouvernance.html">Valeurs &amp; Gouvernance</a></li>
-        <li><a href="contacts.html">Contacts</a></li>
+        <li><a id="menuHome" href="index.html">Accueil</a></li>
+        <li><a id="menuAbout" href="about.html">Qui sommes-nous</a></li>
+        <li><a id="menuPillars" href="pilliers.html">Nos Piliers</a></li>
+        <li><a id="menuPhilosophy" href="philosophie.html">Philosophie</a></li>
+        <li><a id="menuManifesto" href="manifesto.html">Manifesto</a></li>
+        <li><a id="menuGovernance" href="valeurs-gouvernance.html">Valeurs &amp; Gouvernance</a></li>
+        <li><a id="menuContacts" href="contacts.html">Contacts</a></li>
       </ul>
     </nav>
   </div>
@@ -675,6 +675,18 @@ const menuTranslations = {
   }
 };
 
+  function updateMenuLanguage(lang) {
+  const t = menuTranslations[lang];
+
+  document.getElementById("menuHome").innerText = t.home;
+  document.getElementById("menuAbout").innerText = t.about;
+  document.getElementById("menuPillars").innerText = t.pillars;
+  document.getElementById("menuPhilosophy").innerText = t.philosophy;
+  document.getElementById("menuManifesto").innerText = t.manifesto;
+  document.getElementById("menuGovernance").innerText = t.governance;
+  document.getElementById("menuContacts").innerText = t.contacts;
+}
+
   
 let activeLang = "fr";
 
@@ -783,6 +795,7 @@ function setLanguage(lang) {
   document.getElementById('btnText').innerText = data.btnSubmit;
   errorMsg.innerHTML = data.error;
   langMenu.classList.remove('show');
+  updateMenuLanguage(lang);
 }
 
 document.addEventListener('click', (e) => {
