@@ -28,13 +28,14 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* CONFIGURATION GLOBALE AVEC FIX IOS */
     html, body {
         margin: 0; padding: 0;
         width: 100vw;
-        /* FIX IOS : on utilise la variable calculée par JS */
+        /* Hauteur calculée dynamiquement par le JS pour éviter le bug mobile */
         height: 100vh; 
         height: var(--app-height);
-        overflow: hidden; /* Empêche le scroll élastique iOS */
+        overflow: hidden;
         background-color: #000;
         font-family: var(--font-sans);
     }
@@ -44,8 +45,8 @@
       position: fixed;
       top: 0; left: 0; 
       width: 100%; 
-      /* FIX IOS ICI AUSSI */
-      height: 100vh;
+      /* Application du fix hauteur ici aussi */
+      height: 100vh; 
       height: var(--app-height);
       z-index: -1;
       overflow: hidden;
@@ -54,7 +55,7 @@
     .bg-image {
       width: 100%; 
       height: 100%;
-      object-fit: cover; /* Remplit tout l'écran sans bandes noires */
+      object-fit: cover; 
       object-position: center center;
       transition: opacity 1s ease;
       animation: zoomIn 40s infinite alternate linear;
@@ -130,7 +131,7 @@
       font-size: 0.75rem;
       transition: 0.2s;
       border-bottom: 1px solid rgba(255,255,255,0.03);
-      white-space: nowrap; /* Pas de saut de ligne */
+      white-space: nowrap;
     }
 
     .lang-option:last-child { border-bottom: none; }
@@ -175,23 +176,19 @@
     }
 
     .logo-main {
-      /* Dimensions */
-      width: auto; /* Garde le ratio */
-      max-width: 90%; /* Ne dépasse pas la largeur écran */
-      max-height: 160px; /* Limite hauteur demandée */
-      
+      width: auto; 
+      max-width: 90%; 
+      max-height: 160px; 
       margin-bottom: 25px;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-      
-      /* Animation d'arrivée */
-      opacity: 0; /* Départ invisible */
-      animation: fadeInUp 2.5s ease-out forwards; /* Arrivée progressive */
-      animation-delay: 0.2s; /* Petit délai au chargement */
+      opacity: 0; 
+      animation: fadeInUp 2.5s ease-out forwards; 
+      animation-delay: 0.2s;
     }
 
     .motto {
       font-family: var(--font-motto); 
-      font-size: 1.35rem; /* Réduit de 25% */
+      font-size: 1.35rem; 
       color: #f0f0f0;
       font-weight: 400; 
       letter-spacing: 2px;
@@ -200,11 +197,9 @@
       margin: 0 auto;
       max-width: 900px;
       line-height: 1.4;
-      
-      /* Animation légère pour la devise aussi */
       opacity: 0;
       animation: fadeInUp 2.5s ease-out forwards;
-      animation-delay: 0.8s; /* Arrive après le logo */
+      animation-delay: 0.8s;
     }
 
     /* --- FOOTER --- */
@@ -217,7 +212,7 @@
       z-index: 10;
       display: flex;
       flex-direction: column;
-      gap: 8px; /* Espace entre les lignes */
+      gap: 8px; 
     }
 
     .footer-links {
@@ -350,7 +345,7 @@
     @media (max-width: 600px) {
       header { padding: 15px 20px; }
       .motto { font-size: 1rem; padding: 0 15px; line-height: 1.5; }
-      .logo-main { margin-bottom: 20px; max-height: 120px; } /* Plus petit sur mobile */
+      .logo-main { margin-bottom: 20px; max-height: 120px; }
       .modal-box { padding: 40px 25px; width: 95%; }
       .lang-menu { max-height: 60vh; overflow-y: auto; }
       .footer-links { display: flex; flex-direction: column; gap: 5px; }
@@ -381,7 +376,7 @@
   </header>
 
   <main>
-    <img src="img/logo.jpeg" alt="HFG CAPITAL" class="logo-main">
+    <img src="logo.jpeg" alt="HFG CAPITAL" class="logo-main">
     
     <h2 class="motto">Patrimonium Custodire, Augere et Tradere</h2>
   </main>
@@ -415,7 +410,7 @@
   </div>
 
 <script>
-    /* --- CORRECTIF 100VH MOBILE (iOS BUG FIX) --- */
+    /* --- 1. CORRECTIF MOBILE (iOS 100VH FIX) --- */
     const setAppHeight = () => {
         const doc = document.documentElement;
         doc.style.setProperty('--app-height', `${window.innerHeight}px`);
@@ -439,17 +434,15 @@
 
     let activeLang = "fr";
 
-    // --- IMAGES DE FOND ---
+    // --- IMAGES DE FOND (VOS FICHIERS ORIGINAUX) ---
     const bgImages = [
-     /* "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80",
-      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=80",*/
-      "img/rouge_01.png",
-      "img/rouge_02.png",
-      "img/jaune_01.png",
-      "img/jaune_02.png",
-      "img/vert_01.png",
-      "img/bleu_02.png",
-      "img/violet_01.png"
+      "img/PassionForceHeritage_01.png",
+      "img/PassionForceHeritage_02.png",
+      "img/SagesseTresorLumiere_02.png",
+      "img/StabiliteConfianceAvenir_01.png",
+      "img/CroissanceAbondanceSerenite_01.png",
+      "img/AbondanceLumiereProsperite_01.png",
+      "img/RoyauteSagesseLuxe_01.png",
     ];
 
     // --- DOM ELEMENTS ---
@@ -468,7 +461,10 @@
       bgElement.src = randomBg;
       
       generateLangMenu();
-     // setLanguage(activeLang); 
+      
+      /* --- 2. FIX MSG ERREUR : On force la langue FR au chargement --- */
+      setLanguage(activeLang); 
+      
       scrollTitle();
     });
 
@@ -514,7 +510,7 @@
       document.getElementById('userId').placeholder = data.placeholders[0];
       document.getElementById('password').placeholder = data.placeholders[1];
       document.getElementById('btnText').innerText = data.btnSubmit;
-      errorMsg.innerText = data.error; 
+      errorMsg.innerText = data.error; /* Ici, le texte complet est chargé */
       langMenu.classList.remove('show');
     }
 
