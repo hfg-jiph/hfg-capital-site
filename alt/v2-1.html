@@ -26,31 +26,21 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-      font-family: var(--font-sans);
-      height: 100%; /* La hauteur sera définie par JS sur la balise <html> */
-      width: 100vw;
-      overflow: hidden;
-      background-color: #000;
-    }
-
-    /* On force la balise html à prendre la hauteur calculée pour éviter le décalage */
-    html {
-        height: var(--app-height); 
-        /* Fallback pour les navigateurs non supportés ou initialisation */
-        height: 100vh; 
+    body {
+      font-family: var(--font-sans);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background-color: #000;
     }
 
     /* --- BACKGROUND PLEIN ÉCRAN --- */
-    /* Le conteneur de fond utilise maintenant cette variable */
     .bg-container {
-        position: fixed;
-        top: 0; left: 0; 
-        width: 100%; 
-        height: var(--app-height); /* UTILISATION DE LA VARIABLE ICI */
-        height: 100vh; /* Fallback */
-        z-index: -1;
-        overflow: hidden;
+      position: fixed;
+      top: 0; left: 0; 
+      width: 100%; height: 100%;
+      z-index: -1;
+      overflow: hidden;
     }
 
     .bg-image {
