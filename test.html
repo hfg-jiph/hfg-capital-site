@@ -131,59 +131,65 @@
       bottom: 5px;
       transform: rotate(-45deg);
     }
-
+    
+    /* --- MENU PRINCIPAL --- */
     .main-menu-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.82);
-      backdrop-filter: blur(14px);
+      background: rgba(0,0,0,0.50);        /* léger assombrissement hors panneau */
+      backdrop-filter: blur(6px);
       display: none;
-      align-items: center;
-      justify-content: center;
+      align-items: stretch;                 /* occupe toute la hauteur */
+      justify-content: flex-start;          /* aligne le panneau à gauche */
       z-index: 900;
     }
-
-    .main-menu-overlay.open {
-      display: flex;
-      animation: fadeIn 0.25s ease-out;
-    }
-
+    
+    .main-menu-overlay.open { display: flex; animation: fadeIn 0.25s ease-out; }
+    
+    /* Panneau latéral gauche */
     .main-menu {
-      text-align: center;
+      width: 320px;                         /* petite partie de l’écran */
+      max-width: calc(100% - 80px);
+      height: 100%;
+      background: rgba(10,10,10,0.92);
+      border-right: 1px solid var(--gold-accent);
+      padding: 24px 24px;
+      text-align: left;                     /* alignement gauche */
+      transform: translateX(-100%);         /* caché par défaut */
+      transition: transform 0.25s ease;     /* slide-in */
     }
-
+    
+    /* révèle le panneau quand l’overlay est ouvert */
+    .main-menu-overlay.open .main-menu { transform: translateX(0); }
+    
     .main-menu-title {
       font-family: var(--font-motto);
       font-size: 0.8rem;
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.7);
-      margin-bottom: 22px;
+      margin-bottom: 16px;
+      text-align: left;
     }
-
-    .main-menu ul {
-      list-style: none;
-    }
-
-    .main-menu li {
-      margin: 8px 0;
-    }
-
+    
+    .main-menu ul { list-style: none; }
+    
+    .main-menu li { margin: 6px 0; }
+    
     .main-menu a {
       font-family: var(--font-sans);
       font-size: 0.9rem;
       text-transform: uppercase;
-      letter-spacing: 0.28em;
-      color: rgba(255,255,255,0.8);
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.85);
       text-decoration: none;
-      padding: 8px 0;
-      display: inline-block;
+      padding: 10px 0;                      /* clic confortable */
+      display: block;                       /* pleine largeur, aligné à gauche */
       transition: color 0.2s ease;
     }
+    
+    .main-menu a:hover { color: var(--gold-accent); }
 
-    .main-menu a:hover {
-      color: var(--gold-accent);
-    }
 
     /* --- LANGUAGE SELECTOR --- */
     .lang-container { position: relative; }
@@ -499,7 +505,6 @@
         <li><a href="philosophie.html">Philosophie</a></li>
         <li><a href="manifesto.html">Manifesto</a></li>
         <li><a href="valeurs-gouvernance.html">Valeurs &amp; Gouvernance</a></li>
-        <li><a href="insights.html">Insights</a></li>
         <li><a href="contacts.html">Contacts</a></li>
       </ul>
     </nav>
