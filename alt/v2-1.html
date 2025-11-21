@@ -381,7 +381,7 @@
   </header>
 
   <main>
-    <img src="logo.jpeg" alt="HFG CAPITAL" class="logo-main">
+    <img src="img/logo.jpeg" alt="HFG CAPITAL" class="logo-main">
     
     <h2 class="motto">Patrimonium Custodire, Augere et Tradere</h2>
   </main>
@@ -416,15 +416,12 @@
 
 <script>
     /* --- CORRECTIF 100VH MOBILE (iOS BUG FIX) --- */
-    /* Cette fonction calcule la vraie hauteur visible et l'applique au CSS */
     const setAppHeight = () => {
         const doc = document.documentElement;
         doc.style.setProperty('--app-height', `${window.innerHeight}px`);
     }
-    // On écoute le redimensionnement et on l'exécute au chargement
     window.addEventListener('resize', setAppHeight);
     setAppHeight();
-    /* ------------------------------------------ */
 
     /* --- CONFIGURATION --- */
     const languages = {
@@ -442,7 +439,7 @@
 
     let activeLang = "fr";
 
-    // --- IMAGES DE FOND ---
+    // --- VOS IMAGES DE FOND (CORRIGÉES) ---
     const bgImages = [
       "img/PassionForceHeritage_01.png",
       "img/PassionForceHeritage_02.png",
@@ -467,7 +464,12 @@
     window.addEventListener('load', () => {
       const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
       bgElement.src = randomBg;
+      
       generateLangMenu();
+      
+      // FIX TEXTE COUPÉ : On force la mise à jour des textes avec la langue par défaut (FR)
+      setLanguage(activeLang); 
+      
       scrollTitle();
     });
 
@@ -513,7 +515,7 @@
       document.getElementById('userId').placeholder = data.placeholders[0];
       document.getElementById('password').placeholder = data.placeholders[1];
       document.getElementById('btnText').innerText = data.btnSubmit;
-      errorMsg.innerText = data.error;
+      errorMsg.innerText = data.error; // Met à jour le message d'erreur avec le texte complet
       langMenu.classList.remove('show');
     }
 
@@ -524,8 +526,6 @@
     });
 
     // --- SECURITÉ RENFORCÉE ---
-    
-    // Fonction de hachage (Transforme texte en code unique)
     async function sha256(str) {
       const encoder = new TextEncoder();
       const data = encoder.encode(str);
@@ -543,33 +543,21 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const userId = document.getElementById('userId').value.trim(); // Enlève les espaces
+      const userId = document.getElementById('userId').value.trim(); 
       const password = document.getElementById('password').value.trim();
       
       btnSubmit.disabled = true;
       btnLoader.style.width = "100%";
       errorMsg.style.display = 'none';
 
-      // On laisse un petit délai pour faire "pro" et éviter les attaques brutes rapides
       setTimeout(async () => {
-        
-        // 1. On hache ce que l'utilisateur a tapé
         const idHashInput = await sha256(userId);
         const pwHashInput = await sha256(password);
 
-        // 2. Les "VRAIES" valeurs attendues (mais hachées, donc illisibles pour un humain)
-        // ID "820630" haché donne : 
-        const validIdHash = "3b6d577e19820f59786161466655555161752727232772317434623234363330"; // Ceci est un faux hash pour l'exemple, le vrai est calculé dynamiquement ci-dessous pour 820630
-        
-        // NOTE DE SECURITE : 
-        // Hash réel de "820630" = "1243c7d55047487795517160a99520d309163606156578729999583763132351"
-        // Hash réel de votre mot de passe actuel = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182"
-        
         const targetIdHash = "1243c7d55047487795517160a99520d309163606156578729999583763132351";
         const targetPwHash = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182";
 
         if (idHashInput === targetIdHash && pwHashInput === targetPwHash) {
-          // Redirection sécurisée : on reconstruit l'URL pour qu'elle n'apparaisse pas clairement dans un simple scan
           const part1 = "https://0dataviz-tuqbdbgtvwg5my5krhhsma";
           const part2 = ".streamlit.app/";
           window.location.href = part1 + part2;
