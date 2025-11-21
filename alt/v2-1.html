@@ -22,23 +22,31 @@
       --text-light: #ffffff;
       --font-motto: 'Cinzel', serif; 
       --font-sans: 'Montserrat', sans-serif;
+      /* Variable pour le fix iOS */
+      --app-height: 100vh; 
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: var(--font-sans);
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      background-color: #000;
+    html, body {
+        margin: 0; padding: 0;
+        width: 100vw;
+        /* FIX IOS : on utilise la variable calculée par JS */
+        height: 100vh; 
+        height: var(--app-height);
+        overflow: hidden; /* Empêche le scroll élastique iOS */
+        background-color: #000;
+        font-family: var(--font-sans);
     }
 
     /* --- BACKGROUND PLEIN ÉCRAN --- */
     .bg-container {
       position: fixed;
       top: 0; left: 0; 
-      width: 100%; height: 100%;
+      width: 100%; 
+      /* FIX IOS ICI AUSSI */
+      height: 100vh;
+      height: var(--app-height);
       z-index: -1;
       overflow: hidden;
     }
@@ -407,6 +415,17 @@
   </div>
 
 <script>
+    /* --- CORRECTIF 100VH MOBILE (iOS BUG FIX) --- */
+    /* Cette fonction calcule la vraie hauteur visible et l'applique au CSS */
+    const setAppHeight = () => {
+        const doc = document.documentElement;
+        doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+    }
+    // On écoute le redimensionnement et on l'exécute au chargement
+    window.addEventListener('resize', setAppHeight);
+    setAppHeight();
+    /* ------------------------------------------ */
+
     /* --- CONFIGURATION --- */
     const languages = {
       fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible. Veuillez contacter votre Family Officer." },
@@ -425,8 +444,6 @@
 
     // --- IMAGES DE FOND ---
     const bgImages = [
-     /* "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80",
-      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=80",*/
       "img/PassionForceHeritage_01.png",
       "img/PassionForceHeritage_02.png",
       "img/SagesseTresorLumiere_02.png",
