@@ -362,7 +362,7 @@
 <body>
 
   <div class="bg-container">
-    <img src="https://www.hfg-capital.com/alt/img/jaune_01.png" id="bgImage" class="bg-image" alt="Background">
+    <img src="" id="bgImage" class="bg-image" alt="Background">
   </div>
 
   <header>
@@ -381,7 +381,7 @@
   </header>
 
   <main>
-    <img src="logo.jpeg" alt="HFG CAPITAL" class="logo-main">
+    <img src="img/logo.jpeg" alt="HFG CAPITAL" class="logo-main">
     
     <h2 class="motto">Patrimonium Custodire, Augere et Tradere</h2>
   </main>
@@ -439,17 +439,15 @@
 
     let activeLang = "fr";
 
-    // --- VOS IMAGES DE FOND (CORRIGÉES) ---
+    /* --- IMAGES DE FOND (Noms mis à jour) --- */
     const bgImages = [
-     /* "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80",
-      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=80",*/
-      "img/PassionForceHeritage_01.png",
-   /*   "img/PassionForceHeritage_02.png",
-      "img/SagesseTresorLumiere_02.png",
-      "img/StabiliteConfianceAvenir_01.png",
-      "img/CroissanceAbondanceSerenite_01.png",
-      "img/AbondanceLumiereProsperite_01.png",
-      "img/RoyauteSagesseLuxe_01.png",*/
+      "img/rouge_01.png",
+      "img/rouge_02.png",
+      "img/jaune_01.png",
+      "img/jaune_02.png",
+      "img/vert_01.png",
+      "img/bleu_02.png",
+      "img/violet_01.png"
     ];
 
     // --- DOM ELEMENTS ---
@@ -468,10 +466,7 @@
       bgElement.src = randomBg;
       
       generateLangMenu();
-      
-      // FIX TEXTE COUPÉ : On force la mise à jour des textes avec la langue par défaut (FR)
       setLanguage(activeLang); 
-      
       scrollTitle();
     });
 
@@ -517,7 +512,7 @@
       document.getElementById('userId').placeholder = data.placeholders[0];
       document.getElementById('password').placeholder = data.placeholders[1];
       document.getElementById('btnText').innerText = data.btnSubmit;
-      errorMsg.innerText = data.error; // Met à jour le message d'erreur avec le texte complet
+      errorMsg.innerText = data.error; 
       langMenu.classList.remove('show');
     }
 
