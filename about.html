@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>HFG CAPITAL – Qui sommes-nous ?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="HFG CAPITAL est un family office indépendant dédié à la préservation, à la croissance et à la transmission du patrimoine.">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-main: #0c0c10;
+      --bg-soft: #181821;
+      --bg-panel: #101018;
+      --text-main: #f5f3ee;
+      --text-muted: #b9b4aa;
+      --accent: #c9a14a;
+      --border-subtle: rgba(255,255,255,0.06);
+      --max-width: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      background: linear-gradient(to bottom, rgba(8,8,12,0.96), rgba(8,8,12,0.82), transparent);
+      border-bottom: 1px solid transparent;
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      border: 1px solid rgba(255,255,255,0.16);
+      padding: 6px 16px 7px;
+      letter-spacing: 0.35em;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-family: 'Playfair Display', serif;
+      background: rgba(5,5,8,0.85);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--text-muted);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    nav a {
+      padding-bottom: 3px;
+      border-bottom: 1px solid transparent;
+      color: var(--text-muted);
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    nav a.active,
+    nav a:hover {
+      color: var(--text-main);
+      border-color: rgba(255,255,255,0.24);
+    }
+
+    .btn-access {
+      padding: 7px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(201,161,74,0.10));
+      font-size: 11px;
+      letter-spacing: 0.2em;
+    }
+
+    main {
+      margin-top: 80px;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 58vh;
+      display: flex;
+      align-items: flex-end;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* Remplace l’URL du background par ton chemin réel
+       ex: url("img/violet_01.png") ou similaire */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("img/violet_01.png");
+      background-size: cover;
+      background-position: center;
+      filter: saturate(1.05);
+      transform: scale(1.02);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(12,12,18,0.1), transparent 50%),
+                  linear-gradient(to top, rgba(6,6,10,0.95), rgba(6,6,10,0.35));
+    }
+
+    .hero-inner {
+      position: relative;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 80px 20px 70px;
+    }
+
+    .hero-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 40px);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-subtitle {
+      max-width: 520px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .hero-devise {
+      margin-top: 30px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+      color: rgba(255,255,255,0.7);
+      border-top: 1px solid rgba(255,255,255,0.24);
+      padding-top: 12px;
+      display: inline-block;
+    }
+
+    .content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 56px 20px 80px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 40px;
+      align-items: flex-start;
+    }
+
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 500;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .lead {
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      padding: 7px 14px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(201,161,74,0.06));
+    }
+
+    .card {
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.04), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(201,161,74,0.05), transparent 55%),
+                  var(--bg-panel);
+      padding: 22px 22px 20px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .card p {
+      font-size: 13px;
+    }
+
+    .mini-gallery {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mini-gallery figure {
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+      aspect-ratio: 4 / 3;
+      background: #111;
+    }
+
+    .mini-gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.05);
+      transform: scale(1.02);
+      transition: transform 0.35s ease, filter 0.35s ease, opacity 0.35s ease;
+      opacity: 0.94;
+    }
+
+    .mini-gallery figure::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(6,6,10,0.45), transparent 55%);
+    }
+
+    .mini-gallery figure:hover img {
+      transform: scale(1.05);
+      filter: saturate(1.12);
+      opacity: 1;
+    }
+
+    .mini-caption {
+      position: absolute;
+      bottom: 9px;
+      left: 11px;
+      right: 11px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.78);
+      z-index: 2;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 18px 20px 22px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    @media (max-width: 880px) {
+      nav {
+        display: none; /* tu peux ensuite ajouter un menu burger si besoin */
+      }
+
+      .hero-inner {
+        padding-top: 90px;
+        padding-bottom: 60px;
+      }
+
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+      }
+
+      .mini-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">HFG&nbsp;CAPITAL</div>
+      <div class="brand-sub">Private Investment Office</div>
+    </div>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="qui-sommes-nous.html" class="active">Qui sommes-nous</a>
+      <a href="philosophie.html">Philosophie</a>
+      <a href="manifesto.html">Manifesto</a>
+      <a href="valeurs-gouvernance.html">Valeurs &amp; gouvernance</a>
+      <a href="insights.html">Insights</a>
+      <a href="login.html" class="btn-access">Accès privé</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-kicker">Family Office Indépendant</div>
+      <h1 class="hero-title">Qui sommes-nous&nbsp;?</h1>
+      <p class="hero-subtitle">
+        HFG CAPITAL est un family office indépendant dédié à la préservation, à la croissance
+        et à la transmission d’un patrimoine familial, avec une approche disciplinée et multi-actifs.
+      </p>
+      <div class="hero-devise">Patrimonium Custodire, Augere et Tradere</div>
+    </div>
+  </section>
+
+  <!-- CONTENU PRINCIPAL -->
+  <section class="content">
+    <div class="grid">
+      <div>
+        <div class="section-label">Identité</div>
+        <h2>Un office patrimonial dédié au temps long</h2>
+        <p class="lead">
+          Fondé en 2019, HFG CAPITAL opère comme un <strong>private investment office</strong> :
