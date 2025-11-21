@@ -1,513 +1,659 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>HFG CAPITAL – Qui sommes-nous ?</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="HFG CAPITAL est un family office indépendant dédié à la préservation, à la croissance et à la transmission du patrimoine.">
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <title>HFG CAPITAL | Qui sommes-nous ?</title>
+  <meta name="description" content="HFG CAPITAL - Family Office indépendant, dédié à la préservation, la croissance et la transmission du patrimoine." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="shortcut icon" href="favicon/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
+    /* --- VARIABLES & RESET --- */
     :root {
-      --bg-main: #0c0c10;
-      --bg-soft: #181821;
-      --bg-panel: #101018;
-      --text-main: #f5f3ee;
-      --text-muted: #b9b4aa;
-      --accent: #c9a14a;
-      --border-subtle: rgba(255,255,255,0.06);
-      --max-width: 1120px;
+      --primary-dark: #1a1a1a;
+      --gold-accent: #D4AF37;
+      --text-light: #ffffff;
+      --font-motto: 'Cinzel', serif;
+      --font-sans: 'Montserrat', sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 20;
-      background: linear-gradient(to bottom, rgba(8,8,12,0.96), rgba(8,8,12,0.82), transparent);
-      border-bottom: 1px solid transparent;
-      backdrop-filter: blur(12px);
-    }
-
-    .header-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .brand-mark {
-      border: 1px solid rgba(255,255,255,0.16);
-      padding: 6px 16px 7px;
-      letter-spacing: 0.35em;
-      font-size: 11px;
-      text-transform: uppercase;
-      font-family: 'Playfair Display', serif;
-      background: rgba(5,5,8,0.85);
-    }
-
-    .brand-sub {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--text-muted);
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-    }
-
-    nav a {
-      padding-bottom: 3px;
-      border-bottom: 1px solid transparent;
-      color: var(--text-muted);
-      transition: color 0.2s ease, border-color 0.2s ease;
-    }
-
-    nav a.active,
-    nav a:hover {
-      color: var(--text-main);
-      border-color: rgba(255,255,255,0.24);
-    }
-
-    .btn-access {
-      padding: 7px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.28);
-      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(201,161,74,0.10));
-      font-size: 11px;
-      letter-spacing: 0.2em;
-    }
-
-    main {
-      margin-top: 80px;
-    }
-
-    .hero {
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background-color: #000;
       position: relative;
-      min-height: 58vh;
-      display: flex;
-      align-items: flex-end;
-      color: #fff;
+    }
+
+    /* --- BACKGROUND PLEIN ÉCRAN --- */
+    .bg-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
       overflow: hidden;
     }
 
-    /* Remplace l’URL du background par ton chemin réel
-       ex: url("img/violet_01.png") ou similaire */
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url("img/violet_01.png");
-      background-size: cover;
-      background-position: center;
-      filter: saturate(1.05);
-      transform: scale(1.02);
+    .bg-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: opacity 1s ease;
+      animation: zoomIn 40s infinite alternate linear;
+      will-change: transform;
+      opacity: 0.9;
     }
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top right, rgba(12,12,18,0.1), transparent 50%),
-                  linear-gradient(to top, rgba(6,6,10,0.95), rgba(6,6,10,0.35));
+    @keyframes zoomIn {
+      from { transform: scale(1); }
+      to { transform: scale(1.15); }
     }
 
-    .hero-inner {
-      position: relative;
-      max-width: var(--max-width);
+    /* --- HEADER (identique à index) --- */
+    header {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+    }
+
+    .lang-container { position: relative; }
+
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .lang-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+    .lang-btn img, .lang-option img {
+      width: 20px; height: 13px;
+      object-fit: cover;
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .lang-menu {
+      position: absolute;
+      top: 45px; left: 0;
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid var(--gold-accent);
+      border-radius: 8px;
+      padding: 5px 0;
+      display: none;
+      flex-direction: column;
+      width: max-content;
+      min-width: 150px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
+
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: 0.2s;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      white-space: nowrap;
+    }
+
+    .lang-option:last-child { border-bottom: none; }
+    .lang-option:hover { background: rgba(212, 175, 55, 0.15); color: white; }
+
+    .login-trigger {
+      background: transparent;
+      color: white;
+      border: 1px solid var(--gold-accent);
+      padding: 10px 30px;
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .login-trigger:hover {
+      background: var(--gold-accent);
+      color: var(--primary-dark);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+
+    /* --- CONTENU ABOUT --- */
+    main {
+      max-width: 900px;
       margin: 0 auto;
-      padding: 80px 20px 70px;
+      padding: 140px 40px 60px; /* espace pour le header + respiration */
+      color: var(--text-light);
     }
 
-    .hero-kicker {
-      font-size: 11px;
+    .logo-main {
+      display: block;
+      margin: 0 auto 30px;
+      max-width: 50%;     /* 50 % de la largeur */
+      max-height: 90px;   /* plus petit que sur la home */
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+    }
+
+    .page-kicker {
+      font-family: var(--font-motto);
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
       text-transform: uppercase;
-      letter-spacing: 0.3em;
-      color: rgba(255,255,255,0.75);
-      margin-bottom: 14px;
-    }
-
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(32px, 4vw, 40px);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .hero-subtitle {
-      max-width: 520px;
-      font-size: 14px;
-      color: rgba(255,255,255,0.86);
-    }
-
-    .hero-devise {
-      margin-top: 30px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.26em;
+      text-align: center;
       color: rgba(255,255,255,0.7);
-      border-top: 1px solid rgba(255,255,255,0.24);
-      padding-top: 12px;
-      display: inline-block;
-    }
-
-    .content {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 56px 20px 80px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
-      gap: 40px;
-      align-items: flex-start;
-    }
-
-    .section-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.28em;
-      color: var(--accent);
       margin-bottom: 10px;
     }
 
-    h2 {
-      font-family: 'Playfair Display', serif;
-      font-weight: 500;
-      font-size: 24px;
-      margin-bottom: 16px;
+    h1 {
+      font-family: var(--font-motto);
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    p {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
+    .intro {
+      text-align: center;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      max-width: 720px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
     }
 
-    .lead {
-      font-size: 15px;
-      color: var(--text-main);
+    .section {
+      margin-bottom: 26px;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 18px 20px 16px;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-accent);
+      margin-bottom: 8px;
+    }
+
+    .section h2 {
+      font-family: var(--font-motto);
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+
+    .section p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.7;
+      margin-bottom: 8px;
     }
 
     .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
+      gap: 8px;
+      margin-top: 12px;
     }
 
     .pill {
       border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      padding: 7px 14px;
-      font-size: 11px;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 5px 12px;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.16em;
-      color: var(--text-muted);
-      background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(201,161,74,0.06));
+      color: rgba(255,255,255,0.85);
+      background: rgba(0,0,0,0.4);
     }
 
-    .card {
-      border-radius: 18px;
-      border: 1px solid var(--border-subtle);
-      background: radial-gradient(circle at top left, rgba(255,255,255,0.04), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(201,161,74,0.05), transparent 55%),
-                  var(--bg-panel);
-      padding: 22px 22px 20px;
-    }
-
-    .card-title {
-      font-size: 13px;
+    /* --- FOOTER --- */
+    footer {
+      text-align: center;
+      font-family: var(--font-sans);
+      padding: 20px 20px 25px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.6rem;
       text-transform: uppercase;
-      letter-spacing: 0.22em;
-      margin-bottom: 12px;
-      color: var(--text-main);
+      letter-spacing: 1.5px;
     }
 
-    .card p {
-      font-size: 13px;
+    /* --- MODAL (copié d’index) --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      padding: 20px;
     }
 
-    .mini-gallery {
-      margin-top: 28px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
+    .modal-overlay.active { display: flex; opacity: 1; }
+
+    .modal-box {
+      background: #fff;
+      width: 100%; max-width: 420px;
+      padding: 50px 40px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+      transform: translateY(20px);
+      transition: transform 0.4s ease;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
-    .mini-gallery figure {
+    .modal-overlay.active .modal-box { transform: translateY(0); }
+
+    .close-modal {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 32px;
+      cursor: pointer;
+      color: #bbb;
+      transition: color 0.3s;
+      line-height: 1;
+      padding: 10px;
+    }
+
+    .close-modal:hover { color: var(--primary-dark); }
+
+    .modal-title {
+      font-family: var(--font-motto);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .input-group { margin-bottom: 20px; text-align: left; }
+
+    .input-group input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      background: #fafafa;
+      border-radius: 0;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+      color: #333;
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+
+    .input-group input:focus { border-color: var(--gold-accent); background: #fff; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--primary-dark);
+      color: white;
+      border: none;
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: 0.3s;
       position: relative;
       overflow: hidden;
-      border-radius: 14px;
-      border: 1px solid var(--border-subtle);
-      aspect-ratio: 4 / 3;
-      background: #111;
-    }
-
-    .mini-gallery img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: saturate(1.05);
-      transform: scale(1.02);
-      transition: transform 0.35s ease, filter 0.35s ease, opacity 0.35s ease;
-      opacity: 0.94;
-    }
-
-    .mini-gallery figure::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(6,6,10,0.45), transparent 55%);
-    }
-
-    .mini-gallery figure:hover img {
-      transform: scale(1.05);
-      filter: saturate(1.12);
-      opacity: 1;
-    }
-
-    .mini-caption {
-      position: absolute;
-      bottom: 9px;
-      left: 11px;
-      right: 11px;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: rgba(255,255,255,0.78);
-      z-index: 2;
-    }
-
-    footer {
-      border-top: 1px solid var(--border-subtle);
-      padding: 18px 20px 22px;
       margin-top: 10px;
-      font-size: 11px;
-      color: var(--text-muted);
     }
 
-    .footer-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+    .btn-submit:hover { background: #2c2c2c; }
+    .btn-submit:disabled { opacity: 0.8; cursor: wait; }
+
+    .loader {
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold-accent), #fff);
+      position: absolute;
+      bottom: 0; left: 0;
+      transition: width 1.5s ease-in-out;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
+    .error-msg {
+      color: #9e1b1b;
+      font-size: 0.8rem;
+      margin-top: 20px;
+      display: none;
+      line-height: 1.5;
+      font-weight: 500;
     }
 
-    .footer-links a {
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
+    /* --- RESPONSIVE --- */
+    @media (max-width: 600px) {
+      header { padding: 15px 20px; }
+
+      main {
+        padding: 120px 20px 40px;
+      }
+
+      .logo-main {
+        max-width: 65%;
+        max-height: 80px;
+      }
+
+      .modal-box {
+        padding: 30px 20px;
+        border-radius: 4px;
+      }
+
+      .modal-title { font-size: 1.3rem; }
+      .input-group input { font-size: 16px; padding: 12px; }
+      .login-trigger { padding: 8px 15px; font-size: 0.7rem; }
+      .lang-menu { max-height: 50vh; overflow-y: auto; }
     }
 
-    @media (max-width: 880px) {
-      nav {
-        display: none; /* tu peux ensuite ajouter un menu burger si besoin */
-      }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-      .hero-inner {
-        padding-top: 90px;
-        padding-bottom: 60px;
-      }
-
-      .grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 32px;
-      }
-
-      .mini-gallery {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="brand">
-      <div class="brand-mark">HFG&nbsp;CAPITAL</div>
-      <div class="brand-sub">Private Investment Office</div>
-    </div>
-    <nav>
-      <a href="index.html">Accueil</a>
-      <a href="qui-sommes-nous.html" class="active">Qui sommes-nous</a>
-      <a href="philosophie.html">Philosophie</a>
-      <a href="manifesto.html">Manifesto</a>
-      <a href="valeurs-gouvernance.html">Valeurs &amp; gouvernance</a>
-      <a href="insights.html">Insights</a>
-      <a href="login.html" class="btn-access">Accès privé</a>
-    </nav>
+  <div class="bg-container">
+    <img src="" id="bgImage" class="bg-image" alt="Background">
   </div>
-</header>
 
-<main>
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-kicker">Family Office Indépendant</div>
-      <h1 class="hero-title">Qui sommes-nous&nbsp;?</h1>
-      <p class="hero-subtitle">
-        HFG CAPITAL est un family office indépendant dédié à la préservation, à la croissance
-        et à la transmission d’un patrimoine familial, avec une approche disciplinée et multi-actifs.
+  <header>
+    <div class="lang-container" id="langContainer">
+      <div class="lang-btn" onclick="toggleLangMenu()">
+        <img id="currentFlag" src="https://flagcdn.com/fr.svg" alt="FR">
+        <span id="currentLangLabel">FR</span>
+        <small>▼</small>
+      </div>
+      <div class="lang-menu" id="langMenu"></div>
+    </div>
+
+    <button class="login-trigger" id="openLoginBtn" onclick="openModal()">
+      Accès
+    </button>
+  </header>
+
+  <main>
+    <!-- Logo plus haut, plus petit -->
+    <img src="img/logo.jpeg" alt="HFG CAPITAL" class="logo-main">
+
+    <div class="page-kicker">Family Office Indépendant</div>
+    <h1>Qui sommes-nous&nbsp;?</h1>
+
+    <p class="intro">
+      HFG CAPITAL est un family office indépendant fondé en 2019.  
+      Nous accompagnons, préservons et développons un patrimoine familial avec une approche
+      disciplinée, multi-classes d’actifs et résolument tournée vers le temps long.
+    </p>
+
+    <section class="section">
+      <div class="section-title">Identité</div>
+      <h2>Un private investment office au service d’une famille</h2>
+      <p>
+        HFG CAPITAL opère comme un <strong>private investment office</strong> : une structure resserrée,
+        indépendante, pensée pour gérer un patrimoine significatif avec une exigence institutionnelle
+        et une discrétion totale.
       </p>
-      <div class="hero-devise">Patrimonium Custodire, Augere et Tradere</div>
-    </div>
-  </section>
+      <p>
+        Notre rôle est d’orchestrer l’ensemble des décisions financières : allocation d’actifs,
+        sélection de fonds, investissements directs, structuration, gestion de la liquidité,
+        en veillant à la cohérence globale du patrimoine dans le temps.
+      </p>
+      <div class="pill-row">
+        <div class="pill">Family office indépendant</div>
+        <div class="pill">Multi-classes d’actifs</div>
+        <div class="pill">Vision long terme</div>
+        <div class="pill">Exécution disciplinée</div>
+      </div>
+    </section>
 
-  <!-- CONTENU PRINCIPAL -->
-  <section class="content">
-    <div class="grid">
-      <div>
-        <div class="section-label">Identité</div>
-        <h2>Un office patrimonial dédié au temps long</h2>
-        <p class="lead">
-          Fondé en 2019, HFG CAPITAL opère comme un <strong>private investment office</strong> :
-          une structure resserrée, indépendante, pensée pour gérer un patrimoine significatif
-          avec une exigence institutionnelle et une discrétion totale.
-        </p>
-        <p>
-          Notre rôle est d’orchestrer l’ensemble des décisions financières&nbsp;: allocation d’actifs,
-          sélection de fonds, investissements directs, structuration, liquidités,
-          tout en veillant à la cohérence globale du patrimoine dans le temps.
-        </p>
-        <p>
-          Nous privilégions la clarté, la patience et la discipline d’exécution.
-          L’objectif n’est pas de battre un indice sur un trimestre,
-          mais de <em>construire un patrimoine qui résiste aux cycles</em>.
-        </p>
+    <section class="section">
+      <div class="section-title">Mission</div>
+      <h2>Préserver, faire croître, transmettre</h2>
+      <p>
+        Notre mission est d’assurer la continuité d’un patrimoine construit dans la durée :
+        <strong>le préserver</strong>, <strong>le faire croître</strong> de manière maîtrisée,
+        et <strong>organiser sa transmission</strong> dans un cadre structuré.
+      </p>
+      <p>
+        Concrètement, cela signifie : sélectionner des allocations robustes,
+        organiser la diversification entre marchés cotés, private markets et actifs alternatifs,
+        contrôler les risques, coordonner les partenaires et suivre dans le détail chaque engagement.
+      </p>
+    </section>
 
-        <div class="pill-row">
-          <div class="pill">Family Office Indépendant</div>
-          <div class="pill">Multi-classes d’actifs</div>
-          <div class="pill">Vision long terme</div>
-          <div class="pill">Approche disciplinée</div>
+    <section class="section">
+      <div class="section-title">Positionnement</div>
+      <h2>Un interlocuteur unique pour l’ensemble du patrimoine</h2>
+      <p>
+        HFG CAPITAL agit comme point de convergence entre les différentes contreparties :
+        banques privées, sociétés de gestion, gérants spécialisés, conseils juridiques et fiscaux,
+        opérateurs immobiliers ou plateformes d’investissement.
+      </p>
+      <p>
+        Nous ne distribuons aucun produit et ne dépendons d’aucun réseau.  
+        Cette indépendance nous permet de sélectionner les meilleures solutions disponibles,
+        strictement alignées avec les intérêts du patrimoine familial.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 HFG CAPITAL | Private Investment Office
+  </footer>
+
+  <!-- MODAL LOGIN (identique index) -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h3 class="modal-title" id="modalTitle">Espace Privé</h3>
+      <form id="loginForm">
+        <div class="input-group">
+          <input type="text" id="userId" maxlength="6" pattern="\d{6}" placeholder="Identifiant" required autocomplete="off">
         </div>
-      </div>
-
-      <div>
-        <div class="card">
-          <div class="card-title">Notre mission</div>
-          <p>
-            Assurer, pour une famille, la continuité d’un patrimoine construit dans la durée&nbsp;:
-            <strong>le préserver</strong>, <strong>le faire croître</strong> de manière maîtrisée,
-            et <strong>organiser sa transmission</strong> dans un cadre structuré.
-          </p>
-          <p>
-            Concrètement, cela signifie&nbsp;: sélectionner des allocations robustes,
-            organiser la diversification entre marchés cotés, private markets et actifs alternatifs,
-            contrôler les risques, coordonner les partenaires, et suivre dans le détail chaque engagement.
-          </p>
+        <div class="input-group">
+          <input type="password" id="password" maxlength="50" placeholder="Mot de passe" required>
         </div>
-
-        <div class="mini-gallery">
-          <!-- Remplace les src par tes chemins réels (ex: img/jaune_01.png, etc.) -->
-          <figure>
-            <img src="img/jaune_01.png" alt="Paysage de champs dorés">
-            <div class="mini-caption">Patrimoine réel</div>
-          </figure>
-          <figure>
-            <img src="img/rouge_02.png" alt="Fontaine classique">
-            <div class="mini-caption">Héritage</div>
-          </figure>
-          <figure>
-            <img src="img/bleu_04.png" alt="Détail de porcelaine ancienne">
-            <div class="mini-caption">Détail &amp; exigence</div>
-          </figure>
-          <figure>
-            <img src="img/orange_02.png" alt="Allée d’arbres en automne">
-            <div class="mini-caption">Temps long</div>
-          </figure>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:56px" class="grid">
-      <div>
-        <div class="section-label">Positionnement</div>
-        <h2>Un interlocuteur unique pour l’ensemble du patrimoine</h2>
-        <p>
-          HFG CAPITAL agit comme point de convergence entre les différentes contreparties&nbsp;:
-          banques privées, gérants d’actifs, sociétés de gestion, conseils juridiques et fiscaux,
-          opérateurs immobiliers, plateformes d’investissement.
-        </p>
-        <p>
-          Nous ne commercialisons aucun produit et ne dépendons d’aucun réseau.
-          Cette indépendance nous permet de sélectionner les meilleures solutions disponibles,
-          en alignement strict avec les intérêts du patrimoine familial.
-        </p>
-      </div>
-      <div>
-        <div class="section-label">Horizon</div>
-        <h2>Construire une citadelle patrimoniale</h2>
-        <p>
-          Notre ambition est de bâtir une structure patrimoniale capable de traverser
-          plusieurs cycles économiques et plusieurs générations.
-        </p>
-        <p>
-          Cela implique des choix parfois contra-cycliques, une gestion prudente de la dette,
-          une culture de liquidité maîtrisée et une attention permanente aux risques extrêmes.
-        </p>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <div class="footer-inner">
-    <div>© 2025 HFG CAPITAL &nbsp;|&nbsp; Private Investment Office</div>
-    <div class="footer-links">
-      <a href="mentions-legales.html">Mentions légales</a>
-      <a href="confidentialite.html">Confidentialité</a>
-      <a href="cookies.html">Cookies</a>
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span id="btnText">Entrer</span>
+          <div class="loader" id="btnLoader"></div>
+        </button>
+        <div class="error-msg" id="errorMsg"></div>
+      </form>
     </div>
   </div>
-</footer>
 
+<script>
+  /* même logique JS que sur index, sans rien toucher au comportement */
+
+  const languages = {
+    fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible.<br>Veuillez contacter votre Family Officer." },
+    en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", title: "Private Access", btnOpen: "Access", placeholders: ["ID Code", "Password"], btnSubmit: "Enter", error: "Identification failed.<br>Please contact your Family Officer." },
+    cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", title: "私人专区", btnOpen: "进入", placeholders: ["识别码", "密码"], btnSubmit: "进入", error: "验证失败。<br>请联系您的家族办公室负责人。" },
+    es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", title: "Acceso Privado", btnOpen: "Acceso", placeholders: ["Identificación", "Contraseña"], btnSubmit: "Entrar", error: "Identificación fallida.<br>Contacte a su Family Officer." },
+    de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", title: "Privater Zugang", btnOpen: "Zugang", placeholders: ["Kennung", "Passwort"], btnSubmit: "Eintreten", error: "Identifizierung fehlgeschlagen.<br>Bitte kontaktieren Sie Ihren Family Officer." },
+    it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", title: "Accesso Riservato", btnOpen: "Accesso", placeholders: ["Identificativo", "Password"], btnSubmit: "Entra", error: "Identificazione fallita.<br>Contattare il Family Officer." },
+    ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", title: "Частный доступ", btnOpen: "Вход", placeholders: ["Идентификатор", "Пароль"], btnSubmit: "Войти", error: "Ошибка идентификации.<br>Свяжитесь с вашим менеджером." },
+    jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", title: "プライベートアクセス", btnOpen: "アクセス", placeholders: ["IDコード", "パスワード"], btnSubmit: "入る", error: "認証に失敗しました。<br>担当者にご連絡ください。" },
+    vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", title: "Truy cập riêng", btnOpen: "Truy cập", placeholders: ["Mã ID", "Mật khẩu"], btnSubmit: "Vào", error: "Xác thực thất bại.<br>Vui lòng liên hệ quản lý." },
+    id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", title: "Akses Pribadi", btnOpen: "Akses", placeholders: ["ID Pengguna", "Kata Sandi"], btnSubmit: "Masuk", error: "Identifikasi gagal.<br>Silakan hubungi Family Officer Anda." }
+  };
+
+  let activeLang = "fr";
+
+  const bgImages = [
+    "img/rouge_01.png", "img/rouge_02.png", "img/rouge_03.png", "img/rouge_04.png",
+    "img/jaune_01.png", "img/jaune_02.png", "img/jaune_03.png", "img/jaune_04.png",
+    "img/vert_01.png", "img/vert_02.png", "img/vert_03.png", "img/vert_04.png",
+    "img/bleu_01.png", "img/bleu_02.png", "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png",
+    "img/orange_01.png", "img/orange_02.png", "img/orange_03.png", "img/orange_04.png",
+    "img/violet_01.png", "img/violet_02.png", "img/violet_03.png"
+  ];
+
+  const modal = document.getElementById('modalOverlay');
+  const langMenu = document.getElementById('langMenu');
+  const bgElement = document.getElementById('bgImage');
+  const form = document.getElementById('loginForm');
+  const errorMsg = document.getElementById('errorMsg');
+  const btnSubmit = document.getElementById('submitBtn');
+  const btnLoader = document.getElementById('btnLoader');
+  const openLoginBtn = document.getElementById('openLoginBtn');
+
+  window.addEventListener('load', () => {
+    const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
+    bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
+    bgElement.src = randomBg;
+
+    generateLangMenu();
+    setLanguage('fr');
+  });
+
+  function openModal() {
+    modal.classList.add('active');
+    setTimeout(() => document.getElementById('userId').focus(), 300);
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    errorMsg.style.display = 'none';
+    resetBtnState();
+  }
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  function generateLangMenu() {
+    langMenu.innerHTML = '';
+    for (const code in languages) {
+      const opt = document.createElement('div');
+      opt.className = 'lang-option';
+      opt.innerHTML = `<img src="${languages[code].flag}" alt="${code}"> ${languages[code].full}`;
+      opt.onclick = () => setLanguage(code);
+      langMenu.appendChild(opt);
+    }
+  }
+
+  function toggleLangMenu() {
+    langMenu.classList.toggle('show');
+  }
+
+  function setLanguage(lang) {
+    activeLang = lang;
+    const data = languages[lang];
+    document.getElementById('currentFlag').src = data.flag;
+    document.getElementById('currentLangLabel').innerText = data.label;
+    openLoginBtn.innerText = data.btnOpen;
+    document.getElementById('modalTitle').innerText = data.title;
+    document.getElementById('userId').placeholder = data.placeholders[0];
+    document.getElementById('password').placeholder = data.placeholders[1];
+    document.getElementById('btnText').innerText = data.btnSubmit;
+    errorMsg.innerHTML = data.error;
+    langMenu.classList.remove('show');
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.lang-container')) {
+      langMenu.classList.remove('show');
+    }
+  });
+
+  async function sha256(str) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function resetBtnState() {
+    btnSubmit.disabled = false;
+    btnLoader.style.width = "0%";
+    const data = languages[activeLang];
+    document.getElementById('btnText').innerText = data.btnSubmit;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const userId = document.getElementById('userId').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    btnSubmit.disabled = true;
+    btnLoader.style.width = "100%";
+    errorMsg.style.display = 'none';
+
+    setTimeout(async () => {
+      const idHashInput = await sha256(userId);
+      const pwHashInput = await sha256(password);
+
+      const targetIdHash = "1243c7d55047487795517160a99520d309163606156578729999583763132351";
+      const targetPwHash = "e551ea5c1371065311a5f10e88093119013158fa957d4bfe588a39c74f801182";
+
+      if (idHashInput === targetIdHash && pwHashInput === targetPwHash) {
+        const part1 = "https://0dataviz-tuqbdbgtvwg5my5krhhsma";
+        const part2 = ".streamlit.app/";
+        window.location.href = part1 + part2;
+      } else {
+        resetBtnState();
+        errorMsg.innerHTML = languages[activeLang].error;
+        errorMsg.style.display = 'block';
+        const box = document.querySelector('.modal-box');
+        box.style.animation = "shake 0.5s";
+        setTimeout(() => box.style.animation = "", 500);
+      }
+    }, 1500);
+  });
+</script>
 </body>
 </html>
