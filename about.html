@@ -110,65 +110,24 @@
 
 
 
-    /* --- MENU PRINCIPAL --- */
+/* --- MENU NAVIGATION --- */
     .main-menu-overlay {
-      position: fixed;
-      inset: 0;
-      background: transparent;        /* léger assombrissement hors panneau */
-      /*backdrop-filter: blur(5px);*/
-      display: none;
-      align-items: stretch;                 /* occupe toute la hauteur */
-      justify-content: flex-start;          /* aligne le panneau à gauche */
-      z-index: 900;
+      position: fixed; inset: 0; background: transparent; display: none;
+      align-items: stretch; justify-content: flex-start; z-index: 900;
     }
-    
-    .main-menu-overlay.open { display: flex; animation: fadeIn 0.25s ease-out; }
-    
-    /* Panneau latéral gauche */
+    .main-menu-overlay.open { display: flex; }
     .main-menu {
-      width: 320px;                         /* petite partie de l’écran */
-      max-width: calc(100% - 80px);
-      height: auto;
-      max-height: calc(100% - 70px);
-      overflow-y: auto; 
-      margin-top: 50px;
-      background: transparent;
-      border-right: none;
-      padding: 24px 24px;
-      text-align: left;                     /* alignement gauche */
-      transform: translateX(-100%);         /* caché par défaut */
-      transition: transform 0.25s ease;     /* slide-in */
+      width: 320px; max-width: calc(100% - 80px); margin-top: 70px;
+      background: transparent; padding: 24px; text-align: left;
+      transform: translateX(-100%); transition: transform 0.25s ease;
     }
-    
-    /* révèle le panneau quand l’overlay est ouvert */
     .main-menu-overlay.open .main-menu { transform: translateX(0); }
-    
-    .main-menu-title {
-      font-family: var(--font-motto);
-      font-size: 0.8rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 16px;
-      text-align: left;
-    }
-    
     .main-menu ul { list-style: none; }
-    
-    .main-menu li { margin: 0.25px 0; }
-    
     .main-menu a {
-      font-family: var(--font-sans);
-      font-size: 0.675rem;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: rgba(255,255,255,0.85);
-      text-decoration: none;
-      padding: 10px 0;                      /* clic confortable */
-      display: block;                       /* pleine largeur, aligné à gauche */
-      transition: color 0.2s ease;
+      font-family: var(--font-sans); font-size: 0.675rem; text-transform: uppercase;
+      letter-spacing: 0.22em; color: rgba(255,255,255,0.85); text-decoration: none;
+      padding: 10px 0; display: block; transition: color 0.2s ease;
     }
-    
     .main-menu a:hover { color: var(--gold-accent); }
 
 
