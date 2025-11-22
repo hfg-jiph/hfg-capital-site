@@ -125,7 +125,7 @@
     }
     .main-menu a:hover { color: var(--gold-accent); }
 
-    /* --- CONTENU PRINCIPAL (Manifesto Style) --- */
+    /* --- CONTENU PRINCIPAL --- */
     .content-wrapper {
       position: relative; z-index: 5;
       padding-top: 120px; padding-bottom: 60px;
@@ -161,30 +161,19 @@
       padding-top: 50px;
     }
 
-    /* SECTION MANIFESTO (POÉTIQUE) */
     .manifesto-text {
       font-family: var(--font-sans);
       font-size: 1rem;
       line-height: 2;
-      text-align: center; /* Centré pour l'aspect déclaration */
+      text-align: center;
       color: #e0e0e0;
       margin-bottom: 40px;
       font-weight: 300;
     }
+    .manifesto-text strong { color: #fff; font-weight: 500; letter-spacing: 1px; }
+    .highlight-latin { font-family: var(--font-motto); color: var(--gold-accent); font-size: 1.1rem; }
 
-    .manifesto-text strong {
-      color: #fff;
-      font-weight: 500;
-      letter-spacing: 1px;
-    }
-
-    .highlight-latin {
-      font-family: var(--font-motto);
-      color: var(--gold-accent);
-      font-size: 1.1rem;
-    }
-
-    /* SECTION VALEURS (GRID) */
+    /* VALEURS */
     .values-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -207,7 +196,7 @@
     }
 
     .value-card p {
-      font-size: 0.85rem; line-height: 1.6; color: #ccc;
+      font-size: 0.85rem; line-height: 1.6; color: #ccc; /* Assure que le texte est bien gris clair */
     }
 
     .conclusion-box {
@@ -257,7 +246,7 @@
       header { padding: 15px 20px; }
       .text-container { padding: 30px 20px; margin: 0 15px; }
       h1 { font-size: 1.4rem; }
-      .manifesto-text { font-size: 0.9rem; text-align: left; } /* Gauche sur mobile pour lisibilité */
+      .manifesto-text { font-size: 0.9rem; text-align: left; } 
       .values-grid { grid-template-columns: 1fr; }
       .conclusion-box { font-size: 0.8rem; padding: 15px; }
     }
@@ -369,11 +358,23 @@ const savedLang = localStorage.getItem('hfg_lang') || 'fr';
 const savedTheme = localStorage.getItem('hfg_theme');
 let activeLang = savedLang;
 
-/* --- TRADUCTIONS DU MANIFESTO --- */
+/* --- TRADUCTIONS MANIFESTO & VALEURS --- */
 const contentTranslations = {
   fr: {
     mainTitle: "Manifesto HFG CAPITAL",
-    manifesto: `Nous croyons que le patrimoine est une responsabilité.<br>Une force construite lentement, qui exige prudence, clairvoyance et humilité.<br><br>Nous croyons en la puissance du temps long.<br>Les cycles changent, mais la discipline reste.<br><br>Nous croyons en la discrétion.<br>Ce qui compte doit être protégé.<br><br>Nous croyons aux décisions réfléchies.<br>Pas au bruit. Pas aux tendances éphémères.<br><br>Nous croyons en trois mots :<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Nous croyons que la dernière citadelle — <span class="highlight-latin">Ultima Arx</span> — est celle que l’on bâtit pierre après pierre, sans céder aux effets de foule.<br><br>Nous sommes <strong>HFG CAPITAL</strong>.<br>Et notre engagement est simple : préserver, développer et transmettre.`,
+    manifesto: "Nous croyons que le patrimoine est une responsabilité.<br>" +
+               "Une force construite lentement, qui exige prudence, clairvoyance et humilité.<br><br>" +
+               "Nous croyons en la puissance du temps long.<br>" +
+               "Les cycles changent, mais la discipline reste.<br><br>" +
+               "Nous croyons en la discrétion.<br>" +
+               "Ce qui compte doit être protégé.<br><br>" +
+               "Nous croyons aux décisions réfléchies.<br>" +
+               "Pas au bruit. Pas aux tendances éphémères.<br><br>" +
+               "Nous croyons en trois mots :<br>" +
+               "<span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>" +
+               "Nous croyons que la dernière citadelle — <span class='highlight-latin'>Ultima Arx</span> — est celle que l’on bâtit pierre après pierre, sans céder aux effets de foule.<br><br>" +
+               "Nous sommes <strong>HFG CAPITAL</strong>.<br>" +
+               "Et notre engagement est simple : préserver, développer et transmettre.",
     valuesTitle: "Valeurs & Gouvernance",
     v1T: "Devise", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Préserver. Faire croître. Transmettre.",
     v2T: "Indépendance", v2Tx: "Une gouvernance volontairement resserrée, des décisions rapides et une totale liberté d’allocation. Aucun produit imposé.",
@@ -385,7 +386,19 @@ const contentTranslations = {
   },
   en: {
     mainTitle: "HFG CAPITAL Manifesto",
-    manifesto: `We believe that wealth is a responsibility.<br>A force built slowly, requiring prudence, foresight, and humility.<br><br>We believe in the power of the long term.<br>Cycles change, but discipline remains.<br><br>We believe in discretion.<br>What matters must be protected.<br><br>We believe in thoughtful decisions.<br>Not in noise. Not in fleeting trends.<br><br>We believe in three words:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>We believe that the last citadel — <span class="highlight-latin">Ultima Arx</span> — is the one built stone by stone, without yielding to the crowd.<br><br>We are <strong>HFG CAPITAL</strong>.<br>And our commitment is simple: preserve, develop, and transmit.`,
+    manifesto: "We believe that wealth is a responsibility.<br>" +
+               "A force built slowly, requiring prudence, foresight, and humility.<br><br>" +
+               "We believe in the power of the long term.<br>" +
+               "Cycles change, but discipline remains.<br><br>" +
+               "We believe in discretion.<br>" +
+               "What matters must be protected.<br><br>" +
+               "We believe in thoughtful decisions.<br>" +
+               "Not in noise. Not in fleeting trends.<br><br>" +
+               "We believe in three words:<br>" +
+               "<span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>" +
+               "We believe that the last citadel — <span class='highlight-latin'>Ultima Arx</span> — is the one built stone by stone, without yielding to the crowd.<br><br>" +
+               "We are <strong>HFG CAPITAL</strong>.<br>" +
+               "And our commitment is simple: preserve, develop, and transmit.",
     valuesTitle: "Values & Governance",
     v1T: "Motto", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Preserve. Grow. Transmit.",
     v2T: "Independence", v2Tx: "Deliberately tight governance, rapid decisions, and total freedom of allocation. No imposed products.",
@@ -397,7 +410,19 @@ const contentTranslations = {
   },
   cn: {
     mainTitle: "HFG CAPITAL 宣言",
-    manifesto: `我们相信财富是一种责任。<br>一种缓慢构建的力量，需要谨慎、远见和谦逊。<br><br>我们相信长期主义的力量。<br>周期会变，但纪律长存。<br><br>我们相信审慎。<br>重要的事物必须被保护。<br><br>我们相信深思熟虑的决策。<br>拒绝噪音。拒绝短暂的潮流。<br><br>我们相信三个词：<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>我们相信最后的堡垒 — <span class="highlight-latin">Ultima Arx</span> — 是那一块块石头砌成的，不屈从于人群效应。<br><br>我们是 <strong>HFG CAPITAL</strong>。<br>我们的承诺很简单：保存、发展和传承。`,
+    manifesto: "我们相信财富是一种责任。<br>" +
+               "一种缓慢构建的力量，需要谨慎、远见和谦逊。<br><br>" +
+               "我们相信长期主义的力量。<br>" +
+               "周期会变，但纪律长存。<br><br>" +
+               "我们相信审慎。<br>" +
+               "重要的事物必须被保护。<br><br>" +
+               "我们相信深思熟虑的决策。<br>" +
+               "拒绝噪音。拒绝短暂的潮流。<br><br>" +
+               "我们相信三个词：<br>" +
+               "<span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>" +
+               "我们相信最后的堡垒 — <span class='highlight-latin'>Ultima Arx</span> — 是那一块块石头砌成的，不屈从于人群效应。<br><br>" +
+               "我们是 <strong>HFG CAPITAL</strong>。<br>" +
+               "我们的承诺很简单：保存、发展和传承。",
     valuesTitle: "价值观与治理",
     v1T: "格言", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>保存。增长。传承。",
     v2T: "独立", v2Tx: "刻意精简的治理，快速的决策以及完全的配置自由。没有强加的产品。",
@@ -409,7 +434,7 @@ const contentTranslations = {
   },
   es: {
     mainTitle: "Manifiesto HFG CAPITAL",
-    manifesto: `Creemos que el patrimonio es una responsabilidad.<br>Una fuerza construida lentamente, que exige prudencia, previsión y humildad.<br><br>Creemos en el poder del largo plazo.<br>Los ciclos cambian, pero la disciplina permanece.<br><br>Creemos en la discreción.<br>Lo que importa debe ser protegido.<br><br>Creemos en decisiones reflexivas.<br>No en el ruido. No en las tendencias efímeras.<br><br>Creemos en tres palabras:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Creemos que la última ciudadela — <span class="highlight-latin">Ultima Arx</span> — es la que se construye piedra a piedra, sin ceder a la multitud.<br><br>Somos <strong>HFG CAPITAL</strong>.<br>Y nuestro compromiso es simple: preservar, desarrollar y transmitir.`,
+    manifesto: "Creemos que el patrimonio es una responsabilidad.<br>Una fuerza construida lentamente, que exige prudencia, previsión y humildad.<br><br>Creemos en el poder del largo plazo.<br>Los ciclos cambian, pero la disciplina permanece.<br><br>Creemos en la discreción.<br>Lo que importa debe ser protegido.<br><br>Creemos en decisiones reflexivas.<br>No en el ruido. No en las tendencias efímeras.<br><br>Creemos en tres palabras:<br><span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>Creemos que la última ciudadela — <span class='highlight-latin'>Ultima Arx</span> — es la que se construye piedra a piedra, sin ceder a la multitud.<br><br>Somos <strong>HFG CAPITAL</strong>.<br>Y nuestro compromiso es simple: preservar, desarrollar y transmitir.",
     valuesTitle: "Valores y Gobernanza",
     v1T: "Lema", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Preservar. Hacer crecer. Transmitir.",
     v2T: "Independencia", v2Tx: "Una gobernanza deliberadamente ajustada, decisiones rápidas y total libertad de asignación. Ningún producto impuesto.",
@@ -421,7 +446,7 @@ const contentTranslations = {
   },
   de: {
     mainTitle: "Manifest HFG CAPITAL",
-    manifesto: `Wir glauben, dass Vermögen eine Verantwortung ist.<br>Eine Kraft, die langsam aufgebaut wird und Vorsicht, Weitsicht und Demut erfordert.<br><br>Wir glauben an die Kraft der Langfristigkeit.<br>Zyklen ändern sich, aber Disziplin bleibt.<br><br>Wir glauben an Diskretion.<br>Was zählt, muss geschützt werden.<br><br>Wir glauben an wohlüberlegte Entscheidungen.<br>Nicht an Lärm. Nicht an flüchtige Trends.<br><br>Wir glauben an drei Worte:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Wir glauben, dass die letzte Zitadelle — <span class="highlight-latin">Ultima Arx</span> — diejenige ist, die Stein für Stein gebaut wird, ohne dem Masseneffekt nachzugeben.<br><br>Wir sind <strong>HFG CAPITAL</strong>.<br>Und unser Engagement ist einfach: bewahren, entwickeln und weitergeben.`,
+    manifesto: "Wir glauben, dass Vermögen eine Verantwortung ist.<br>Eine Kraft, die langsam aufgebaut wird und Vorsicht, Weitsicht und Demut erfordert.<br><br>Wir glauben an die Kraft der Langfristigkeit.<br>Zyklen ändern sich, aber Disziplin bleibt.<br><br>Wir glauben an Diskretion.<br>Was zählt, muss geschützt werden.<br><br>Wir glauben an wohlüberlegte Entscheidungen.<br>Nicht an Lärm. Nicht an flüchtige Trends.<br><br>Wir glauben an drei Worte:<br><span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>Wir glauben, dass die letzte Zitadelle — <span class='highlight-latin'>Ultima Arx</span> — diejenige ist, die Stein für Stein gebaut wird, ohne dem Masseneffekt nachzugeben.<br><br>Wir sind <strong>HFG CAPITAL</strong>.<br>Und unser Engagement ist einfach: bewahren, entwickeln und weitergeben.",
     valuesTitle: "Werte & Governance",
     v1T: "Motto", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Bewahren. Vermehren. Weitergeben.",
     v2T: "Unabhängigkeit", v2Tx: "Eine bewusst straffe Governance, schnelle Entscheidungen und völlige Allokationsfreiheit. Keine auferlegten Produkte.",
@@ -433,7 +458,7 @@ const contentTranslations = {
   },
   it: {
     mainTitle: "Manifesto HFG CAPITAL",
-    manifesto: `Crediamo che il patrimonio sia una responsabilità.<br>Una forza costruita lentamente, che richiede prudenza, lungimiranza e umiltà.<br><br>Crediamo nel potere del lungo termine.<br>I cicli cambiano, ma la disciplina resta.<br><br>Crediamo nella discrezione.<br>Ciò che conta deve essere protetto.<br><br>Crediamo in decisioni ponderate.<br>Non nel rumore. Non nelle tendenze effimere.<br><br>Crediamo in tre parole:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Crediamo che l'ultima cittadella — <span class="highlight-latin">Ultima Arx</span> — sia quella che si costruisce pietra su pietra, senza cedere alla folla.<br><br>Siamo <strong>HFG CAPITAL</strong>.<br>E il nostro impegno è semplice: preservare, sviluppare e trasmettere.`,
+    manifesto: "Crediamo che il patrimonio sia una responsabilità.<br>Una forza costruita lentamente, che richiede prudenza, lungimiranza e umiltà.<br><br>Crediamo nel potere del lungo termine.<br>I cicli cambiano, ma la disciplina resta.<br><br>Crediamo nella discrezione.<br>Ciò che conta deve essere protetto.<br><br>Crediamo in decisioni ponderate.<br>Non nel rumore. Non nelle tendenze effimere.<br><br>Crediamo in tre parole:<br><span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>Crediamo che l'ultima cittadella — <span class='highlight-latin'>Ultima Arx</span> — sia quella che si costruisce pietra su pietra, senza cedere alla folla.<br><br>Siamo <strong>HFG CAPITAL</strong>.<br>E il nostro impegno è semplice: preservare, sviluppare e trasmettere.",
     valuesTitle: "Valori & Governance",
     v1T: "Motto", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Preservare. Accrescere. Tramandare.",
     v2T: "Indipendenza", v2Tx: "Una governance volutamente ristretta, decisioni rapide e totale libertà di allocazione.",
@@ -445,7 +470,7 @@ const contentTranslations = {
   },
   ru: {
     mainTitle: "Манифест HFG CAPITAL",
-    manifesto: `Мы верим, что капитал — это ответственность.<br>Сила, создаваемая медленно, требующая осторожности, дальновидности и смирения.<br><br>Мы верим в силу долгосрочной перспективы.<br>Циклы меняются, но дисциплина остается.<br><br>Мы верим в конфиденциальность.<br>То, что важно, должно быть защищено.<br><br>Мы верим в обдуманные решения.<br>Не в шум. Не в мимолетные тренды.<br><br>Мы верим в три слова:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Мы верим, что последняя цитадель — <span class="highlight-latin">Ultima Arx</span> — это та, которую строят камень за камнем, не поддаваясь толпе.<br><br>Мы — <strong>HFG CAPITAL</strong>.<br>И наше обязательство простое: сохранять, развивать и передавать.`,
+    manifesto: "Мы верим, что капитал — это ответственность.<br>Сила, создаваемая медленно, требующая осторожности, дальновидности и смирения.<br><br>Мы верим в силу долгосрочной перспективы.<br>Циклы меняются, но дисциплина остается.<br><br>Мы верим в конфиденциальность.<br>То, что важно, должно быть защищено.<br><br>Мы верим в обдуманные решения.<br>Не в шум. Не в мимолетные тренды.<br><br>Мы верим в три слова:<br><span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>Мы верим, что последняя цитадель — <span class='highlight-latin'>Ultima Arx</span> — это та, которую строят камень за камнем, не поддаваясь толпе.<br><br>Мы — <strong>HFG CAPITAL</strong>.<br>И наше обязательство простое: сохранять, развивать и передавать.",
     valuesTitle: "Ценности и управление",
     v1T: "Девиз", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Сохранять. Приумножать. Передавать.",
     v2T: "Независимость", v2Tx: "Намеренно сжатое управление, быстрые решения и полная свобода распределения.",
@@ -457,7 +482,7 @@ const contentTranslations = {
   },
   jp: {
     mainTitle: "HFG CAPITAL マニフェスト",
-    manifesto: `私たちは、資産とは責任であると信じています。<br>ゆっくりと築かれる力であり、慎重さ、先見性、そして謙虚さが求められます。<br><br>私たちは長期的視点の力を信じています。<br>サイクルは変わりますが、規律は残ります。<br><br>私たちは慎重さを信じています。<br>重要なものは守られなければなりません。<br><br>私たちは熟考された決断を信じています。<br>雑音ではなく。一時的な流行ではなく。<br><br>私たちは3つの言葉を信じています：<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>私たちは、最後の砦 — <span class="highlight-latin">Ultima Arx</span> — とは、群集心理に屈することなく、石を一つ一つ積み上げて築くものだと信じています。<br><br>私たちは <strong>HFG CAPITAL</strong> です。<br>そして私たちの約束はシンプルです：保存し、発展させ、伝承する。`,
+    manifesto: "私たちは、資産とは責任であると信じています。<br>ゆっくりと築かれる力であり、慎重さ、先見性、そして謙虚さが求められます。<br><br>私たちは長期的視点の力を信じています。<br>サイクルは変わりますが、規律は残ります。<br><br>私たちは慎重さを信じています。<br>重要なものは守られなければなりません。<br><br>私たちは熟考された決断を信じています。<br>雑音ではなく。一時的な流行ではなく。<br><br>私たちは3つの言葉を信じています：<br><span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>私たちは、最後の砦 — <span class='highlight-latin'>Ultima Arx</span> — とは、群集心理に屈することなく、石を一つ一つ積み上げて築くものだと信じています。<br><br>私たちは <strong>HFG CAPITAL</strong> です。<br>そして私たちの約束はシンプルです：保存し、発展させ、伝承する。",
     valuesTitle: "価値観とガバナンス",
     v1T: "モットー", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>保存する。成長させる。伝承する。",
     v2T: "独立性", v2Tx: "意図的に引き締められたガバナンス、迅速な意思決定、そして完全な配分の自由。",
@@ -469,7 +494,7 @@ const contentTranslations = {
   },
   vn: {
     mainTitle: "Tuyên ngôn HFG CAPITAL",
-    manifesto: `Chúng tôi tin rằng tài sản là một trách nhiệm.<br>Một sức mạnh được xây dựng chậm rãi, đòi hỏi sự thận trọng, tầm nhìn xa và sự khiêm tốn.<br><br>Chúng tôi tin vào sức mạnh của dài hạn.<br>Chu kỳ thay đổi, nhưng kỷ luật vẫn còn.<br><br>Chúng tôi tin vào sự kín đáo.<br>Những gì quan trọng phải được bảo vệ.<br><br>Chúng tôi tin vào những quyết định thấu đáo.<br>Không phải tiếng ồn. Không phải xu hướng nhất thời.<br><br>Chúng tôi tin vào ba từ:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Chúng tôi tin rằng thành trì cuối cùng — <span class="highlight-latin">Ultima Arx</span> — là thành trì được xây dựng từng viên đá một, không nhượng bộ trước đám đông.<br><br>Chúng tôi là <strong>HFG CAPITAL</strong>.<br>Và cam kết của chúng tôi rất đơn giản: bảo tồn, phát triển và trao truyền.`,
+    manifesto: "Chúng tôi tin rằng tài sản là một trách nhiệm.<br>Một sức mạnh được xây dựng chậm rãi, đòi hỏi sự thận trọng, tầm nhìn xa và sự khiêm tốn.<br><br>Chúng tôi tin vào sức mạnh của dài hạn.<br>Chu kỳ thay đổi, nhưng kỷ luật vẫn còn.<br><br>Chúng tôi tin vào sự kín đáo.<br>Những gì quan trọng phải được bảo vệ.<br><br>Chúng tôi tin vào những quyết định thấu đáo.<br>Không phải tiếng ồn. Không phải xu hướng nhất thời.<br><br>Chúng tôi tin vào ba từ:<br><span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>Chúng tôi tin rằng thành trì cuối cùng — <span class='highlight-latin'>Ultima Arx</span> — là thành trì được xây dựng từng viên đá một, không nhượng bộ trước đám đông.<br><br>Chúng tôi là <strong>HFG CAPITAL</strong>.<br>Và cam kết của chúng tôi rất đơn giản: bảo tồn, phát triển và trao truyền.",
     valuesTitle: "Giá trị & Quản trị",
     v1T: "Phương châm", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Bảo tồn. Phát triển. Trao truyền.",
     v2T: "Độc lập", v2Tx: "Quản trị chặt chẽ có chủ đích, quyết định nhanh chóng và tự do phân bổ hoàn toàn.",
@@ -481,7 +506,7 @@ const contentTranslations = {
   },
   id: {
     mainTitle: "Manifesto HFG CAPITAL",
-    manifesto: `Kami percaya bahwa kekayaan adalah sebuah tanggung jawab.<br>Kekuatan yang dibangun perlahan, membutuhkan kehati-hatian, pandangan jauh ke depan, dan kerendahan hati.<br><br>Kami percaya pada kekuatan jangka panjang.<br>Siklus berubah, tetapi disiplin tetap ada.<br><br>Kami percaya pada kebijaksanaan.<br>Apa yang penting harus dilindungi.<br><br>Kami percaya pada keputusan yang matang.<br>Bukan kebisingan. Bukan tren sesaat.<br><br>Kami percaya pada tiga kata:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Kami percaya bahwa benteng terakhir — <span class="highlight-latin">Ultima Arx</span> — adalah yang dibangun batu demi batu, tanpa menyerah pada kerumunan.<br><br>Kami adalah <strong>HFG CAPITAL</strong>.<br>Dan komitmen kami sederhana: melestarikan, mengembangkan, dan mewariskan.`,
+    manifesto: "Kami percaya bahwa kekayaan adalah sebuah tanggung jawab.<br>Kekuatan yang dibangun perlahan, membutuhkan kehati-hatian, pandangan jauh ke depan, dan kerendahan hati.<br><br>Kami percaya pada kekuatan jangka panjang.<br>Siklus berubah, tetapi disiplin tetap ada.<br><br>Kami percaya pada kebijaksanaan.<br>Apa yang penting harus dilindungi.<br><br>Kami percaya pada keputusan yang matang.<br>Bukan kebisingan. Bukan tren sesaat.<br><br>Kami percaya pada tiga kata:<br><span class='highlight-latin'>Custodire. Augere. Tradere.</span><br><br>Kami percaya bahwa benteng terakhir — <span class='highlight-latin'>Ultima Arx</span> — adalah yang dibangun batu demi batu, tanpa menyerah pada kerumunan.<br><br>Kami adalah <strong>HFG CAPITAL</strong>.<br>Dan komitmen kami sederhana: melestarikan, mengembangkan, dan mewariskan.",
     valuesTitle: "Nilai & Tata Kelola",
     v1T: "Semboyan", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Melestarikan. Menumbuhkan. Mewariskan.",
     v2T: "Kemandirian", v2Tx: "Tata kelola yang sengaja diperketat, keputusan cepat, dan kebebasan alokasi total.",
@@ -559,23 +584,31 @@ function setLanguage(lang) {
   document.getElementById('menuContacts').innerText = menuT.contacts;
 
   const t = contentTranslations[lang] || contentTranslations['en'];
-  document.getElementById('pageTitle').innerText = t.mainTitle;
-  document.getElementById('manifestoText').innerHTML = t.manifesto;
-  document.getElementById('valuesTitle').innerText = t.valuesTitle;
+  
+  /* --- INJECTION SÉCURISÉE DU CONTENU --- */
+  if (document.getElementById('pageTitle')) document.getElementById('pageTitle').innerText = t.mainTitle;
+  if (document.getElementById('manifestoText')) document.getElementById('manifestoText').innerHTML = t.manifesto;
+  if (document.getElementById('valuesTitle')) document.getElementById('valuesTitle').innerText = t.valuesTitle;
 
-  document.getElementById('val1Title').innerText = t.v1T;
-  document.getElementById('val1Text').innerHTML = t.v1Tx;
-  document.getElementById('val2Title').innerText = t.v2T;
-  document.getElementById('val2Text').innerText = t.v2Tx;
-  document.getElementById('val3Title').innerText = t.v3T;
-  document.getElementById('val3Text').innerText = t.v3Tx;
-  document.getElementById('val4Title').innerText = t.v4T;
-  document.getElementById('val4Text').innerText = t.v4Tx;
-  document.getElementById('val5Title').innerText = t.v5T;
-  document.getElementById('val5Text').innerText = t.v5Tx;
-  document.getElementById('val6Title').innerText = t.v6T;
-  document.getElementById('val6Text').innerText = t.v6Tx;
-  document.getElementById('conclusionText').innerText = t.conclusion;
+  if (document.getElementById('val1Title')) document.getElementById('val1Title').innerText = t.v1T;
+  if (document.getElementById('val1Text')) document.getElementById('val1Text').innerHTML = t.v1Tx;
+  
+  if (document.getElementById('val2Title')) document.getElementById('val2Title').innerText = t.v2T;
+  if (document.getElementById('val2Text')) document.getElementById('val2Text').innerText = t.v2Tx;
+  
+  if (document.getElementById('val3Title')) document.getElementById('val3Title').innerText = t.v3T;
+  if (document.getElementById('val3Text')) document.getElementById('val3Text').innerText = t.v3Tx;
+  
+  if (document.getElementById('val4Title')) document.getElementById('val4Title').innerText = t.v4T;
+  if (document.getElementById('val4Text')) document.getElementById('val4Text').innerText = t.v4Tx;
+  
+  if (document.getElementById('val5Title')) document.getElementById('val5Title').innerText = t.v5T;
+  if (document.getElementById('val5Text')) document.getElementById('val5Text').innerText = t.v5Tx;
+  
+  if (document.getElementById('val6Title')) document.getElementById('val6Title').innerText = t.v6T;
+  if (document.getElementById('val6Text')) document.getElementById('val6Text').innerText = t.v6Tx;
+  
+  if (document.getElementById('conclusionText')) document.getElementById('conclusionText').innerText = t.conclusion;
 
   document.getElementById('langMenu').classList.remove('show');
 }
