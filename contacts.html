@@ -76,29 +76,72 @@
     .theme-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.9); transition: 0.3s; }
     .theme-btn.active .theme-dot { background: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.95); }
 
-    /* --- LANGUES --- */
+    /* --- LANGUAGE SELECTOR --- */
     .lang-container { position: relative; }
+
     .lang-btn {
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
-      padding: 0px 12px; height: 34px; border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      padding: 0px 12px; /*6px 12px */
+      height: 34px;
+      display: flex;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.3s;
+      -webkit-tap-highlight-color: transparent;
     }
-    .lang-btn img { width: 20px; height: 13px; object-fit: cover; border-radius: 3px; }
+
+    .lang-btn:hover { 
+      background: rgba(255, 255, 255, 0.2); 
+      border-color: var(--gold-accent);
+    }
+    
+    .lang-btn img, .lang-option img { 
+      width: 20px; height: 13px;
+      object-fit: cover;
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
 
     .lang-menu {
-      position: absolute; top: 45px; left: 0;
-      background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px; padding: 5px 0; display: none;
-      width: max-content; min-width: 150px; max-height: 60vh; overflow-y: auto;
+      position: absolute;
+      top: 45px; left: 0;
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 5px 0;
+      display: none;
+      flex-direction: column;
+      width: max-content; 
+      min-width: 150px;
+      box-shadow: 0 10px 30px rgba(55,255,255,0.1); /*0,0,0,0.5*/
     }
-    .lang-menu.show { display: flex; flex-direction: column; }
+
+    .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
 
     .lang-option {
-      padding: 10px 20px; color: #ccc; cursor: pointer; font-size: 0.75rem;
-      display: flex; gap: 12px; align-items: center;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: 0.2s;
       border-bottom: 1px solid rgba(255,255,255,0.03);
+      white-space: nowrap;
     }
+
+    .lang-option:last-child { border-bottom: none; }
+    .lang-option:hover { background: rgba(212, 175, 55, 0.15); color: white; }
+
+    
 
     /* --- LOGIN BUTTON --- */
     .login-trigger {
