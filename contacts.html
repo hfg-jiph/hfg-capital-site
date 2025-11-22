@@ -23,13 +23,7 @@
       --background-light: #f9f9f9;
       --text-light: #1a1a1a;
       --bg-header-light: rgba(255, 255, 255, 0.95);
-    }
-    body {
-        font-family: var(--font-sans);
-        min-height: 100vh;
-        background-color: var(--background-light);
-        color: var(--text-light);
-        transition: background-color 0.3s, color 0.3s;
+      --highlight-color: var(--gold-accent); /* Ajouté pour le formulaire */
     }
     .dark-mode {
       --background-light: #1a1a1a;
@@ -37,6 +31,14 @@
       --bg-header-light: rgba(26, 26, 26, 0.95);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      background-color: var(--background-light);
+      color: var(--text-light);
+      transition: background-color 0.3s, color 0.3s;
+    }
 
     /* --- COMMON STYLES (Header, Menu, Footer) --- */
     .header {
@@ -53,18 +55,27 @@
       z-index: 1000;
       backdrop-filter: blur(5px);
     }
+    .dark-mode .header {
+        box-shadow: 0 1px 5px rgba(255, 255, 255, 0.1);
+    }
     .logo {
       font-family: var(--font-motto);
       font-size: 1.5rem;
       color: var(--primary-dark);
       text-decoration: none;
+      transition: color 0.3s;
     }
     .dark-mode .logo {
         color: var(--gold-accent);
     }
+
+    /* Lang Menu Styles (Repris) */
     .lang-container, .menu-container {
         position: relative;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        margin-left: 15px;
     }
     .lang-btn, .menu-btn {
         padding: 8px 12px;
@@ -73,6 +84,8 @@
         color: var(--text-light);
         background: transparent;
         font-size: 0.9rem;
+        cursor: pointer;
+        transition: border-color 0.3s, color 0.3s;
     }
     .dark-mode .lang-btn, .dark-mode .menu-btn {
         border-color: var(--gold-accent);
@@ -83,6 +96,7 @@
         position: absolute;
         top: 100%;
         right: 0;
+        margin-top: 5px;
         background-color: var(--background-light);
         border: 1px solid #ccc;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -98,75 +112,147 @@
         cursor: pointer;
         color: var(--text-light);
         white-space: nowrap;
+        font-weight: 500;
     }
     .lang-option:hover {
         background-color: var(--gold-accent);
         color: var(--primary-dark);
     }
+    .nav-buttons {
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Menu Button (Hamburger) */
+    .menu-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+    .menu-btn span {
+        display: block;
+        width: 25px;
+        height: 2px;
+        background-color: var(--text-light);
+        margin: 4px 0;
+        transition: 0.4s;
+    }
+    .dark-mode .menu-btn span {
+        background-color: var(--gold-accent);
+    }
+    /* Menu Animation (Repris) */
+    .menu-btn.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .menu-btn.open span:nth-child(2) { opacity: 0; }
+    .menu-btn.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-    /* --- MAIN CONTENT & CONTACT FORM STYLES (NOUVEAU) --- */
+    /* Main Menu Overlay (Repris) */
+    #mainMenuOverlay {
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        z-index: 999;
+        top: 0;
+        left: 0;
+        background-color: var(--background-light);
+        opacity: 0.98;
+        overflow-y: auto;
+        transition: opacity 0.3s;
+        display: none;
+        padding-top: 60px; /* Espace pour le header */
+        text-align: center;
+    }
+    #mainMenuOverlay.open {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .menu-item {
+        padding: 15px 0;
+        text-decoration: none;
+        font-family: var(--font-motto);
+        font-size: 1.8rem;
+        color: var(--text-light);
+        transition: color 0.3s;
+    }
+    .menu-item:hover {
+        color: var(--gold-accent);
+    }
+
+    /* --- CONTACT SPECIFIC STYLES --- */
     .main-content {
-      padding: 80px 30px 50px;
-      max-width: 800px;
+      padding: 100px 30px 50px;
+      max-width: 900px;
       margin: 0 auto;
-      text-align: center;
     }
     h1#header {
         font-family: var(--font-motto);
         font-weight: 600;
         font-size: 2.5rem;
         margin-bottom: 15px;
+        text-align: center;
         color: var(--gold-accent);
     }
     #intro {
         font-size: 1.1rem;
         margin-bottom: 40px;
         opacity: 0.8;
+        text-align: center;
     }
 
-    /* Form Styles */
+    /* Form Styles (Alignés sur l'esthétique HFG) */
     #contactForm {
-        text-align: left;
-        max-width: 500px;
+        max-width: 600px;
         margin: 0 auto;
         padding: 30px;
         border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        background-color: rgba(255, 255, 255, 0.05); /* Légère transparence pour le mode dark */
+        border-radius: 4px;
+        background-color: var(--background-light);
     }
     .dark-mode #contactForm {
         border-color: #333;
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: var(--primary-dark);
     }
-
     #contactForm label {
         display: block;
         margin-top: 15px;
         margin-bottom: 5px;
         font-weight: 500;
         font-size: 0.95rem;
+        color: var(--text-light);
+        opacity: 0.8;
     }
     #contactForm input[type="text"],
     #contactForm input[type="email"],
     #contactForm textarea {
         width: 100%;
-        padding: 10px;
+        padding: 12px 10px;
         border: 1px solid #ccc;
-        border-radius: 4px;
+        border-radius: 0; /* Design minimaliste */
         background-color: var(--background-light);
         color: var(--text-light);
         transition: border-color 0.3s;
+        font-family: var(--font-sans);
+        font-size: 1rem;
     }
     .dark-mode #contactForm input, .dark-mode #contactForm textarea {
         border-color: #555;
+        background-color: #2a2a2a;
+        color: #f0f0f0;
     }
     #contactForm input:focus, #contactForm textarea:focus {
         border-color: var(--gold-accent);
-        outline: none;
+        outline: 1px solid var(--gold-accent);
     }
     #contactForm textarea {
         resize: vertical;
-        min-height: 120px;
+        min-height: 150px;
     }
     #formSend {
         background-color: var(--gold-accent);
@@ -178,35 +264,46 @@
         font-size: 1rem;
         font-weight: 600;
         margin-top: 25px;
-        transition: opacity 0.3s, background-color 0.3s;
+        transition: background-color 0.3s;
+        display: block;
+        width: 100%;
     }
     #formSend:hover {
-        opacity: 0.9;
+        background-color: #bfa85a;
     }
     #formStatus {
         margin-top: 20px;
+        text-align: center;
         font-weight: 600;
         font-size: 1.05rem;
-        min-height: 20px; /* Réserve de l'espace pour éviter le saut de mise en page */
+        min-height: 20px; /* Réserve de l'espace */
     }
     .status-success {
-        color: green;
+        color: var(--gold-accent);
     }
     .status-error {
         color: red;
     }
-
+    
     /* --- FOOTER (Repris de vos fichiers) --- */
     .footer {
       text-align: center;
       padding: 20px;
       font-size: 0.8rem;
       opacity: 0.6;
+      border-top: 1px solid #e0e0e0;
+      margin-top: 50px;
+    }
+    .dark-mode .footer {
+        border-color: #333;
     }
     .footer a {
         color: var(--text-light);
         text-decoration: none;
         margin: 0 10px;
+    }
+    .dark-mode .footer a {
+        color: var(--f0f0f0);
     }
     .footer a:hover {
         text-decoration: underline;
@@ -217,13 +314,31 @@
 
 <header class="header">
     <a href="index.html" class="logo">HFG CAPITAL</a>
-    <nav>
+    <div class="nav-buttons">
+        <div class="menu-container">
+            <button id="themeBtn" class="menu-btn" title="Toggle Dark/Light Mode">
+                <span id="themeIcon">☀️</span>
+            </button>
+        </div>
         <div class="lang-container">
             <button id="langBtn" class="lang-btn">FR 🇫🇷</button>
             <div id="langMenu"></div>
         </div>
-    </nav>
+        <div class="menu-container">
+            <button id="menuBtn" class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
 </header>
+<div id="mainMenuOverlay">
+    <a href="manifesto.html" class="menu-item" id="menu-manifesto">Manifesto</a>
+    <a href="philosophy.html" class="menu-item" id="menu-philosophy">Philosophie</a>
+    <a href="contacts.html" class="menu-item" id="menu-contact">Contact</a>
+    <a href="#" class="menu-item" id="menu-login" onclick="openModal(); return false;">Client Login</a>
+</div>
 <main class="main-content">
     <h1 id="header">Contactez-nous</h1>
     <p id="intro">Pour toute demande d’information, n’hésitez pas à utiliser le formulaire ci-dessous. Nous vous répondrons dans les meilleurs délais.</p>
@@ -247,9 +362,20 @@
     <p id="formStatus"></p>
 </main>
 <footer class="footer">
-    <span id="footerText">&copy; 2024 HFG CAPITAL. All rights reserved.</span> | 
+    <span id="footerText">© 2024 HFG CAPITAL. Tous droits réservés.</span> | 
     <a href="legal.html" id="footerLegal">Mentions Légales</a>
 </footer>
+<div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+    <div id="modalContent" style="background:var(--background-light); padding:30px; border-radius:4px; max-width:400px; width:90%; text-align:center;">
+        <h3 style="margin-bottom:20px; color:var(--text-light);">Client Login</h3>
+        <form id="loginForm">
+            <input type="text" id="userId" placeholder="User ID" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc;" required>
+            <input type="password" id="password" placeholder="Password" style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #ccc;" required>
+            <button type="submit" style="background-color:var(--gold-accent); color:var(--primary-dark); padding:10px 20px; border:none; cursor:pointer;">Login</button>
+        </form>
+        <button onclick="closeModal()" style="margin-top:15px; background:none; border:none; color:var(--text-light); opacity:0.7; cursor:pointer;">Close</button>
+    </div>
+</div>
 <script>
     // =================================================================
     // =========== OBJET DE TRADUCTION (10 LANGUES) ====================
@@ -257,7 +383,7 @@
 
     const contentTranslations = {
       fr: {
-        title: "Contact HFG CAPITAL",
+        title: "HFG CAPITAL | Contact",
         header: "Contactez-nous",
         intro: "Pour toute demande d’information, n’hésitez pas à utiliser le formulaire ci-dessous. Nous vous répondrons dans les meilleurs délais.",
         formName: "Votre Nom",
@@ -268,10 +394,14 @@
         statusSuccess: "Bien envoyé. Nous vous répondrons rapidement.",
         statusError: "Erreur lors de l'envoi. Veuillez réessayer ou contacter directement notre support.",
         footerText: "© 2024 HFG CAPITAL. Tous droits réservés.",
-        footerLegal: "Mentions Légales"
+        footerLegal: "Mentions Légales",
+        menuManifesto: "Manifesto",
+        menuPhilosophy: "Philosophie",
+        menuContact: "Contact",
+        menuLogin: "Accès Client"
       },
       en: {
-        title: "HFG CAPITAL Contact",
+        title: "HFG CAPITAL | Contact",
         header: "Contact Us",
         intro: "For any inquiries, please use the form below. We will respond to you as soon as possible.",
         formName: "Your Name",
@@ -282,10 +412,14 @@
         statusSuccess: "Successfully sent. We will respond promptly.",
         statusError: "Error during sending. Please try again or contact our support directly.",
         footerText: "© 2024 HFG CAPITAL. All rights reserved.",
-        footerLegal: "Legal Notice"
+        footerLegal: "Legal Notice",
+        menuManifesto: "Manifesto",
+        menuPhilosophy: "Philosophy",
+        menuContact: "Contact",
+        menuLogin: "Client Login"
       },
       cn: {
-        title: "HFG CAPITAL 联系方式",
+        title: "HFG CAPITAL | 联系方式",
         header: "联系我们",
         intro: "如有任何疑问，请使用下方的表格联系我们。我们将尽快给您回复。",
         formName: "您的姓名",
@@ -296,10 +430,14 @@
         statusSuccess: "发送成功。我们将尽快回复您。",
         statusError: "发送过程中出现错误。请重试或直接联系我们的客服。",
         footerText: "© 2024 HFG CAPITAL. 保留所有权利。",
-        footerLegal: "法律声明"
+        footerLegal: "法律声明",
+        menuManifesto: "宣言",
+        menuPhilosophy: "理念",
+        menuContact: "联系我们",
+        menuLogin: "客户登录"
       },
       es: {
-        title: "Contacto HFG CAPITAL",
+        title: "HFG CAPITAL | Contacto",
         header: "Contáctenos",
         intro: "Para cualquier consulta, no dude en utilizar el siguiente formulario. Le responderemos lo antes posible.",
         formName: "Su Nombre",
@@ -310,10 +448,14 @@
         statusSuccess: "Enviado correctamente. Le responderemos con prontitud.",
         statusError: "Error durante el envío. Por favor, inténtelo de nuevo o contacte con nuestro soporte directamente.",
         footerText: "© 2024 HFG CAPITAL. Todos los derechos reservados.",
-        footerLegal: "Aviso Legal"
+        footerLegal: "Aviso Legal",
+        menuManifesto: "Manifiesto",
+        menuPhilosophy: "Filosofía",
+        menuContact: "Contacto",
+        menuLogin: "Acceso Cliente"
       },
       de: {
-        title: "HFG CAPITAL Kontakt",
+        title: "HFG CAPITAL | Kontakt",
         header: "Kontaktieren Sie uns",
         intro: "Für jegliche Anfragen nutzen Sie bitte das untenstehende Formular. Wir werden Ihnen so schnell wie möglich antworten.",
         formName: "Ihr Name",
@@ -324,10 +466,14 @@
         statusSuccess: "Erfolgreich gesendet. Wir werden Ihnen umgehend antworten.",
         statusError: "Fehler beim Senden. Bitte versuchen Sie es erneut oder wenden Sie sich direkt an unseren Support.",
         footerText: "© 2024 HFG CAPITAL. Alle Rechte vorbehalten.",
-        footerLegal: "Impressum"
+        footerLegal: "Impressum",
+        menuManifesto: "Manifest",
+        menuPhilosophy: "Philosophie",
+        menuContact: "Kontakt",
+        menuLogin: "Kunden-Login"
       },
       it: {
-        title: "Contatto HFG CAPITAL",
+        title: "HFG CAPITAL | Contatto",
         header: "Contattaci",
         intro: "Per qualsiasi richiesta di informazioni, non esiti a utilizzare il modulo sottostante. Le risponderemo il prima possibile.",
         formName: "Il tuo Nome",
@@ -338,10 +484,14 @@
         statusSuccess: "Inviato con successo. Le risponderemo prontamente.",
         statusError: "Errore durante l'invio. Riprova o contatta direttamente il nostro supporto.",
         footerText: "© 2024 HFG CAPITAL. Tutti i diritti riservati.",
-        footerLegal: "Note Legali"
+        footerLegal: "Note Legali",
+        menuManifesto: "Manifesto",
+        menuPhilosophy: "Filosofia",
+        menuContact: "Contatto",
+        menuLogin: "Accesso Clienti"
       },
       ru: {
-        title: "Контакты HFG CAPITAL",
+        title: "HFG CAPITAL | Контакты",
         header: "Свяжитесь с нами",
         intro: "Для получения любой информации, пожалуйста, используйте форму ниже. Мы ответим вам как можно скорее.",
         formName: "Ваше Имя",
@@ -352,10 +502,14 @@
         statusSuccess: "Успешно отправлено. Мы оперативно ответим вам.",
         statusError: "Ошибка при отправке. Пожалуйста, повторите попытку или свяжитесь с нашей службой поддержки напрямую.",
         footerText: "© 2024 HFG CAPITAL. Все права защищены.",
-        footerLegal: "Правовая информация"
+        footerLegal: "Правовая информация",
+        menuManifesto: "Манифест",
+        menuPhilosophy: "Философия",
+        menuContact: "Контакты",
+        menuLogin: "Вход для клиентов"
       },
       jp: {
-        title: "HFG CAPITAL お問い合わせ",
+        title: "HFG CAPITAL | お問い合わせ",
         header: "お問い合わせ",
         intro: "お問い合わせは、以下のフォームをご利用ください。できるだけ早くご返信いたします。",
         formName: "お名前",
@@ -366,10 +520,14 @@
         statusSuccess: "送信が完了しました。迅速にご返信いたします。",
         statusError: "送信中にエラーが発生しました。もう一度お試しいただくか、直接サポートにご連絡ください。",
         footerText: "© 2024 HFG CAPITAL. 全ての権利を保有。",
-        footerLegal: "法的通知"
+        footerLegal: "法的通知",
+        menuManifesto: "マニフェスト",
+        menuPhilosophy: "哲学",
+        menuContact: "お問い合わせ",
+        menuLogin: "顧客ログイン"
       },
       vn: {
-        title: "Liên hệ HFG CAPITAL",
+        title: "HFG CAPITAL | Liên hệ",
         header: "Liên hệ chúng tôi",
         intro: "Để yêu cầu thông tin, vui lòng sử dụng biểu mẫu dưới đây. Chúng tôi sẽ trả lời bạn sớm nhất có thể.",
         formName: "Tên của bạn",
@@ -380,10 +538,14 @@
         statusSuccess: "Đã gửi thành công. Chúng tôi sẽ phản hồi kịp thời.",
         statusError: "Lỗi trong quá trình gửi. Vui lòng thử lại hoặc liên hệ trực tiếp với bộ phận hỗ trợ của chúng tôi.",
         footerText: "© 2024 HFG CAPITAL. Đã đăng ký bản quyền.",
-        footerLegal: "Thông báo pháp lý"
+        footerLegal: "Thông báo pháp lý",
+        menuManifesto: "Tuyên ngôn",
+        menuPhilosophy: "Triết lý",
+        menuContact: "Liên hệ",
+        menuLogin: "Đăng nhập khách hàng"
       },
       id: {
-        title: "Kontak HFG CAPITAL",
+        title: "HFG CAPITAL | Kontak",
         header: "Hubungi Kami",
         intro: "Untuk permintaan informasi apa pun, jangan ragu untuk menggunakan formulir di bawah ini. Kami akan membalas Anda sesegera mungkin.",
         formName: "Nama Anda",
@@ -394,7 +556,11 @@
         statusSuccess: "Berhasil dikirim. Kami akan segera membalas Anda.",
         statusError: "Terjadi kesalahan saat pengiriman. Silakan coba lagi atau hubungi dukungan kami secara langsung.",
         footerText: "© 2024 HFG CAPITAL. Semua hak dilindungi.",
-        footerLegal: "Pemberitahuan Hukum"
+        footerLegal: "Pemberitahuan Hukum",
+        menuManifesto: "Manifesto",
+        menuPhilosophy: "Filosofi",
+        menuContact: "Kontak",
+        menuLogin: "Login Klien"
       }
     };
     
@@ -433,8 +599,14 @@
         document.getElementById('label-message').textContent = t.formMessage;
         document.getElementById('formSend').textContent = t.formSend;
         
+        // Menu Overlay
+        document.getElementById('menu-manifesto').textContent = t.menuManifesto;
+        document.getElementById('menu-philosophy').textContent = t.menuPhilosophy;
+        document.getElementById('menu-contact').textContent = t.menuContact;
+        document.getElementById('menu-login').textContent = t.menuLogin;
+
         // Footer
-        document.getElementById('footerText').textContent = t.footerText.split('|')[0].trim();
+        document.getElementById('footerText').textContent = t.footerText;
         document.getElementById('footerLegal').textContent = t.footerLegal;
 
         // Statut de la langue
@@ -469,13 +641,27 @@
         }
     }
 
-    // --- Initialisation et événements globaux (Repris de vos fichiers) ---
+    // --- Fonctions Modal (Repris) ---
+    const modal = document.getElementById('modalOverlay');
+    function openModal() { modal.style.display = 'flex'; setTimeout(()=>document.getElementById('userId').focus(),300); }
+    function closeModal() { modal.style.display = 'none'; }
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.getElementById('loginForm').addEventListener('submit', (e) => { 
+        e.preventDefault(); 
+        alert('Login functionality not yet implemented.'); // Placeholder
+        closeModal();
+    });
+
+    // --- Initialisation et événements globaux (Repris) ---
     document.addEventListener('DOMContentLoaded', () => {
         populateLanguageMenu();
         
         // Appliquer le thème sauvegardé
         if (localStorage.getItem('hfg_theme') === 'dark') {
             document.body.classList.add('dark-mode');
+            document.getElementById('themeIcon').textContent = '🌙';
+        } else {
+            document.getElementById('themeIcon').textContent = '☀️';
         }
         
         // Appliquer la traduction au chargement
@@ -495,6 +681,31 @@
       }
     });
 
+    // Menu Hamburger Logic (Repris)
+    const menuBtn = document.getElementById('menuBtn');
+    const mainMenuOverlay = document.getElementById('mainMenuOverlay');
+    menuBtn.addEventListener('click', () => { 
+        mainMenuOverlay.classList.toggle('open'); 
+        menuBtn.classList.toggle('open'); 
+        mainMenuOverlay.style.display = mainMenuOverlay.classList.contains('open') ? 'flex' : 'none';
+    });
+    mainMenuOverlay.addEventListener('click', (e) => { 
+        if(e.target===mainMenuOverlay){ 
+            mainMenuOverlay.classList.remove('open'); 
+            menuBtn.classList.remove('open'); 
+            mainMenuOverlay.style.display = 'none';
+        }
+    });
+
+    // Dark Mode Toggle Logic (Repris)
+    const themeBtn = document.getElementById('themeBtn');
+    themeBtn.addEventListener('click', () => {
+        const isDarkMode = document.body.classList.toggle('dark-mode');
+        document.getElementById('themeIcon').textContent = isDarkMode ? '🌙' : '☀️';
+        localStorage.setItem('hfg_theme', isDarkMode ? 'dark' : 'light');
+    });
+
+
     // =================================================================
     // =========== GESTION DU FORMULAIRE (AJAX SANS REDIRECTION) ========
     // =================================================================
@@ -506,7 +717,7 @@
 
         // Fonction pour récupérer le texte traduit pour le statut
         function getStatusText(key) {
-            // Utilise la langue actuelle définie par applyTranslation
+            // Utilise la langue actuelle
             return contentTranslations[currentLang] ? contentTranslations[currentLang][key] : contentTranslations['fr'][key];
         }
 
@@ -517,7 +728,10 @@
             const data = new FormData(event.target);
             
             // Affichage de l'état d'envoi temporaire
-            formStatus.textContent = getStatusText('formSend') + '...';
+            const originalButtonText = document.getElementById('formSend').textContent;
+            document.getElementById('formSend').textContent = getStatusText('formSend') + '...';
+            document.getElementById('formSend').disabled = true; // Désactive le bouton
+            formStatus.textContent = ''; // Cache le message précédent
             formStatus.className = '';
 
             try {
@@ -543,6 +757,10 @@
                 // Erreur de connexion (réseau, CORS, etc.)
                 formStatus.textContent = getStatusText('statusError');
                 formStatus.className = 'status-error';
+            } finally {
+                // Rétablit l'état du bouton et son texte original après l'envoi
+                document.getElementById('formSend').textContent = originalButtonText;
+                document.getElementById('formSend').disabled = false;
             }
         });
     });
