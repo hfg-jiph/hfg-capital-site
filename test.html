@@ -138,13 +138,13 @@
     }
 
     /* Bouton mode sombre – même base que menu-btn */
+    /* Bouton toggle thème, même gabarit que les autres (34px) */
     .theme-btn {
+      width: 34px;
+      height: 34px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 34px;
-      height: 34px;
-      margin-left: 8px;
     
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(5px);
@@ -153,20 +153,28 @@
     
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
-      transition: all 0.3s ease;
+      transition: background 0.3s ease, border-color 0.3s ease;
+      margin-left: 8px; /* petit espace après le menu */
     }
     
     .theme-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.2);
     }
     
-    /* Petite icône cercle / lune */
-    .theme-icon {
+    /* Cercle intérieur (état normal : contour) */
+    .theme-dot {
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.85);
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.9);
+      background: transparent;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    
+    /* Quand le mode sombre est actif : cercle rempli */
+    .theme-btn.active .theme-dot {
+      background: rgba(255,255,255,0.95);   /* ou var(--gold-accent) si tu veux doré */
+      border-color: rgba(255,255,255,0.95);
     }
 
 
@@ -571,8 +579,8 @@
       </div>
 
       <!-- BOUTON MODE SOMBRE -->
-      <button class="theme-btn" id="themeBtn" aria-label="Activer le mode sombre">
-        <span class="theme-icon"></span>
+      <button class="theme-btn" id="themeBtn" aria-label="Basculer le fond sombre">
+        <span class="theme-dot"></span>
       </button>
       <!-- FIN BOUTON MODE SOMBRE -->
       
@@ -738,6 +746,13 @@ const themeBtn = document.getElementById('themeBtn');
 themeBtn.addEventListener('click', () => {
   document.body.classList.toggle('dark-mode');
 });
+
+if (themeBtn) {
+  themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    themeBtn.classList.toggle('active');
+  });
+}
 
 
 /* --- INIT --- */
