@@ -125,7 +125,7 @@
     }
     .main-menu a:hover { color: var(--gold-accent); }
 
-    /* --- CONTENU PRINCIPAL (Spécifique Philosophie) --- */
+    /* --- CONTENU PRINCIPAL --- */
     .content-wrapper {
       position: relative; z-index: 5;
       padding-top: 120px;
@@ -160,10 +160,15 @@
       text-align: center; opacity: 0.8;
     }
 
+    /* --- MODIFICATION : ALIGNEMENT JUSTIFIÉ GAUCHE --- */
     .intro-text {
-      font-size: 0.95rem; line-height: 1.8; text-align: center;
-      margin-bottom: 50px; color: #e0e0e0; max-width: 800px; margin-left: auto; margin-right: auto;
-      border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px;
+      font-size: 0.95rem; 
+      line-height: 1.8; 
+      text-align: justify; /* Aligné comme sur about.html */
+      margin-bottom: 50px; 
+      color: #e0e0e0; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); 
+      padding-bottom: 40px;
     }
 
     /* GRID LAYOUT POUR LES PRINCIPES */
@@ -193,7 +198,6 @@
 
     .principle-card p { font-size: 0.85rem; line-height: 1.7; color: #ccc; margin-bottom: 10px; }
 
-    /* LISTES STYLISÉES */
     .styled-list { list-style: none; margin-top: 10px; }
     .styled-list li {
       font-size: 0.85rem; color: #ccc; line-height: 1.6;
@@ -242,7 +246,7 @@
       .text-container { padding: 30px 20px; margin: 0 15px; }
       h1 { font-size: 1.4rem; }
       h2 { font-size: 0.75rem; margin-bottom: 30px; }
-      .intro-text { font-size: 0.85rem; text-align: left; }
+      .intro-text { font-size: 0.85rem; text-align: left; } /* Force gauche sur mobile */
       .principles-grid { grid-template-columns: 1fr; gap: 30px; }
       .principle-card h3 { white-space: nowrap; font-size: 0.95rem; }
     }
@@ -308,15 +312,13 @@
         <div class="principle-card">
           <h3 id="p2Title">Discipline & Méthode</h3>
           <p id="p2Text"></p>
-          <ul class="styled-list" id="p2List">
-            </ul>
+          <ul class="styled-list" id="p2List"></ul>
         </div>
 
         <div class="principle-card" style="grid-row: span 2;">
           <h3 id="p3Title">Diversification intelligente</h3>
           <p id="p3Text"></p>
-          <ul class="styled-list" id="p3List">
-             </ul>
+          <ul class="styled-list" id="p3List"></ul>
         </div>
 
         <div class="principle-card">
@@ -355,7 +357,7 @@ const savedLang = localStorage.getItem('hfg_lang') || 'fr';
 const savedTheme = localStorage.getItem('hfg_theme');
 let activeLang = savedLang;
 
-/* --- TEXTE PHILOSOPHIE (10 LANGUES) --- */
+/* --- TEXTE PHILOSOPHIE --- */
 const contentTranslations = {
   fr: {
     title: "Philosophie d’investissement",
@@ -465,7 +467,7 @@ const contentTranslations = {
   it: {
     title: "Filosofia di Investimento",
     subtitle: "Un quadro disciplinato e una visione a lungo termine",
-    intro: "La nostra filosofia è guidata da una convinzione centrale: il tempo premia chi costruisce metodicamente.<br>Operiamo con pazienza, rigore e indipendenza, tenendo conto dei cicli economici e degli equilibri strutturali.<br>La performance non è mai ricercata a scapito del rischio o della stabilità patrimoniale.",
+    intro: "La nostra filosofia è guidata da una convinzione centrale: il tempo premia chi costruisce metodicamente.<br>Operiamo con pazienza, rigore e indipendenza, tenendo conto dei cicli economici e degli equilibri strutturali.<br>La performance non è mai ricercata a scapito del rischio o della stabilità patrimonial.",
     p1Title: "Visione a lungo termine",
     p1Text: "Investiamo lontano dalle mode e dalla speculazione. Il nostro orizzonte si misura in decenni, mai in trimestri.",
     p2Title: "Disciplina & Metodo",
@@ -569,7 +571,7 @@ const contentTranslations = {
   }
 };
 
-/* --- LANGUES UI & MENU --- */
+/* --- CONFIG UI & MENU --- */
 const uiLanguages = {
   fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", menuAbout: "Qui sommes-nous", btnOpen: "Accès", modalTitle: "Espace Privé", btnSubmit: "Entrer", footer: "© 2025 HFG CAPITAL | Bureau d'Investissement Privé" },
   en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", menuAbout: "About Us", btnOpen: "Access", modalTitle: "Private Access", btnSubmit: "Enter", footer: "© 2025 HFG CAPITAL | Private Investment Office" },
@@ -596,7 +598,7 @@ const menuTranslations = {
   id: { home: "Beranda", manifesto: "Manifesto", contacts: "Kontak" }
 };
 
-/* --- INITIALISATION --- */
+/* --- INIT --- */
 const bgImages = ["img/rouge_02.png", "img/jaune_01.png", "img/bleu_01.png", "img/violet_01.png"];
 
 window.addEventListener('load', () => {
@@ -614,14 +616,12 @@ window.addEventListener('load', () => {
   setLanguage(activeLang);
 });
 
-/* --- FONCTIONS --- */
 function toggleLangMenu() { document.getElementById('langMenu').classList.toggle('show'); }
 
 function setLanguage(lang) {
   localStorage.setItem('hfg_lang', lang);
   activeLang = lang;
 
-  // UI
   const ui = uiLanguages[lang] || uiLanguages['en'];
   document.getElementById('currentFlag').src = ui.flag;
   document.getElementById('currentLangLabel').innerText = ui.label;
@@ -630,14 +630,12 @@ function setLanguage(lang) {
   document.getElementById('btnText').innerText = ui.btnSubmit;
   document.getElementById('footerText').innerText = ui.footer;
 
-  // MENU NAV
-  document.getElementById('menuAbout').innerText = ui.menuAbout; // "Qui sommes nous" specifique
+  document.getElementById('menuAbout').innerText = ui.menuAbout;
   const menuT = menuTranslations[lang] || menuTranslations['en'];
   document.getElementById('menuHome').innerText = menuT.home;
   document.getElementById('menuManifesto').innerText = menuT.manifesto;
   document.getElementById('menuContacts').innerText = menuT.contacts;
 
-  // CONTENU TEXTE
   const t = contentTranslations[lang] || contentTranslations['en'];
   document.getElementById('pageTitle').innerText = t.title;
   document.getElementById('pageSubtitle').innerText = t.subtitle;
@@ -648,7 +646,6 @@ function setLanguage(lang) {
 
   document.getElementById('p2Title').innerText = t.p2Title;
   document.getElementById('p2Text').innerText = t.p2Text;
-  // Liste P2
   const list2 = document.getElementById('p2List');
   list2.innerHTML = "";
   t.p2List.forEach(item => {
@@ -659,12 +656,11 @@ function setLanguage(lang) {
 
   document.getElementById('p3Title').innerText = t.p3Title;
   document.getElementById('p3Text').innerText = t.p3Text;
-  // Liste P3
   const list3 = document.getElementById('p3List');
   list3.innerHTML = "";
   t.p3List.forEach(item => {
     const li = document.createElement('li');
-    li.innerHTML = item; // InnerHTML car contient du <strong>
+    li.innerHTML = item;
     list3.appendChild(li);
   });
 
@@ -695,7 +691,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* --- BOUTONS --- */
 const menuBtn = document.getElementById('menuBtn');
 const mainMenuOverlay = document.getElementById('mainMenuOverlay');
 menuBtn.addEventListener('click', () => { mainMenuOverlay.classList.toggle('open'); menuBtn.classList.toggle('open'); });
@@ -708,7 +703,6 @@ themeBtn.addEventListener('click', () => {
   localStorage.setItem('hfg_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
 });
 
-/* --- MODAL --- */
 const modal = document.getElementById('modalOverlay');
 function openModal() { modal.classList.add('active'); setTimeout(()=>document.getElementById('userId').focus(),300); }
 function closeModal() { modal.classList.remove('active'); }
