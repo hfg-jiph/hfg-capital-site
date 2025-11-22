@@ -486,12 +486,12 @@ const bgImages = [
   "img/violet_01.png",                       "img/violet_03.png"
 ];
 
-window.addEventListener('load', () => {
+/*window.addEventListener('load', () => {
   const bgElement = document.getElementById('bgImage');
   const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
   bgElement.src = randomBg;
   bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
-
+  
   if (savedTheme === 'dark') {
     document.body.classList.add('dark-mode');
     document.getElementById('themeBtn').classList.add('active');
@@ -499,8 +499,38 @@ window.addEventListener('load', () => {
 
   generateLangMenu();
   setLanguage(activeLang);
+});*/
+window.addEventListener('load', () => {
+  const bgElement = document.getElementById('bgImage');
+  
+  // --- Logique pour maintenir le fond d'écran de la session ---
+  const STORAGE_KEY_BG = 'hfg_bg_session';
+  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+
+  if (!currentBg) {
+    // Si aucune image n'est stockée, on en choisit une aléatoirement
+    const randomIndex = Math.floor(Math.random() * bgImages.length);
+    currentBg = bgImages[randomIndex];
+    
+    // On stocke l'image choisie pour le reste de la session
+    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+  }
+  
+  // Application de l'image
+  bgElement.src = currentBg;
+  bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
+
+
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeBtn').classList.add('active');
+  }
+
+  generateLangMenu();
+  setLanguage(activeLang);
 });
 
+  
 
 /* --- FONCTIONS UI --- */
 function toggleLangMenu() { document.getElementById('langMenu').classList.toggle('show'); }
