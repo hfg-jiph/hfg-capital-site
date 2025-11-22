@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>HFG CAPITAL | Contacts</title>
-  <meta name="description" content="HFG CAPITAL - Private Investment Office" />
+  <title id="title">HFG CAPITAL | Contact</title>
+  <meta name="description" content="HFG CAPITAL - Nous Contacter" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
@@ -14,790 +14,538 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-
-    /* --- VARIABLES & RESET --- */
+    /* --- VARIABLES --- (Repris de vos fichiers) */
     :root {
       --primary-dark: #1a1a1a;
       --gold-accent: #D4AF37;
-      --text-light: #ffffff;
       --font-motto: 'Cinzel', serif; 
       --font-sans: 'Montserrat', sans-serif;
+      --background-light: #f9f9f9;
+      --text-light: #1a1a1a;
+      --bg-header-light: rgba(255, 255, 255, 0.95);
     }
-
+    body {
+        font-family: var(--font-sans);
+        min-height: 100vh;
+        background-color: var(--background-light);
+        color: var(--text-light);
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .dark-mode {
+      --background-light: #1a1a1a;
+      --text-light: #f0f0f0;
+      --bg-header-light: rgba(26, 26, 26, 0.95);
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: var(--font-sans);
-      height: 100vh;
-      height: 100dvh;
-      width: 100vw;
-      overflow: hidden;
-      background-color: #000;
-      position: relative; 
-    }
-
-    /* --- BACKGROUND PLEIN ÉCRAN --- */
-    .bg-container {
+    /* --- COMMON STYLES (Header, Menu, Footer) --- */
+    .header {
       position: fixed;
-      top: 0; left: 0; 
-      width: 100%; height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-
-    .bg-image {
-      width: 100%; 
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      transition: opacity 1s ease;
-      animation: zoomIn 40s infinite alternate linear;
-      will-change: transform;
-    }
-
-
-    @keyframes zoomIn {
-      from { transform: scale(1); }
-      to { transform: scale(1.15); }
-    }
-
-    /* --- HEADER --- */
-    header {
-      position: absolute;
-      top: 0; left: 0; width: 100%;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      padding: 0 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 40px;
-      z-index: 10;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* --- MENU PRINCIPAL --- */
-    .menu-container { position: relative; }
-
-    .menu-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 20px; /*50%*/
-      border: 1px solid rgba(255,255,255,0.2); /*1px solid rgba(255,255,255,0.5);*/
-      backdrop-filter: blur(5px);
-      background: rgba(255, 255, 255, 0.1); /*rgba(0,0,0,0.45);*/
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: background 0.3s, border-color 0.3s;
-    }
-
-    .menu-btn:hover {
-      background: rgba(255, 255, 255, 0.2); 
-      border-color: var(--gold-accent);
-    }
-
-    .menu-btn-lines {
-      width: 15px;
-      height: 11px;
-      position: relative;
-    }
-
-    .menu-btn-lines span {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: #fff;
-      transition: transform 0.25s ease, opacity 0.25s ease, top 0.25s ease, bottom 0.25s ease;
-    }
-
-    .menu-btn-lines span:nth-child(1) { top: 0; }
-    .menu-btn-lines span:nth-child(2) { top: 5px; }
-    .menu-btn-lines span:nth-child(3) { bottom: 0; }
-
-    .menu-btn.open .menu-btn-lines span:nth-child(1) {
-      top: 5px;
-      transform: rotate(45deg);
-    }
-
-    .menu-btn.open .menu-btn-lines span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .menu-btn.open .menu-btn-lines span:nth-child(3) {
-      bottom: 5px;
-      transform: rotate(-45deg);
-    }
-
-    /* Mode sombre : l'image devient gris sombre */
-    body.dark-mode .bg-image {
-      filter: grayscale(100%) brightness(0.25);
-    }
-    
-    /* Bouton mode sombre – même base que menu-btn */
-    /* Bouton toggle thème, même gabarit que les autres (34px) */
-    .theme-btn {
-      width: 34px;
-      height: 34px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 20px;
-    
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: background 0.3s ease, border-color 0.3s ease;
-     /* margin-left: 8px;*/ /* petit espace après le menu */
-    }
-    
-    .theme-btn:hover {
-      background: rgba(255,255,255,0.2);
-      border-color: var(--gold-accent);
-    }
-    
-    /* Cercle intérieur (état normal : contour) */
-    .theme-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.9);
-      background: transparent;
-      transition: background 0.3s ease, border-color 0.3s ease;
-    }
-    
-    /* Quand le mode sombre est actif : cercle rempli */
-    .theme-btn.active .theme-dot {
-      background: rgba(255,255,255,0.95);   /* ou var(--gold-accent) si tu veux doré */
-      border-color: rgba(255,255,255,0.95);
-    }
-
-
-    /* --- MENU NAVIGATION --- */
-    .main-menu-overlay {
-      position: fixed; inset: 0; background: transparent; display: none;
-      align-items: stretch; justify-content: flex-start; z-index: 900;
-    }
-    .main-menu-overlay.open { display: flex; }
-    .main-menu {
-      width: 320px; max-width: calc(100% - 80px); margin-top: 70px;
-      background: transparent; padding: 24px; text-align: left;
-      transform: translateX(-100%); transition: transform 0.25s ease;
-    }
-    .main-menu-overlay.open .main-menu { transform: translateX(0); }
-    .main-menu ul { list-style: none; }
-    .main-menu a {
-      font-family: var(--font-sans); font-size: 0.675rem; text-transform: uppercase;
-      letter-spacing: 0.22em; color: rgba(255,255,255,0.85); text-decoration: none;
-      padding: 10px 0; display: block; transition: color 0.2s ease;
-    }
-    .main-menu a:hover { color: var(--gold-accent); }
-
-    
-
-
-
-    /* --- LANGUAGE SELECTOR --- */
-    .lang-container { position: relative; }
-
-    .lang-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(5px);
-      padding: 0px 12px; /*6px 12px */
-      height: 34px;
-      display: flex;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: all 0.3s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .lang-btn:hover { 
-      background: rgba(255, 255, 255, 0.2); 
-      border-color: var(--gold-accent);
-    }
-    
-    .lang-btn img, .lang-option img { 
-      width: 20px; height: 13px;
-      object-fit: cover;
-      border-radius: 3px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-
-    .lang-menu {
-      position: absolute;
-      top: 45px; left: 0;
-      background: rgba(20, 20, 20, 0.95);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      padding: 5px 0;
-      display: none;
-      flex-direction: column;
-      width: max-content; 
-      min-width: 150px;
-      box-shadow: 0 10px 30px rgba(55,255,255,0.1); /*0,0,0,0.5*/
-    }
-
-    .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
-
-    .lang-option {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 20px;
-      color: #ccc;
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: 0.2s;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-      white-space: nowrap;
-    }
-
-    .lang-option:last-child { border-bottom: none; }
-    .lang-option:hover { background: rgba(212, 175, 55, 0.15); color: white; }
-
-    /* --- LOGIN BUTTON --- */
-    .login-trigger {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(5px);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.2);
-      height: 34px;
-      padding: 0px 24px; /*10px 30px*/
-      display: flex;
-      align-items: center;
-      border-radius: 20px;
-      font-family: var(--font-sans);
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .login-trigger:hover {
-      background: var(--gold-accent);
-      color: var(--primary-dark);
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-    }
-
-    /* --- MAIN CONTENT --- */
-    main {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      width: 100%;
-      padding: 0 20px;
-      color: white;
-      z-index: 5;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .logo-main {
-      width: auto;
-      max-width: 85%;
-      max-height: 160px;
-      margin-bottom: 25px;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-      opacity: 0; 
-      animation: fadeInUp 2.5s ease-out forwards;
-      animation-delay: 0.2s;
-    }
-
-    .motto {
-      font-family: var(--font-motto); 
-      font-size: 1.35rem;
-      color: #f0f0f0;
-      font-weight: 400; 
-      letter-spacing: 2px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-      text-transform: uppercase;
-      margin: 0 auto;
-      max-width: 900px;
-      line-height: 1.4;
-      opacity: 0;
-      animation: fadeInUp 2.5s ease-out forwards;
-      animation-delay: 0.8s;
-    }
-
-    /* --- FOOTER --- */
-    footer {
-      position: absolute;
-      bottom: 15px;
-      width: 100%;
-      text-align: center;
-      font-family: var(--font-sans);
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    .footer-copyright {
-      color: rgba(255,255,255,0.4);
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-    }
-
-    /* --- MODAL --- */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
+      background-color: var(--bg-header-light);
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
       z-index: 1000;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      padding: 20px;
+      backdrop-filter: blur(5px);
     }
-
-    .modal-overlay.active { display: flex; opacity: 1; }
-
-    .modal-box {
-      background: #fff;
-      width: 100%; max-width: 420px;
-      padding: 50px 40px;
-      text-align: center;
-      position: relative;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
-      transform: translateY(20px);
-      transition: transform 0.4s ease;
-      max-height: 90vh;
-      overflow-y: auto; 
-    }
-
-    .modal-overlay.active .modal-box { transform: translateY(0); }
-
-    .close-modal {
-      position: absolute;
-      top: 10px; right: 15px;
-      font-size: 32px;
-      cursor: pointer;
-      color: #bbb;
-      transition: color 0.3s;
-      line-height: 1;
-      padding: 10px;
-    }
-    
-    .close-modal:hover { color: var(--primary-dark); }
-
-    .modal-title {
+    .logo {
       font-family: var(--font-motto);
-      font-size: 1.6rem;
-      font-weight: 600;
+      font-size: 1.5rem;
       color: var(--primary-dark);
-      margin-bottom: 30px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      text-decoration: none;
     }
-
-    .input-group { margin-bottom: 20px; text-align: left; }
-    
-    .input-group input {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid #e0e0e0;
-      background: #fafafa;
-      border-radius: 0;
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      outline: none;
-      transition: all 0.3s;
-      color: #333;
-      -webkit-appearance: none; 
-      border-radius: 0;
+    .dark-mode .logo {
+        color: var(--gold-accent);
     }
-
-    .input-group input:focus { border-color: var(--gold-accent); background: #fff; }
-
-    .btn-submit {
-      width: 100%;
-      padding: 15px;
-      background: var(--primary-dark);
-      color: white;
-      border: none;
-      font-family: var(--font-sans);
-      text-transform: uppercase;
-      font-weight: 500;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: 0.3s;
-      position: relative;
-      overflow: hidden;
-      margin-top: 10px;
+    .lang-container, .menu-container {
+        position: relative;
+        cursor: pointer;
     }
-
-    .btn-submit:hover { background: #2c2c2c; }
-    .btn-submit:disabled { opacity: 0.8; cursor: wait; }
-
-    .loader {
-      height: 3px;
-      width: 0%;
-      background: linear-gradient(90deg, var(--gold-accent), #fff);
-      position: absolute;
-      bottom: 0; left: 0;
-      transition: width 1.5s ease-in-out;
-    }
-
-    .error-msg {
-      color: #9e1b1b;
-      font-size: 0.8rem;
-      margin-top: 20px;
-      display: none;
-      line-height: 1.5;
-      font-weight: 500;
-    }
-
-    /* --- RESPONSIVE --- */
-    @media (max-width: 600px) {
-      header { padding: 15px 20px; }
-
-      .motto { font-size: 0.9rem; padding: 0 10px; line-height: 1.6; }
-      .logo-main { margin-bottom: 15px; max-height: 100px; } 
-      .main-menu {margin-top: 30px !important;  }
-      .modal-box { 
-        padding: 30px 20px; 
-        width: 100%; 
+    .lang-btn, .menu-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--text-light);
         border-radius: 4px;
-      }
-      
-      .modal-title { font-size: 1.3rem; margin-bottom: 20px; }
-      .input-group input { font-size: 16px; padding: 12px; }
-      .login-trigger { padding: 8px 15px; font-size: 0.7rem; }
-      .lang-menu { max-height: 50vh; overflow-y: auto; right: auto; left: 0; }
+        color: var(--text-light);
+        background: transparent;
+        font-size: 0.9rem;
     }
-    
-    @media (max-height: 500px) and (orientation: landscape) {
-      header { padding: 10px 20px; }
-      .logo-main { display: none; }
-      .motto { font-size: 0.8rem; margin-top: 40px; }
-      main { top: 60%; }
-      .modal-box { padding: 20px; }
-      .modal-title { margin-bottom: 15px; font-size: 1.2rem; }
+    .dark-mode .lang-btn, .dark-mode .menu-btn {
+        border-color: var(--gold-accent);
+        color: var(--gold-accent);
     }
-
-    @keyframes fadeIn { 
-      from { opacity: 0; transform: translateY(-10px); } 
-      to { opacity: 1; transform: translateY(0); } 
+    #langMenu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: var(--background-light);
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 5px 0;
+        z-index: 10;
+        min-width: 150px;
     }
-    
-
-    /* --- CONTENT --- */
-    .content-wrapper {
-      padding-top: 130px; padding-bottom: 80px;
-      max-width: 800px; width: 100%; margin: auto;
-      display: flex; flex-direction: column; align-items: center;
+    #langMenu.show {
+        display: block;
     }
-
-    .text-container {
-      width: 100%;
-      background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(20px);
-      padding: 50px;
-      border-radius: 4px;
-      box-shadow: 0 30px 70px rgba(0,0,0,0.6);
-      animation: fadeInUp 1.2s ease both;
+    .lang-option {
+        padding: 8px 15px;
+        cursor: pointer;
+        color: var(--text-light);
+        white-space: nowrap;
+    }
+    .lang-option:hover {
+        background-color: var(--gold-accent);
+        color: var(--primary-dark);
     }
 
-    h1 {
-      font-family: var(--font-motto); font-size: 1.8rem;
-      letter-spacing: 3px; text-transform: uppercase;
-      text-align: center; color: var(--gold-accent);
-      margin-bottom: 10px;
+    /* --- MAIN CONTENT & CONTACT FORM STYLES (NOUVEAU) --- */
+    .main-content {
+      padding: 80px 30px 50px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    h1#header {
+        font-family: var(--font-motto);
+        font-weight: 600;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: var(--gold-accent);
+    }
+    #intro {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+        opacity: 0.8;
     }
 
-    h2 {
-      text-align: center; opacity: 0.8;
-      font-size: 0.9rem; margin-bottom: 40px;
-      letter-spacing: 2px; text-transform: uppercase;
+    /* Form Styles */
+    #contactForm {
+        text-align: left;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 30px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.05); /* Légère transparence pour le mode dark */
+    }
+    .dark-mode #contactForm {
+        border-color: #333;
+        background-color: rgba(0, 0, 0, 0.1);
     }
 
-    /* --- FORMULAIRE --- */
-    .contact-form .input-group {
-      margin-bottom: 20px;
+    #contactForm label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+    #contactForm input[type="text"],
+    #contactForm input[type="email"],
+    #contactForm textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: var(--background-light);
+        color: var(--text-light);
+        transition: border-color 0.3s;
+    }
+    .dark-mode #contactForm input, .dark-mode #contactForm textarea {
+        border-color: #555;
+    }
+    #contactForm input:focus, #contactForm textarea:focus {
+        border-color: var(--gold-accent);
+        outline: none;
+    }
+    #contactForm textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+    #formSend {
+        background-color: var(--gold-accent);
+        color: var(--primary-dark);
+        padding: 12px 25px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 25px;
+        transition: opacity 0.3s, background-color 0.3s;
+    }
+    #formSend:hover {
+        opacity: 0.9;
+    }
+    #formStatus {
+        margin-top: 20px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        min-height: 20px; /* Réserve de l'espace pour éviter le saut de mise en page */
+    }
+    .status-success {
+        color: green;
+    }
+    .status-error {
+        color: red;
     }
 
-    .contact-form input,
-    .contact-form textarea {
-      width: 100%; padding: 15px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.07);
-      color: white; font-size: 0.9rem;
-      outline: none; resize: vertical;
+    /* --- FOOTER (Repris de vos fichiers) --- */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.8rem;
+      opacity: 0.6;
     }
-
-    .btn-submit {
-      width: 100%; padding: 15px;
-      background: var(--primary-dark);
-      color: white; border: none;
-      letter-spacing: 1px; text-transform: uppercase;
-      cursor: pointer;
-      margin-top: 10px;
+    .footer a {
+        color: var(--text-light);
+        text-decoration: none;
+        margin: 0 10px;
     }
-
-
+    .footer a:hover {
+        text-decoration: underline;
+    }
   </style>
 </head>
-
 <body>
 
-  <!-- BACKGROUND -->
-  <div class="bg-container">
-    <img src="" id="bgImage" class="bg-image" alt="Background">
-  </div>
-
-  <!-- MENU NAVIGATION -->
-  <div class="main-menu-overlay" id="mainMenuOverlay">
-    <nav class="main-menu">
-      <ul>
-        <li><a id="menuHome" href="index.html">Home</a></li>
-        <li><a id="menuAbout" href="about.html">About</a></li>
-        <li><a id="menuPhilosophy" href="philosophy.html">Philosophy</a></li>
-        <li><a id="menuManifesto" href="manifesto.html">Manifesto</a></li>
-        <li><a id="menuContacts" href="contacts.html"> </a></li>
-      </ul>
+<header class="header">
+    <a href="index.html" class="logo">HFG CAPITAL</a>
+    <nav>
+        <div class="lang-container">
+            <button id="langBtn" class="lang-btn">FR 🇫🇷</button>
+            <div id="langMenu"></div>
+        </div>
     </nav>
-  </div>
+</header>
+<main class="main-content">
+    <h1 id="header">Contactez-nous</h1>
+    <p id="intro">Pour toute demande d’information, n’hésitez pas à utiliser le formulaire ci-dessous. Nous vous répondrons dans les meilleurs délais.</p>
 
-  <header>
-    <div class="header-left">
+    <form id="contactForm">
+        <label for="name" id="label-name">Votre Nom</label>
+        <input type="text" id="name" name="name" required>
 
-      <button class="menu-btn" id="menuBtn" aria-label="Menu">
-        <div class="menu-btn-lines"><span></span><span></span><span></span></div>
-      </button>
+        <label for="email" id="label-email">Votre E-mail</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="subject" id="label-subject">Sujet</label>
+        <input type="text" id="subject" name="_subject" required> 
 
-      <button class="theme-btn" id="themeBtn" aria-label="Thème">
-        <span class="theme-dot"></span>
-      </button>
+        <label for="message" id="label-message">Votre Message</label>
+        <textarea id="message" name="message" required></textarea>
 
-      <div class="lang-container">
-        <div class="lang-btn" onclick="toggleLangMenu()">
-          <img id="currentFlag" src="https://flagcdn.com/fr.svg">
-          <span id="currentLangLabel">FR</span>
-          <small>▼</small>
-        </div>
-        <div class="lang-menu" id="langMenu"></div>
-      </div>
-    </div>
+        <button type="submit" id="formSend">Envoyer</button>
+    </form>
 
-    <button class="login-trigger" id="openLoginBtn" onclick="openModal()">Accès</button>
-  </header>
-
-  <!-- MAIN CONTENT -->
-  <div class="content-wrapper">
-    <div class="text-container">
-
-      <h1 id="pageTitle">Contacts</h1>
-      <h2 id="pageSubtitle">Pour nous écrire en toute confidentialité</h2>
-
-      <form action="https://formspree.io/f/xgvqnowr" method="POST" class="contact-form">
-
-        <div class="input-group">
-          <input type="text" name="name" placeholder="Nom (optionnel)">
-        </div>
-
-        <div class="input-group">
-          <input type="email" name="email" placeholder="Email (optionnel)">
-        </div>
-
-        <div class="input-group">
-          <textarea name="message" rows="4" required placeholder="Votre message"></textarea>
-        </div>
-
-        <!-- Anti-bot honeypot -->
-        <input type="text" name="_gotcha" style="display:none">
-
-        <button class="btn-submit" type="submit" id="btnSend">Envoyer</button>
-
-      </form>
-
-    </div>
-  </div>
-
-  <footer>
-    <div id="footerText">© 2025 HFG CAPITAL | Private Investment Office</div>
-  </footer>
-
+    <p id="formStatus"></p>
+</main>
+<footer class="footer">
+    <span id="footerText">&copy; 2024 HFG CAPITAL. All rights reserved.</span> | 
+    <a href="legal.html" id="footerLegal">Mentions Légales</a>
+</footer>
 <script>
-/* --- BACKGROUND RANDOMIZER --- */
-const bgImages = ["img/rouge_02.png", "img/jaune_01.png", "img/bleu_01.png", "img/violet_01.png"];
-window.addEventListener("load", () => {
-  const bg = document.getElementById("bgImage");
-  bg.src = bgImages[Math.floor(Math.random() * bgImages.length)];
-});
+    // =================================================================
+    // =========== OBJET DE TRADUCTION (10 LANGUES) ====================
+    // =================================================================
 
-/* --- MENU --- */
-const menuBtn = document.getElementById("menuBtn");
-const menuOverlay = document.getElementById("mainMenuOverlay");
-menuBtn.addEventListener("click", () => {
-  menuOverlay.classList.toggle("open");
-  menuBtn.classList.toggle("open");
-});
-menuOverlay.addEventListener("click", e => {
-  if (e.target === menuOverlay) {
-    menuOverlay.classList.remove("open");
-    menuBtn.classList.remove("open");
-  }
-});
+    const contentTranslations = {
+      fr: {
+        title: "Contact HFG CAPITAL",
+        header: "Contactez-nous",
+        intro: "Pour toute demande d’information, n’hésitez pas à utiliser le formulaire ci-dessous. Nous vous répondrons dans les meilleurs délais.",
+        formName: "Votre Nom",
+        formMail: "Votre E-mail",
+        formSubject: "Sujet",
+        formMessage: "Votre Message",
+        formSend: "Envoyer",
+        statusSuccess: "Bien envoyé. Nous vous répondrons rapidement.",
+        statusError: "Erreur lors de l'envoi. Veuillez réessayer ou contacter directement notre support.",
+        footerText: "© 2024 HFG CAPITAL. Tous droits réservés.",
+        footerLegal: "Mentions Légales"
+      },
+      en: {
+        title: "HFG CAPITAL Contact",
+        header: "Contact Us",
+        intro: "For any inquiries, please use the form below. We will respond to you as soon as possible.",
+        formName: "Your Name",
+        formMail: "Your Email",
+        formSubject: "Subject",
+        formMessage: "Your Message",
+        formSend: "Send",
+        statusSuccess: "Successfully sent. We will respond promptly.",
+        statusError: "Error during sending. Please try again or contact our support directly.",
+        footerText: "© 2024 HFG CAPITAL. All rights reserved.",
+        footerLegal: "Legal Notice"
+      },
+      cn: {
+        title: "HFG CAPITAL 联系方式",
+        header: "联系我们",
+        intro: "如有任何疑问，请使用下方的表格联系我们。我们将尽快给您回复。",
+        formName: "您的姓名",
+        formMail: "您的邮箱",
+        formSubject: "主题",
+        formMessage: "您的消息",
+        formSend: "发送",
+        statusSuccess: "发送成功。我们将尽快回复您。",
+        statusError: "发送过程中出现错误。请重试或直接联系我们的客服。",
+        footerText: "© 2024 HFG CAPITAL. 保留所有权利。",
+        footerLegal: "法律声明"
+      },
+      es: {
+        title: "Contacto HFG CAPITAL",
+        header: "Contáctenos",
+        intro: "Para cualquier consulta, no dude en utilizar el siguiente formulario. Le responderemos lo antes posible.",
+        formName: "Su Nombre",
+        formMail: "Su Correo Electrónico",
+        formSubject: "Asunto",
+        formMessage: "Su Mensaje",
+        formSend: "Enviar",
+        statusSuccess: "Enviado correctamente. Le responderemos con prontitud.",
+        statusError: "Error durante el envío. Por favor, inténtelo de nuevo o contacte con nuestro soporte directamente.",
+        footerText: "© 2024 HFG CAPITAL. Todos los derechos reservados.",
+        footerLegal: "Aviso Legal"
+      },
+      de: {
+        title: "HFG CAPITAL Kontakt",
+        header: "Kontaktieren Sie uns",
+        intro: "Für jegliche Anfragen nutzen Sie bitte das untenstehende Formular. Wir werden Ihnen so schnell wie möglich antworten.",
+        formName: "Ihr Name",
+        formMail: "Ihre E-Mail",
+        formSubject: "Betreff",
+        formMessage: "Ihre Nachricht",
+        formSend: "Senden",
+        statusSuccess: "Erfolgreich gesendet. Wir werden Ihnen umgehend antworten.",
+        statusError: "Fehler beim Senden. Bitte versuchen Sie es erneut oder wenden Sie sich direkt an unseren Support.",
+        footerText: "© 2024 HFG CAPITAL. Alle Rechte vorbehalten.",
+        footerLegal: "Impressum"
+      },
+      it: {
+        title: "Contatto HFG CAPITAL",
+        header: "Contattaci",
+        intro: "Per qualsiasi richiesta di informazioni, non esiti a utilizzare il modulo sottostante. Le risponderemo il prima possibile.",
+        formName: "Il tuo Nome",
+        formMail: "La tua E-mail",
+        formSubject: "Oggetto",
+        formMessage: "Il tuo Messaggio",
+        formSend: "Inviare",
+        statusSuccess: "Inviato con successo. Le risponderemo prontamente.",
+        statusError: "Errore durante l'invio. Riprova o contatta direttamente il nostro supporto.",
+        footerText: "© 2024 HFG CAPITAL. Tutti i diritti riservati.",
+        footerLegal: "Note Legali"
+      },
+      ru: {
+        title: "Контакты HFG CAPITAL",
+        header: "Свяжитесь с нами",
+        intro: "Для получения любой информации, пожалуйста, используйте форму ниже. Мы ответим вам как можно скорее.",
+        formName: "Ваше Имя",
+        formMail: "Ваш Email",
+        formSubject: "Тема",
+        formMessage: "Ваше Сообщение",
+        formSend: "Отправить",
+        statusSuccess: "Успешно отправлено. Мы оперативно ответим вам.",
+        statusError: "Ошибка при отправке. Пожалуйста, повторите попытку или свяжитесь с нашей службой поддержки напрямую.",
+        footerText: "© 2024 HFG CAPITAL. Все права защищены.",
+        footerLegal: "Правовая информация"
+      },
+      jp: {
+        title: "HFG CAPITAL お問い合わせ",
+        header: "お問い合わせ",
+        intro: "お問い合わせは、以下のフォームをご利用ください。できるだけ早くご返信いたします。",
+        formName: "お名前",
+        formMail: "メールアドレス",
+        formSubject: "件名",
+        formMessage: "メッセージ",
+        formSend: "送信",
+        statusSuccess: "送信が完了しました。迅速にご返信いたします。",
+        statusError: "送信中にエラーが発生しました。もう一度お試しいただくか、直接サポートにご連絡ください。",
+        footerText: "© 2024 HFG CAPITAL. 全ての権利を保有。",
+        footerLegal: "法的通知"
+      },
+      vn: {
+        title: "Liên hệ HFG CAPITAL",
+        header: "Liên hệ chúng tôi",
+        intro: "Để yêu cầu thông tin, vui lòng sử dụng biểu mẫu dưới đây. Chúng tôi sẽ trả lời bạn sớm nhất có thể.",
+        formName: "Tên của bạn",
+        formMail: "Email của bạn",
+        formSubject: "Chủ đề",
+        formMessage: "Tin nhắn của bạn",
+        formSend: "Gửi",
+        statusSuccess: "Đã gửi thành công. Chúng tôi sẽ phản hồi kịp thời.",
+        statusError: "Lỗi trong quá trình gửi. Vui lòng thử lại hoặc liên hệ trực tiếp với bộ phận hỗ trợ của chúng tôi.",
+        footerText: "© 2024 HFG CAPITAL. Đã đăng ký bản quyền.",
+        footerLegal: "Thông báo pháp lý"
+      },
+      id: {
+        title: "Kontak HFG CAPITAL",
+        header: "Hubungi Kami",
+        intro: "Untuk permintaan informasi apa pun, jangan ragu untuk menggunakan formulir di bawah ini. Kami akan membalas Anda sesegera mungkin.",
+        formName: "Nama Anda",
+        formMail: "Email Anda",
+        formSubject: "Subjek",
+        formMessage: "Pesan Anda",
+        formSend: "Kirim",
+        statusSuccess: "Berhasil dikirim. Kami akan segera membalas Anda.",
+        statusError: "Terjadi kesalahan saat pengiriman. Silakan coba lagi atau hubungi dukungan kami secara langsung.",
+        footerText: "© 2024 HFG CAPITAL. Semua hak dilindungi.",
+        footerLegal: "Pemberitahuan Hukum"
+      }
+    };
+    
+    // =================================================================
+    // =========== LOGIQUE DE TRADUCTION & SÉLECTION DE LANGUE ==========
+    // =================================================================
 
-/* --- THEME --- */
-const themeBtn = document.getElementById("themeBtn");
-themeBtn.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  themeBtn.classList.toggle("active");
-});
+    const uiLanguages = {
+        'fr': { flag: '🇫🇷', short: 'FR', full: 'Français' },
+        'en': { flag: '🇬🇧', short: 'EN', full: 'English' },
+        'cn': { flag: '🇨🇳', short: 'CN', full: '中文' },
+        'es': { flag: '🇪🇸', short: 'ES', full: 'Español' },
+        'de': { flag: '🇩🇪', short: 'DE', full: 'Deutsch' },
+        'it': { flag: '🇮🇹', short: 'IT', full: 'Italiano' },
+        'ru': { flag: '🇷🇺', short: 'RU', full: 'Русский' },
+        'jp': { flag: '🇯🇵', short: 'JP', full: '日本語' },
+        'vn': { flag: '🇻🇳', short: 'VN', full: 'Tiếng Việt' },
+        'id': { flag: '🇮🇩', short: 'ID', full: 'Bahasa Indonesia' }
+    };
 
-/* --- LANGUES (même système que tes autres pages) --- */
-const uiLanguages = {
-  fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français",
-        pageTitle:"Contacts", pageSubtitle:"Pour nous écrire en toute confidentialité",
-        home:"Accueil", about:"Qui sommes-nous", philosophy:"Philosophie",
-        manifesto:"Manifesto", contacts:"Contacts", send:"Envoyer",
-        login:"Accès", footer:"© 2025 HFG CAPITAL | Bureau d'Investissement Privé"
-  },
+    let currentLang = localStorage.getItem('hfg_lang') || 'fr';
 
-  en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English",
-        pageTitle:"Contact", pageSubtitle:"Write to us confidentially",
-        home:"Home", about:"About Us", philosophy:"Philosophy",
-        manifesto:"Manifesto", contacts:"Contact", send:"Send",
-        login:"Access", footer:"© 2025 HFG CAPITAL | Private Investment Office"
-  },
+    function applyTranslation(lang) {
+        const t = contentTranslations[lang] || contentTranslations['fr'];
+        
+        // --- Mise à jour des textes ---
+        document.title = t.title;
+        document.getElementById('title').textContent = t.title;
+        document.getElementById('header').textContent = t.header;
+        document.getElementById('intro').textContent = t.intro;
+        
+        // Formulaires
+        document.getElementById('label-name').textContent = t.formName;
+        document.getElementById('label-email').textContent = t.formMail;
+        document.getElementById('label-subject').textContent = t.formSubject;
+        document.getElementById('label-message').textContent = t.formMessage;
+        document.getElementById('formSend').textContent = t.formSend;
+        
+        // Footer
+        document.getElementById('footerText').textContent = t.footerText.split('|')[0].trim();
+        document.getElementById('footerLegal').textContent = t.footerLegal;
 
-  cn: { flag:"https://flagcdn.com/cn.svg", label:"CN", full:"中文",
-        pageTitle:"联系我们", pageSubtitle:"请以保密方式联系我们",
-        home:"首页", about:"关于我们", philosophy:"投资哲学",
-        manifesto:"愿景宣言", contacts:"联系", send:"发送",
-        login:"进入", footer:"© 2025 HFG CAPITAL | 私人投资办公室"
-  },
+        // Statut de la langue
+        document.getElementById('langBtn').textContent = `${uiLanguages[lang].short} ${uiLanguages[lang].flag}`;
 
-  es:{ flag:"https://flagcdn.com/es.svg", label:"ES", full:"Español",
-       pageTitle:"Contacto", pageSubtitle:"Escríbanos con total confidencialidad",
-       home:"Inicio", about:"Quiénes somos", philosophy:"Filosofía",
-       manifesto:"Manifiesto", contacts:"Contacto", send:"Enviar",
-       login:"Acceso", footer:"© 2025 HFG CAPITAL | Oficina de Inversiones Privadas"
-  },
+        // Nettoyer le statut du formulaire lors du changement de langue
+        const formStatus = document.getElementById('formStatus');
+        formStatus.textContent = '';
+        formStatus.className = '';
+        
+        // Mise à jour de la langue globale pour l'AJAX
+        currentLang = lang;
+    }
 
-  de:{ flag:"https://flagcdn.com/de.svg", label:"DE", full:"Deutsch",
-       pageTitle:"Kontakt", pageSubtitle:"Schreiben Sie uns vertraulich",
-       home:"Startseite", about:"Über uns", philosophy:"Philosophie",
-       manifesto:"Manifest", contacts:"Kontakt", send:"Senden",
-       login:"Zugang", footer:"© 2025 HFG CAPITAL | Privates Anlagebüro"
-  },
+    function setLanguage(langCode) {
+        currentLang = langCode;
+        localStorage.setItem('hfg_lang', langCode);
+        applyTranslation(langCode);
+        document.getElementById('langMenu').classList.remove('show');
+        document.documentElement.lang = langCode;
+    }
 
-  it:{ flag:"https://flagcdn.com/it.svg", label:"IT", full:"Italiano",
-       pageTitle:"Contatti", pageSubtitle:"Scrivici in totale riservatezza",
-       home:"Home", about:"Chi siamo", philosophy:"Filosofia",
-       manifesto:"Manifesto", contacts:"Contatti", send:"Inviare",
-       login:"Accesso", footer:"© 2025 HFG CAPITAL | Ufficio di Investimento Privato"
-  },
+    function populateLanguageMenu() {
+        const menu = document.getElementById('langMenu');
+        menu.innerHTML = '';
+        for (const code in uiLanguages) {
+            const opt = document.createElement('div');
+            opt.className = 'lang-option';
+            opt.innerHTML = `${uiLanguages[code].flag} ${uiLanguages[code].full}`;
+            opt.onclick = () => setLanguage(code);
+            menu.appendChild(opt);
+        }
+    }
 
-  ru:{ flag:"https://flagcdn.com/ru.svg", label:"RU", full:"Русский",
-       pageTitle:"Контакты", pageSubtitle:"Напишите нам конфиденциально",
-       home:"Главная", about:"О нас", philosophy:"Философия",
-       manifesto:"Манифест", contacts:"Контакты", send:"Отправить",
-       login:"Вход", footer:"© 2025 HFG CAPITAL | Частный Инвестиционный Офис"
-  },
+    // --- Initialisation et événements globaux (Repris de vos fichiers) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        populateLanguageMenu();
+        
+        // Appliquer le thème sauvegardé
+        if (localStorage.getItem('hfg_theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        
+        // Appliquer la traduction au chargement
+        applyTranslation(currentLang);
+    });
 
-  jp:{ flag:"https://flagcdn.com/jp.svg", label:"JP", full:"日本語",
-       pageTitle:"お問い合わせ", pageSubtitle:"秘密厳守でご連絡ください",
-       home:"ホーム", about:"会社概要", philosophy:"投資哲学",
-       manifesto:"マニフェスト", contacts:"お問い合わせ", send:"送信",
-       login:"アクセス", footer:"© 2025 HFG CAPITAL | プライベート投資オフィス"
-  },
+    // Événement pour le bouton de langue
+    document.getElementById('langBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('langMenu').classList.toggle('show');
+    });
 
-  vn:{ flag:"https://flagcdn.com/vn.svg", label:"VN", full:"Tiếng Việt",
-       pageTitle:"Liên hệ", pageSubtitle:"Liên hệ với chúng tôi một cách bảo mật",
-       home:"Trang chủ", about:"Giới thiệu", philosophy:"Triết lý",
-       manifesto:"Tuyên ngôn", contacts:"Liên hệ", send:"Gửi",
-       login:"Truy cập", footer:"© 2025 HFG CAPITAL | Văn phòng đầu tư tư nhân"
-  },
+    // Fermer le menu si l'on clique ailleurs
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.lang-container')) {
+        document.getElementById('langMenu').classList.remove('show');
+      }
+    });
 
-  id:{ flag:"https://flagcdn.com/id.svg", label:"ID", full:"Bahasa Indonesia",
-       pageTitle:"Kontak", pageSubtitle:"Hubungi kami secara rahasia",
-       home:"Beranda", about:"Tentang Kami", philosophy:"Filosofi",
-       manifesto:"Manifesto", contacts:"Kontak", send:"Kirim",
-       login:"Akses", footer:"© 2025 HFG CAPITAL | Kantor Investasi Pribadi"
-  }
-};
+    // =================================================================
+    // =========== GESTION DU FORMULAIRE (AJAX SANS REDIRECTION) ========
+    // =================================================================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('contactForm');
+        const formStatus = document.getElementById('formStatus');
+        const FORM_URL = "https://formspree.io/f/xgvqnowr"; // VOTRE URL FORMSPREE
 
-function toggleLangMenu() {
-  document.getElementById("langMenu").classList.toggle("show");
-}
+        // Fonction pour récupérer le texte traduit pour le statut
+        function getStatusText(key) {
+            // Utilise la langue actuelle définie par applyTranslation
+            return contentTranslations[currentLang] ? contentTranslations[currentLang][key] : contentTranslations['fr'][key];
+        }
 
-function generateLangMenu() {
-  const menu = document.getElementById("langMenu");
-  menu.innerHTML = "";
-  for (const code in uiLanguages) {
-    const opt = document.createElement("div");
-    opt.className = "lang-option";
-    opt.innerHTML = `<img src="${uiLanguages[code].flag}"> ${uiLanguages[code].full}`;
-    opt.onclick = () => setLanguage(code);
-    menu.appendChild(opt);
-  }
-}
+        // Événement de soumission du formulaire
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault(); // EMPÊCHE LA REDIRECTION FORMSPREE
 
-let activeLang = localStorage.getItem("hfg_lang") || "fr";
+            const data = new FormData(event.target);
+            
+            // Affichage de l'état d'envoi temporaire
+            formStatus.textContent = getStatusText('formSend') + '...';
+            formStatus.className = '';
 
-function setLanguage(lang) {
-  activeLang = lang;
-  localStorage.setItem("hfg_lang", lang);
-  const ui = uiLanguages[lang];
+            try {
+                const response = await fetch(FORM_URL, {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json' 
+                    }
+                });
 
-  document.getElementById("currentFlag").src = ui.flag;
-  document.getElementById("currentLangLabel").innerText = ui.label;
-
-  document.getElementById("pageTitle").innerText = ui.pageTitle;
-  document.getElementById("pageSubtitle").innerText = ui.pageSubtitle;
-
-  document.getElementById("menuHome").innerText = ui.home;
-  document.getElementById("menuAbout").innerText = ui.about;
-  document.getElementById("menuPhilosophy").innerText = ui.philosophy;
-  document.getElementById("menuManifesto").innerText = ui.manifesto;
-  document.getElementById("menuContacts").innerText = ui.contacts;
-  document.getElementById("btnSend").innerText = ui.send;
-  document.getElementById("openLoginBtn").innerText = ui.login;
-
-  document.getElementById("footerText").innerText = ui.footer;
-
-  document.getElementById("langMenu").classList.remove("show");
-}
-
-generateLangMenu();
-setLanguage(activeLang);
-
-/* --- MODALE LOGIN (restée identique à tes autres pages) --- */
-function openModal(){ alert("Espace privé"); }
+                if (response.ok) {
+                    // Succès : Affiche le message de succès ("Bien envoyé")
+                    formStatus.textContent = getStatusText('statusSuccess');
+                    formStatus.className = 'status-success';
+                    form.reset(); // Réinitialise le formulaire après succès
+                } else {
+                    // Échec (réponse de Formspree non-OK)
+                    formStatus.textContent = getStatusText('statusError');
+                    formStatus.className = 'status-error';
+                }
+            } catch (error) {
+                // Erreur de connexion (réseau, CORS, etc.)
+                formStatus.textContent = getStatusText('statusError');
+                formStatus.className = 'status-error';
+            }
+        });
+    });
 </script>
-
 </body>
 </html>
