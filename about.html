@@ -486,7 +486,7 @@ const bgImages = [
   "img/violet_01.png",                       "img/violet_03.png"
 ];
 
-window.addEventListener('load', () => {
+/*window.addEventListener('load', () => {
   const bgElement = document.getElementById('bgImage');
   const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
   bgElement.src = randomBg;
@@ -499,6 +499,43 @@ window.addEventListener('load', () => {
 
   generateLangMenu();
   setLanguage(activeLang);
+});*/
+//--- NOUVEAU BACKGROUND PAR SESSION
+  window.addEventListener('load', () => {
+  // --- 1. Gestion du fond d'écran (Stabilité par Session) ---
+  const STORAGE_KEY_BG = 'hfg_bg_session';
+  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+
+  if (!currentBg) {
+    // Si aucune image n'est stockée pour cette session, on en choisit une aléatoirement
+    const randomIndex = Math.floor(Math.random() * bgImages.length);
+    currentBg = bgImages[randomIndex];
+    
+    // Stockage de l'image choisie dans le sessionStorage
+    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+  }
+
+  // Application de l'image (qu'elle soit nouvelle ou récupérée de la session)
+  bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
+  bgElement.src = currentBg;
+  
+  // --- 2. Restauration du Thème (Inchangé) ---
+  const savedTheme = localStorage.getItem('hfg_theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    if (themeBtn) themeBtn.classList.add('active');
+  }
+
+  generateLangMenu();
+
+  // --- 3. Restauration de la Langue (Inchangé) ---
+  // On vérifie s'il y a une sauvegarde, sinon on utilise la langue du navigateur
+  const savedLang = localStorage.getItem('hfg_lang');
+  const initialLang = savedLang || guessLangFromBrowser();
+  
+  setLanguage(initialLang);
+
+  scrollTitle();
 });
 
 /* --- FONCTIONS UI --- */
