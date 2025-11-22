@@ -514,9 +514,9 @@
 </head>
 <body>
 
-  <!--<div class="bg-container">
+  <div class="bg-container">
     <img src="" id="bgImage" class="bg-image" alt="Background">
-  </div>-->
+  </div>
 
   <!-- MENU PLEIN ÉCRAN -->
   <div class="main-menu-overlay" id="mainMenuOverlay">
@@ -698,7 +698,7 @@ const bgImages = [
 /* --- DOM --- */
 const modal = document.getElementById('modalOverlay');
 const langMenu = document.getElementById('langMenu');
-//const bgElement = document.getElementById('bgImage');
+const bgElement = document.getElementById('bgImage');
 const form = document.getElementById('loginForm');
 const errorMsg = document.getElementById('errorMsg');
 const btnSubmit = document.getElementById('submitBtn');
@@ -740,7 +740,7 @@ function guessLangFromBrowser() {
   return 'en'; // fallback propre
 }
 
-/*window.addEventListener('load', () => {
+window.addEventListener('load', () => {
   // --- 1. Gestion du fond d'écran (Inchangé) ---
   //const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
   //bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
@@ -778,58 +778,8 @@ function guessLangFromBrowser() {
 
   setLanguage(initialLang);
   scrollTitle();
-});*/
- window.addEventListener('load', () => {
-    // 1. --- Gestion du fond d'écran (Stabilité par Session) ---
-    const STORAGE_KEY_BG = 'hfg_bg_session';
-    let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
-
-    if (!currentBg) {
-        // Choix aléatoire si aucune image stockée
-        const randomIndex = Math.floor(Math.random() * bgImages.length);
-        currentBg = bgImages[randomIndex];
-        
-        // Stockage de l'image choisie pour la session
-        sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
-    }
-    
-    // Application du fond d'écran directement au BODY (méthode CSS la plus fiable)
-    if (currentBg) {
-        document.body.style.backgroundImage = `url(${currentBg})`;
-        document.body.style.backgroundSize = 'cover';
-        document.body.style.backgroundPosition = 'center center';
-        document.body.style.backgroundAttachment = 'fixed'; 
-    } else {
-        // Fallback en cas d'erreur
-        document.body.style.backgroundColor = '#111';
-    }
-    
-    // 2. --- Restauration du Thème (CORRECTION) ---
-    // Récupération de la préférence stockée (stockage local)
-    const savedTheme = localStorage.getItem('hfg_theme'); 
-    
-    // Application de la classe 'dark-mode' au body si la préférence est 'dark'
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-    }
-    
-    // Mise à jour de l'icône du bouton si le bouton existe (élément DOM)
-    const themeBtnElement = document.getElementById('themeBtn');
-    if (themeBtnElement && savedTheme === 'dark') {
-        themeBtnElement.classList.add('active'); 
-    }
-
-    // 3. --- Restauration de la Langue ---
-    generateLangMenu();
-    // La langue active est déjà définie globalement via localStorage au début du script
-    setLanguage(activeLang); 
-
-    // 4. --- Fonctions spécifiques (si elles existent sur la page) ---
-    // Vérification de l'existence de la fonction scrollTitle avant de l'appeler (pour index.html)
-    if (typeof scrollTitle !== 'undefined') {
-        scrollTitle();
-    }
 });
+ 
 
 /* --- MENU PRINCIPAL --- */
 function toggleMainMenu(forceClose = false) {
