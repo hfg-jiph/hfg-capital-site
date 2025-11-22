@@ -608,10 +608,11 @@
   </main>
 
   <footer>
-    <div class="footer-copyright">
+    <div class="footer-copyright" id="footerText">
       © 2025 HFG CAPITAL | Private Investment Office
     </div>
   </footer>
+
 
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
@@ -636,16 +637,16 @@
 <script>
 /* --- LANGUES --- */
 const languages = {
-  fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible.<br>Veuillez contacter votre Family Officer." },
-  en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", title: "Private Access", btnOpen: "Access", placeholders: ["ID Code", "Password"], btnSubmit: "Enter", error: "Identification failed.<br>Please contact your Family Officer." },
-  cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", title: "私人专区", btnOpen: "进入", placeholders: ["识别码", "密码"], btnSubmit: "进入", error: "验证失败。<br>请联系您的家族办公室负责人。" },
-  es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", title: "Acceso Privado", btnOpen: "Acceso", placeholders: ["Identificación", "Contraseña"], btnSubmit: "Entrar", error: "Identificación fallida.<br>Contacte a su Family Officer." },
-  de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", title: "Privater Zugang", btnOpen: "Zugang", placeholders: ["Kennung", "Passwort"], btnSubmit: "Eintreten", error: "Identifizierung fehlgeschlagen.<br>Bitte kontaktieren Sie Ihren Family Officer." },
-  it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", title: "Accesso Riservato", btnOpen: "Accesso", placeholders: ["Identificativo", "Password"], btnSubmit: "Entra", error: "Identificazione fallita.<br>Contattare il Family Officer." },
-  ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", title: "Частный доступ", btnOpen: "Вход", placeholders: ["Идентификатор", "Пароль"], btnSubmit: "Войти", error: "Ошибка идентификации.<br>Свяжитесь с вашим менеджером." },
-  jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", title: "プライベートアクセス", btnOpen: "アクセス", placeholders: ["IDコード", "パスワード"], btnSubmit: "入る", error: "認証に失敗しました。<br>担当者にご連絡ください。" },
-  vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", title: "Truy cập riêng", btnOpen: "Truy cập", placeholders: ["Mã ID", "Mật khẩu"], btnSubmit: "Vào", error: "Xác thực thất bại.<br>Vui lòng liên hệ quản lý." },
-  id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", title: "Akses Pribadi", btnOpen: "Akses", placeholders: ["ID Pengguna", "Kata Sandi"], btnSubmit: "Masuk", error: "Identifikasi gagal.<br>Silakan hubungi Family Officer Anda." }
+  fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible.<br>Veuillez contacter votre Family Officer.", footer: "© 2025 HFG CAPITAL | Bureau d'Investissement Privé" },
+  en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", title: "Private Access", btnOpen: "Access", placeholders: ["ID Code", "Password"], btnSubmit: "Enter", error: "Identification failed.<br>Please contact your Family Officer.", footer: "© 2025 HFG CAPITAL | Private Investment Office" },
+  cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", title: "私人专区", btnOpen: "进入", placeholders: ["识别码", "密码"], btnSubmit: "进入", error: "验证失败。<br>请联系您的家族办公室负责人。", footer: "© 2025 HFG CAPITAL | 私人投資辦公室" },
+  es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", title: "Acceso Privado", btnOpen: "Acceso", placeholders: ["Identificación", "Contraseña"], btnSubmit: "Entrar", error: "Identificación fallida.<br>Contacte a su Family Officer.", footer: "© 2025 HFG CAPITAL | Oficina de Inversiones Privadas" },
+  de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", title: "Privater Zugang", btnOpen: "Zugang", placeholders: ["Kennung", "Passwort"], btnSubmit: "Eintreten", error: "Identifizierung fehlgeschlagen.<br>Bitte kontaktieren Sie Ihren Family Officer.", footer: "© 2025 HFG CAPITAL | Privates Anlagebüro" },
+  it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", title: "Accesso Riservato", btnOpen: "Accesso", placeholders: ["Identificativo", "Password"], btnSubmit: "Entra", error: "Identificazione fallita.<br>Contattare il Family Officer.", footer: "© 2025 HFG CAPITAL | Ufficio di Investimento Privato" },
+  ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", title: "Частный доступ", btnOpen: "Вход", placeholders: ["Идентификатор", "Пароль"], btnSubmit: "Войти", error: "Ошибка идентификации.<br>Свяжитесь с вашим менеджером.", footer: "© 2025 HFG CAPITAL | Частный Инвестиционный Офис" },
+  jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", title: "プライベートアクセス", btnOpen: "アクセス", placeholders: ["IDコード", "パスワード"], btnSubmit: "入る", error: "認証に失敗しました。<br>担当者にご連絡ください。", footer: "© 2025 HFG CAPITAL | プライベート投資オフィス" },
+  vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", title: "Truy cập riêng", btnOpen: "Truy cập", placeholders: ["Mã ID", "Mật khẩu"], btnSubmit: "Vào", error: "Xác thực thất bại.<br>Vui lòng liên hệ quản lý.", footer: "© 2025 HFG CAPITAL | Văn phòng đầu tư tư nhân" },
+  id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", title: "Akses Pribadi", btnOpen: "Akses", placeholders: ["ID Pengguna", "Kata Sandi"], btnSubmit: "Masuk", error: "Identifikasi gagal.<br>Silakan hubungi Family Officer Anda.", footer: "© 2025 HFG CAPITAL | Kantor Investasi Pribadi" }
 };
 
 const menuTranslations = {
@@ -859,6 +860,10 @@ function setLanguage(lang) {
   errorMsg.innerHTML = data.error;
   langMenu.classList.remove('show');
   updateMenuLanguage(lang);
+  const footer = document.getElementById('footerText');
+  if (footer && data.footer) {
+    footer.innerText = data.footer;
+  }
 }
 
 document.addEventListener('click', (e) => {
