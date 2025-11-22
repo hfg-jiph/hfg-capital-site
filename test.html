@@ -55,9 +55,6 @@
       will-change: transform;
     }
 
-    body.dark-mode .bg-image {
-      filter: grayscale(100%) brightness(0.25);
-    }
 
     @keyframes zoomIn {
       from { transform: scale(1); }
@@ -137,6 +134,11 @@
       transform: rotate(-45deg);
     }
 
+    /* Mode sombre : l'image devient gris sombre */
+    body.dark-mode .bg-image {
+      filter: grayscale(100%) brightness(0.25);
+    }
+    
     /* Bouton mode sombre – même base que menu-btn */
     /* Bouton toggle thème, même gabarit que les autres (34px) */
     .theme-btn {
