@@ -525,7 +525,6 @@
   <div class="main-menu-overlay" id="mainMenuOverlay">
     <nav class="main-menu">
       <ul>
-        <li><a id="menuHome" href="index.html">Accueil</a></li>
         <li><a id="menuAbout" href="about.html">Qui sommes-nous</a></li>
         <li><a id="menuPhilosophy" href="philosophie.html">Philosophie</a></li>
         <li><a id="menuManifesto" href="manifesto.html">Manifesto</a></li>
@@ -546,7 +545,7 @@
       </div>
 
       <a href="index.html" class="home-icon">
-        <img src="img/chateau.png" alt="HFG Home" class="home-icon-img">
+        <img src="img/ico/chateau.png" alt="HFG Home" class="home-icon-img">
       </a>
       
       <div class="lang-container" id="langContainer">
@@ -612,70 +611,60 @@ const languages = {
 
 const menuTranslations = {
   fr: {
-    home: "Accueil",
     about: "Qui sommes-nous",
     philosophy: "Philosophie",
     manifesto: "Manifesto",
     contacts: "Contacts"
   },
   en: {
-    home: "Home",
     about: "About Us",
     philosophy: "Philosophy",
     manifesto: "Manifesto",
     contacts: "Contact"
   },
   cn: {
-    home: "首页",
     about: "关于我们",
     philosophy: "投资理念",
     manifesto: "愿景宣言",
     contacts: "联系"
   },
   es: {
-    home: "Inicio",
     about: "Quiénes somos",
     philosophy: "Filosofía",
     manifesto: "Manifiesto",
     contacts: "Contacto"
   },
   de: {
-    home: "Startseite",
     about: "Über uns",
     philosophy: "Philosophie",
     manifesto: "Manifest",
     contacts: "Kontakt"
   },
   it: {
-    home: "Home",
     about: "Chi siamo",
     philosophy: "Filosofia",
     manifesto: "Manifesto",
     contacts: "Contatti"
   },
   ru: {
-    home: "Главная",
     about: "О нас",
     philosophy: "Философия",
     manifesto: "Манифест",
     contacts: "Контакты"
   },
   jp: {
-    home: "ホーム",
     about: "会社概要",
     philosophy: "投資哲学",
     manifesto: "マニフェスト",
     contacts: "お問い合わせ"
   },
   vn: {
-    home: "Trang chủ",
     about: "Giới thiệu",
     philosophy: "Triết lý",
     manifesto: "Tuyên ngôn",
     contacts: "Liên hệ"
   },
   id: {
-    home: "Beranda",
     about: "Tentang Kami",
     philosophy: "Filosofi",
     manifesto: "Manifesto",
@@ -686,7 +675,6 @@ const menuTranslations = {
   function updateMenuLanguage(lang) {
   const t = menuTranslations[lang];
 
-  document.getElementById("menuHome").innerText = t.home;
   document.getElementById("menuAbout").innerText = t.about;
   document.getElementById("menuPhilosophy").innerText = t.philosophy;
   document.getElementById("menuManifesto").innerText = t.manifesto;
