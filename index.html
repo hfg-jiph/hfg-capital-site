@@ -698,7 +698,7 @@ const bgImages = [
 /* --- DOM --- */
 const modal = document.getElementById('modalOverlay');
 const langMenu = document.getElementById('langMenu');
-const bgElement = document.getElementById('bgImage');
+//const bgElement = document.getElementById('bgImage');
 const form = document.getElementById('loginForm');
 const errorMsg = document.getElementById('errorMsg');
 const btnSubmit = document.getElementById('submitBtn');
@@ -780,20 +780,20 @@ function guessLangFromBrowser() {
   scrollTitle();
 });*/
 window.addEventListener('load', () => {
-    // 1. Gestion du fond d'écran (Stabilité par Session)
+    // 1. --- Gestion du fond d'écran (Stabilité par Session) ---
     const STORAGE_KEY_BG = 'hfg_bg_session';
     let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
 
     if (!currentBg) {
-        // Si aucune image n'est stockée pour cette session, on en choisit une aléatoirement
+        // Choix aléatoire si aucune image stockée
         const randomIndex = Math.floor(Math.random() * bgImages.length);
         currentBg = bgImages[randomIndex];
         
-        // Stockage de l'image choisie dans le sessionStorage
+        // Stockage de l'image choisie pour la session
         sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
     }
     
-    // Application du fond d'écran directement au BODY (plus fiable)
+    // Application du fond d'écran directement au BODY (méthode CSS la plus fiable)
     if (currentBg) {
         document.body.style.backgroundImage = `url(${currentBg})`;
         document.body.style.backgroundSize = 'cover';
@@ -804,23 +804,31 @@ window.addEventListener('load', () => {
         document.body.style.backgroundColor = '#111';
     }
     
-    // --- 2. Restauration du Thème ---
-    const savedTheme = localStorage.getItem('hfg_theme');
+    // 2. --- Restauration du Thème (CORRECTION) ---
+    // Récupération de la préférence stockée (stockage local)
+    const savedTheme = localStorage.getItem('hfg_theme'); 
+    
+    // Application de la classe 'dark-mode' au body si la préférence est 'dark'
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
-        // On vérifie si themeBtn existe avant d'essayer de lui ajouter une classe
-        if (themeBtn) themeBtn.classList.add('active'); 
+    }
+    
+    // Mise à jour de l'icône du bouton si le bouton existe (élément DOM)
+    const themeBtnElement = document.getElementById('themeBtn');
+    if (themeBtnElement && savedTheme === 'dark') {
+        themeBtnElement.classList.add('active'); 
     }
 
+    // 3. --- Restauration de la Langue ---
     generateLangMenu();
+    // La langue active est déjà définie globalement via localStorage au début du script
+    setLanguage(activeLang); 
 
-    // --- 3. Restauration de la Langue ---
-    const savedLang = localStorage.getItem('hfg_lang');
-    const initialLang = savedLang || guessLangFromBrowser();
-    
-    setLanguage(initialLang);
-
-    scrollTitle();
+    // 4. --- Fonctions spécifiques (si elles existent sur la page) ---
+    // Vérification de l'existence de la fonction scrollTitle avant de l'appeler (pour index.html)
+    if (typeof scrollTitle !== 'undefined') {
+        scrollTitle();
+    }
 });
 
   
