@@ -740,7 +740,24 @@ function guessLangFromBrowser() {
   return 'en'; // fallback propre
 }
 
-window.addEventListener('load', () => {
+function initBackground() {
+  const STORAGE_KEY_BG = 'hfg_bg_session';
+  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+
+  if (!currentBg) {
+    const randomIndex = Math.floor(Math.random() * bgImages.length);
+    currentBg = bgImages[randomIndex];
+    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+  }
+
+  bgElement.onerror = function () {
+    this.style.display = 'none';
+    document.body.style.backgroundColor = '#111';
+  };
+  bgElement.src = currentBg;
+}
+  
+/*window.addEventListener('load', () => {
   // --- 1. Gestion du fond d'écran (Inchangé) ---
   //const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
   //bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
@@ -778,8 +795,24 @@ window.addEventListener('load', () => {
 
   setLanguage(initialLang);
   scrollTitle();
+});*/
+ document.addEventListener('DOMContentLoaded', () => {
+  initBackground();
+
+  // le reste de ton init :
+  const savedTheme = localStorage.getItem('hfg_theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    if (themeBtn) themeBtn.classList.add('active');
+  }
+
+  generateLangMenu();
+
+  const savedLang = localStorage.getItem('hfg_lang');
+  const initialLang = savedLang || guessLangFromBrowser();
+  setLanguage(initialLang);
+  scrollTitle();
 });
- 
 
 /* --- MENU PRINCIPAL --- */
 function toggleMainMenu(forceClose = false) {
