@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>HFG CAPITAL | Philosophie</title>
+  <meta name="description" content="HFG CAPITAL - Private Investment Office" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="shortcut icon" href="favicon/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- VARIABLES --- */
+    :root {
+      --primary-dark: #1a1a1a;
+      --gold-accent: #D4AF37;
+      --font-motto: 'Cinzel', serif; 
+      --font-sans: 'Montserrat', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      background-color: #000;
+      position: relative; 
+      color: white;
+    }
+
+    /* --- BACKGROUND --- */
+    .bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+    .bg-image {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: opacity 1s ease;
+      animation: zoomIn 40s infinite alternate linear;
+    }
+    @keyframes zoomIn { from { transform: scale(1); } to { transform: scale(1.15); } }
+    body.dark-mode .bg-image { filter: grayscale(100%) brightness(0.25); }
+
+    /* --- HEADER --- */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 40px; z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+
+    /* --- UI ELEMENTS --- */
+    .menu-btn, .theme-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.1);
+      cursor: pointer; transition: all 0.3s;
+    }
+    .menu-btn:hover, .theme-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--gold-accent); }
+    
+    .menu-btn-lines { width: 15px; height: 11px; position: relative; }
+    .menu-btn-lines span { position: absolute; left: 0; right: 0; height: 1px; background: #fff; transition: 0.25s; }
+    .menu-btn-lines span:nth-child(1) { top: 0; }
+    .menu-btn-lines span:nth-child(2) { top: 5px; }
+    .menu-btn-lines span:nth-child(3) { bottom: 0; }
+    .menu-btn.open .menu-btn-lines span:nth-child(1) { top: 5px; transform: rotate(45deg); }
+    .menu-btn.open .menu-btn-lines span:nth-child(2) { opacity: 0; }
+    .menu-btn.open .menu-btn-lines span:nth-child(3) { bottom: 5px; transform: rotate(-45deg); }
+
+    .theme-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.9); transition: 0.3s; }
+    .theme-btn.active .theme-dot { background: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.95); }
+
+    /* --- LANGUES --- */
+    .lang-container { position: relative; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
+      padding: 0px 12px; height: 34px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; font-size: 0.75rem;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--gold-accent); }
+    .lang-btn img { width: 20px; height: 13px; object-fit: cover; border-radius: 3px; }
+    .lang-menu {
+      position: absolute; top: 45px; left: 0;
+      background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px; padding: 5px 0; display: none; flex-direction: column; 
+      width: max-content; min-width: 150px; max-height: 60vh; overflow-y: auto;
+    }
+    .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
+    .lang-option { padding: 10px 20px; color: #ccc; cursor: pointer; font-size: 0.75rem; display: flex; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); align-items: center; }
+    .lang-option:hover { background: rgba(212, 175, 55, 0.15); color: white; }
+    .lang-option img { width: 20px; height: 13px; border-radius: 2px; }
+
+    .login-trigger {
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); color: white;
+      border: 1px solid rgba(255,255,255,0.2); height: 34px; padding: 0px 24px;
+      display: flex; align-items: center; border-radius: 20px;
+      font-family: var(--font-sans); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 2px;
+      cursor: pointer; transition: all 0.4s ease;
+    }
+    .login-trigger:hover { background: var(--gold-accent); color: var(--primary-dark); }
+
+    /* --- MENU NAVIGATION --- */
+    .main-menu-overlay {
+      position: fixed; inset: 0; background: transparent; display: none;
+      align-items: stretch; justify-content: flex-start; z-index: 900;
+    }
+    .main-menu-overlay.open { display: flex; }
+    .main-menu {
+      width: 320px; max-width: calc(100% - 80px); margin-top: 70px;
+      background: transparent; padding: 24px; text-align: left;
+      transform: translateX(-100%); transition: transform 0.25s ease;
+    }
+    .main-menu-overlay.open .main-menu { transform: translateX(0); }
+    .main-menu ul { list-style: none; }
+    .main-menu a {
+      font-family: var(--font-sans); font-size: 0.675rem; text-transform: uppercase;
+      letter-spacing: 0.22em; color: rgba(255,255,255,0.85); text-decoration: none;
+      padding: 10px 0; display: block; transition: color 0.2s ease;
+    }
+    .main-menu a:hover { color: var(--gold-accent); }
+
+    /* --- CONTENU PRINCIPAL (Spécifique Philosophie) --- */
+    .content-wrapper {
+      position: relative; z-index: 5;
+      padding-top: 120px;
+      padding-bottom: 60px;
+      width: 100%; max-width: 1100px; margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center;
+      opacity: 0; animation: fadeInUp 1.5s ease-out forwards;
+    }
+
+    .text-container {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 60px;
+      margin: 0 20px;
+      border-radius: 4px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+      width: 100%;
+    }
+
+    h1 {
+      font-family: var(--font-motto);
+      font-size: 1.8rem; font-weight: 400; text-transform: uppercase;
+      letter-spacing: 3px; margin-bottom: 10px; color: var(--gold-accent);
+      text-align: center; line-height: 1.3;
+    }
+
+    h2 {
+      font-family: var(--font-sans);
+      font-size: 0.9rem; font-weight: 300; text-transform: uppercase;
+      letter-spacing: 2px; margin-bottom: 40px; color: #fff;
+      text-align: center; opacity: 0.8;
+    }
+
+    .intro-text {
+      font-size: 0.95rem; line-height: 1.8; text-align: center;
+      margin-bottom: 50px; color: #e0e0e0; max-width: 800px; margin-left: auto; margin-right: auto;
+      border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px;
+    }
+
+    /* GRID LAYOUT POUR LES PRINCIPES */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+
+    .principle-card {
+      text-align: left;
+      padding: 20px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .principle-card:hover { background: rgba(255,255,255,0.05); }
+
+    .principle-card h3 {
+      font-family: var(--font-motto);
+      font-size: 1.1rem; color: #fff; margin-bottom: 15px;
+      letter-spacing: 1px; border-left: 3px solid var(--gold-accent);
+      padding-left: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .principle-card p { font-size: 0.85rem; line-height: 1.7; color: #ccc; margin-bottom: 10px; }
+
+    /* LISTES STYLISÉES */
+    .styled-list { list-style: none; margin-top: 10px; }
+    .styled-list li {
+      font-size: 0.85rem; color: #ccc; line-height: 1.6;
+      padding-left: 20px; position: relative; margin-bottom: 6px;
+    }
+    .styled-list li::before {
+      content: ''; position: absolute; left: 0; top: 8px;
+      width: 6px; height: 6px; background: var(--gold-accent);
+      transform: rotate(45deg);
+    }
+    .styled-list strong { color: #fff; font-weight: 500; }
+
+    /* --- FOOTER --- */
+    footer {
+      padding: 30px 0; text-align: center;
+      font-size: 0.6rem; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: 1.5px;
+    }
+
+    /* --- MODAL --- */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px);
+      z-index: 1000; display: none; justify-content: center; align-items: center;
+      opacity: 0; transition: opacity 0.4s ease; padding: 20px;
+    }
+    .modal-overlay.active { display: flex; opacity: 1; }
+    .modal-box {
+      background: #fff; width: 100%; max-width: 420px; padding: 50px 40px;
+      text-align: center; transform: translateY(20px); transition: transform 0.4s ease;
+    }
+    .modal-overlay.active .modal-box { transform: translateY(0); }
+    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 32px; cursor: pointer; color: #bbb; }
+    .close-modal:hover { color: var(--primary-dark); }
+    .modal-title { font-family: var(--font-motto); font-size: 1.6rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; }
+    .input-group { margin-bottom: 20px; text-align: left; }
+    .input-group input { width: 100%; padding: 15px; border: 1px solid #e0e0e0; background: #fafafa; outline: none; font-family: var(--font-sans); }
+    .input-group input:focus { border-color: var(--gold-accent); background: #fff; }
+    .btn-submit { width: 100%; padding: 15px; background: var(--primary-dark); color: white; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 10px; }
+    
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 600px) {
+      header { padding: 15px 20px; }
+      .text-container { padding: 30px 20px; margin: 0 15px; }
+      h1 { font-size: 1.4rem; }
+      h2 { font-size: 0.75rem; margin-bottom: 30px; }
+      .intro-text { font-size: 0.85rem; text-align: left; }
+      .principles-grid { grid-template-columns: 1fr; gap: 30px; }
+      .principle-card h3 { white-space: nowrap; font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-container">
+    <img src="" id="bgImage" class="bg-image" alt="Background">
+  </div>
+
+  <div class="main-menu-overlay" id="mainMenuOverlay">
+    <nav class="main-menu">
+      <ul>
+        <li><a id="menuHome" href="index.html">Accueil</a></li>
+        <li><a id="menuAbout" href="about.html">Qui sommes-nous</a></li>
+        <li><a id="menuManifesto" href="manifesto.html">Manifesto</a></li>
+        <li><a id="menuContacts" href="contacts.html">Contacts</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <header>
+    <div class="header-left">
+      <div class="menu-container">
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">
+          <div class="menu-btn-lines"><span></span><span></span><span></span></div>
+        </button>
+      </div>
+
+      <button class="theme-btn" id="themeBtn" aria-label="Thème">
+        <span class="theme-dot"></span>
+      </button>
+      
+      <div class="lang-container">
+        <div class="lang-btn" onclick="toggleLangMenu()">
+          <img id="currentFlag" src="https://flagcdn.com/fr.svg" alt="FR">
+          <span id="currentLangLabel">FR</span>
+          <small>▼</small>
+        </div>
+        <div class="lang-menu" id="langMenu"></div>
+      </div>
+    </div>
+
+    <button class="login-trigger" id="openLoginBtn" onclick="openModal()">Accès</button>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="text-container">
+      <h1 id="pageTitle">Philosophie d’investissement</h1>
+      <h2 id="pageSubtitle">Un cadre discipliné et une vision long terme</h2>
+      
+      <div class="intro-text" id="pageIntro">
+        </div>
+
+      <div class="principles-grid">
+        
+        <div class="principle-card">
+          <h3 id="p1Title">Vision long terme</h3>
+          <p id="p1Text"></p>
+        </div>
+
+        <div class="principle-card">
+          <h3 id="p2Title">Discipline & Méthode</h3>
+          <p id="p2Text"></p>
+          <ul class="styled-list" id="p2List">
+            </ul>
+        </div>
+
+        <div class="principle-card" style="grid-row: span 2;">
+          <h3 id="p3Title">Diversification intelligente</h3>
+          <p id="p3Text"></p>
+          <ul class="styled-list" id="p3List">
+             </ul>
+        </div>
+
+        <div class="principle-card">
+          <h3 id="p4Title">Gestion du risque</h3>
+          <p id="p4Text"></p>
+        </div>
+
+        <div class="principle-card">
+          <h3 id="p5Title">Indépendance absolue</h3>
+          <p id="p5Text"></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-copyright" id="footerText">© 2025 HFG CAPITAL | Private Investment Office</div>
+  </footer>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h3 class="modal-title" id="modalTitle">Espace Privé</h3>
+      <form id="loginForm">
+        <div class="input-group"><input type="text" id="userId" placeholder="Identifiant" required></div>
+        <div class="input-group"><input type="password" id="password" placeholder="Mot de passe" required></div>
+        <button type="submit" class="btn-submit" id="submitBtn"><span id="btnText">Entrer</span></button>
+      </form>
+    </div>
+  </div>
+
+<script>
+/* --- LOGIQUE PERSISTANCE --- */
+const savedLang = localStorage.getItem('hfg_lang') || 'fr';
+const savedTheme = localStorage.getItem('hfg_theme');
+let activeLang = savedLang;
+
+/* --- TEXTE PHILOSOPHIE (10 LANGUES) --- */
+const contentTranslations = {
+  fr: {
+    title: "Philosophie d’investissement",
+    subtitle: "Un cadre discipliné et une vision long terme",
+    intro: "Notre philosophie est guidée par une conviction centrale : le temps long récompense ceux qui construisent méthodiquement.<br>Nous opérons avec patience, rigueur et indépendance, en prenant en compte les cycles économiques et les équilibres structurels.<br>La performance n’est jamais recherchée au détriment du risque ou de la stabilité patrimoniale.",
+    p1Title: "Vision long terme",
+    p1Text: "Nous investissons loin des effets de mode et de la spéculation. Notre horizon se mesure en décennies, jamais en trimestres.",
+    p2Title: "Discipline & Méthode",
+    p2Text: "Chaque décision est fondée sur des données robustes. La discipline prévaut toujours sur l’intuition.",
+    p2List: ["Analyse fondamentale profonde", "Données robustes", "Processus d’allocation clair", "Évaluation précise des risques"],
+    p3Title: "Diversification intelligente",
+    p3Text: "Nous intervenons sur trois grands univers d’investissement. Chaque exposition doit apporter une valeur spécifique (rendement, stabilité, convexité).",
+    p3List: [
+      "<strong>Listed Markets :</strong> Actions, obligations, fonds datés et stratégies liquides.",
+      "<strong>Private Markets :</strong> Private equity, venture capital, secondaire, private debt.",
+      "<strong>Alternative Markets :</strong> Immobilier, SCPI, crypto-actifs sélectionnés, actifs non corrélés."
+    ],
+    p4Title: "Gestion du risque",
+    p4Text: "Le risque est une ressource, pas une menace. Nous le répartissons avec précision pour équilibrer performance, volatilité, liquidité et résilience. L’objectif : un patrimoine qui traverse les cycles.",
+    p5Title: "Indépendance absolue",
+    p5Text: "HFG CAPITAL ne distribue aucun produit maison et ne dépend d’aucun réseau. La seule boussole est l’intérêt du patrimoine familial."
+  },
+  en: {
+    title: "Investment Philosophy",
+    subtitle: "A disciplined framework and long-term vision",
+    intro: "Our philosophy is guided by a central conviction: time rewards those who build methodically.<br>We operate with patience, rigor, and independence, taking into account economic cycles and structural balances.<br>Performance is never sought at the expense of risk or asset stability.",
+    p1Title: "Long Term Vision",
+    p1Text: "We invest far from trends and speculation. Our horizon is measured in decades, never in quarters.",
+    p2Title: "Discipline & Method",
+    p2Text: "Every decision is based on robust data. Discipline always prevails over intuition.",
+    p2List: ["Deep fundamental analysis", "Robust data", "Clear allocation process", "Precise risk assessment"],
+    p3Title: "Intelligent Diversification",
+    p3Text: "We operate across three major investment universes. Each exposure must bring specific value (yield, stability, convexity).",
+    p3List: [
+      "<strong>Listed Markets:</strong> Equities, bonds, dated funds, and liquid strategies.",
+      "<strong>Private Markets:</strong> Private equity, venture capital, secondaries, private debt.",
+      "<strong>Alternative Markets:</strong> Real estate, REITs, selected crypto-assets, non-correlated assets."
+    ],
+    p4Title: "Risk Management",
+    p4Text: "Risk is a resource, not a threat. We distribute it precisely to balance performance, volatility, liquidity, and resilience. The goal: wealth that withstands cycles.",
+    p5Title: "Absolute Independence",
+    p5Text: "HFG CAPITAL distributes no in-house products and depends on no network. The only compass is the interest of the family wealth."
+  },
+  cn: {
+    title: "投资哲学",
+    subtitle: "严谨的框架与长远的眼光",
+    intro: "我们的理念源于一个核心信念：时间回报那些有条不紊的建设者。<br>我们在考虑经济周期和结构平衡的同时，以耐心、严谨和独立的态度运作。<br>我们绝不在牺牲风险控制或资产稳定性的前提下追求绩效。",
+    p1Title: "长期愿景",
+    p1Text: "我们的投资远离时尚和投机。我们的视野以数十年为单位，绝非以季度为单位。",
+    p2Title: "纪律与方法",
+    p2Text: "每一个决定都基于可靠的数据。纪律永远胜过直觉。",
+    p2List: ["深度的基本面分析", "可靠的数据", "清晰的配置流程", "精确的风险评估"],
+    p3Title: "智能多元化",
+    p3Text: "我们涉足三大投资领域。每一项风险敞口都必须带来特定价值（收益、稳定性、凸性）。",
+    p3List: [
+      "<strong>Listed Markets（公开市场）:</strong> 股票、债券、定期基金和流动性策略。",
+      "<strong>Private Markets（私募市场）:</strong> 私募股权、风险投资、二级市场、私募债权。",
+      "<strong>Alternative Markets（另类市场）:</strong> 房地产、REITs、精选加密资产、非相关资产。"
+    ],
+    p4Title: "风险管理",
+    p4Text: "风险是一种资源，而非威胁。我们精确分配风险，以平衡绩效、波动性、流动性和韧性。目标是：能够穿越周期的财富。",
+    p5Title: "绝对独立",
+    p5Text: "HFG CAPITAL 不分销任何自家产品，也不依赖任何网络。唯一的指南针是家族财富的利益。"
+  },
+  es: {
+    title: "Filosofía de Inversión",
+    subtitle: "Un marco disciplinado y una visión a largo plazo",
+    intro: "Nuestra filosofía se guía por una convicción central: el tiempo recompensa a quienes construyen metódicamente.<br>Operamos con paciencia, rigor e independencia, teniendo en cuenta los ciclos económicos y los equilibrios estructurales.<br>El rendimiento nunca se busca a expensas del riesgo o la estabilidad patrimonial.",
+    p1Title: "Visión a largo plazo",
+    p1Text: "Invertimos lejos de las modas y la especulación. Nuestro horizonte se mide en décadas, nunca en trimestres.",
+    p2Title: "Disciplina y Método",
+    p2Text: "Cada decisión se basa en datos sólidos. La disciplina siempre prevalece sobre la intuición.",
+    p2List: ["Análisis fundamental profundo", "Datos sólidos", "Proceso de asignación claro", "Evaluación precisa de riesgos"],
+    p3Title: "Diversificación inteligente",
+    p3Text: "Operamos en tres grandes universos de inversión. Cada exposición debe aportar un valor específico (rendimiento, estabilidad, convexidad).",
+    p3List: [
+      "<strong>Listed Markets:</strong> Acciones, bonos, fondos fechados y estrategias líquidas.",
+      "<strong>Private Markets:</strong> Private equity, venture capital, secundarios, deuda privada.",
+      "<strong>Alternative Markets:</strong> Inmobiliario, SOCIMI, criptoactivos seleccionados, activos no correlacionados."
+    ],
+    p4Title: "Gestión de riesgos",
+    p4Text: "El riesgo es un recurso, no una amenaza. Lo distribuimos con precisión para equilibrar rendimiento, volatilidad, liquidez y resiliencia. El objetivo: un patrimonio que atraviese los ciclos.",
+    p5Title: "Independencia absoluta",
+    p5Text: "HFG CAPITAL no distribuye productos propios ni depende de ninguna red. La única brújula es el interés del patrimonio familiar."
+  },
+  de: {
+    title: "Anlagephilosophie",
+    subtitle: "Ein disziplinierter Rahmen und eine langfristige Vision",
+    intro: "Unsere Philosophie wird von einer zentralen Überzeugung geleitet: Zeit belohnt diejenigen, die methodisch aufbauen.<br>Wir handeln mit Geduld, Strenge und Unabhängigkeit und berücksichtigen dabei Wirtschaftszyklen und strukturelle Gleichgewichte.<br>Leistung wird niemals auf Kosten des Risikos oder der Vermögensstabilität angestrebt.",
+    p1Title: "Langfristige Vision",
+    p1Text: "Wir investieren fernab von Moden und Spekulationen. Unser Horizont wird in Jahrzehnten gemessen, niemals in Quartalen.",
+    p2Title: "Disziplin & Methode",
+    p2Text: "Jede Entscheidung basiert auf robusten Daten. Disziplin siegt immer über Intuition.",
+    p2List: ["Tiefe Fundamentalanalyse", "Robuste Daten", "Klarer Allokationsprozess", "Präzise Risikobewertung"],
+    p3Title: "Intelligente Diversifikation",
+    p3Text: "Wir sind in drei großen Anlageuniversen tätig. Jedes Engagement muss einen spezifischen Wert (Ertrag, Stabilität, Konvexität) bringen.",
+    p3List: [
+      "<strong>Listed Markets:</strong> Aktien, Anleihen, Laufzeitfonds und liquide Strategien.",
+      "<strong>Private Markets:</strong> Private Equity, Venture Capital, Sekundärmarkt, Private Debt.",
+      "<strong>Alternative Markets:</strong> Immobilien, REITs, ausgewählte Krypto-Assets, nicht korrelierte Vermögenswerte."
+    ],
+    p4Title: "Risikomanagement",
+    p4Text: "Risiko ist eine Ressource, keine Bedrohung. Wir verteilen es präzise, um Leistung, Volatilität, Liquidität und Widerstandsfähigkeit in Einklang zu bringen. Das Ziel: ein Vermögen, das Zyklen überdauert.",
+    p5Title: "Absolute Unabhängigkeit",
+    p5Text: "HFG CAPITAL vertreibt keine eigenen Produkte und ist von keinem Netzwerk abhängig. Der einzige Kompass ist das Interesse des Familienvermögens."
+  },
+  it: {
+    title: "Filosofia di Investimento",
+    subtitle: "Un quadro disciplinato e una visione a lungo termine",
+    intro: "La nostra filosofia è guidata da una convinzione centrale: il tempo premia chi costruisce metodicamente.<br>Operiamo con pazienza, rigore e indipendenza, tenendo conto dei cicli economici e degli equilibri strutturali.<br>La performance non è mai ricercata a scapito del rischio o della stabilità patrimoniale.",
+    p1Title: "Visione a lungo termine",
+    p1Text: "Investiamo lontano dalle mode e dalla speculazione. Il nostro orizzonte si misura in decenni, mai in trimestri.",
+    p2Title: "Disciplina & Metodo",
+    p2Text: "Ogni decisione si basa su dati solidi. La disciplina prevale sempre sull'intuizione.",
+    p2List: ["Analisi fondamentale profonda", "Dati robusti", "Processo di allocazione chiaro", "Valutazione precisa dei rischi"],
+    p3Title: "Diversificazione intelligente",
+    p3Text: "Operiamo su tre grandi universi di investimento. Ogni esposizione deve apportare un valore specifico (rendimento, stabilità, convessità).",
+    p3List: [
+      "<strong>Listed Markets:</strong> Azioni, obbligazioni, fondi a scadenza e strategie liquide.",
+      "<strong>Private Markets:</strong> Private equity, venture capital, secondario, private debt.",
+      "<strong>Alternative Markets:</strong> Immobiliare, fondi RE, cripto-asset selezionati, asset non correlati."
+    ],
+    p4Title: "Gestione del rischio",
+    p4Text: "Il rischio è una risorsa, non una minaccia. Lo distribuiamo con precisione per bilanciare performance, volatilità, liquidità e resilienza. L'obiettivo: un patrimonio che attraversi i cicli.",
+    p5Title: "Indipendenza assoluta",
+    p5Text: "HFG CAPITAL non distribuisce prodotti propri e non dipende da alcuna rete. L'unica bussola è l'interesse del patrimonio familiare."
+  },
+  ru: {
+    title: "Инвестиционная философия",
+    subtitle: "Дисциплинированная структура и долгосрочное видение",
+    intro: "Наша философия основана на главном убеждении: время вознаграждает тех, кто строит методично.<br>Мы действуем с терпением, строгостью и независимостью, учитывая экономические циклы и структурные балансы.<br>Результативность никогда не достигается в ущерб рискам или стабильности капитала.",
+    p1Title: "Долгосрочное видение",
+    p1Text: "Мы инвестируем вдали от моды и спекуляций. Наш горизонт измеряется десятилетиями, а не кварталами.",
+    p2Title: "Дисциплина и Метод",
+    p2Text: "Каждое решение основано на надежных данных. Дисциплина всегда преобладает над интуицией.",
+    p2List: ["Глубокий фундаментальный анализ", "Надежные данные", "Четкий процесс распределения", "Точная оценка рисков"],
+    p3Title: "Умная диверсификация",
+    p3Text: "Мы работаем в трех основных инвестиционных вселенных. Каждая позиция должна приносить конкретную ценность.",
+    p3List: [
+      "<strong>Listed Markets:</strong> Акции, облигации, фонды с фиксированным сроком и ликвидные стратегии.",
+      "<strong>Private Markets:</strong> Частный капитал, венчурный капитал, вторичный рынок, частный долг.",
+      "<strong>Alternative Markets:</strong> Недвижимость, REIT, избранные криптоактивы, некоррелированные активы."
+    ],
+    p4Title: "Управление рисками",
+    p4Text: "Риск — это ресурс, а не угроза. Мы точно распределяем его, чтобы сбалансировать доходность, волатильность, ликвидность и устойчивость. Цель: капитал, который проходит через циклы.",
+    p5Title: "Абсолютная независимость",
+    p5Text: "HFG CAPITAL не распространяет собственные продукты и не зависит от какой-либо сети. Единственный компас — это интересы семейного капитала."
+  },
+  jp: {
+    title: "投資哲学",
+    subtitle: "規律ある枠組みと長期的視野",
+    intro: "私たちの哲学は、中心的な信念に基づいています。それは、時間は整然と構築する者に報いるということです。<br>私たちは経済サイクルと構造的バランスを考慮し、忍耐、厳格さ、独立性を持って運営しています。<br>リスクや資産の安定性を犠牲にしてパフォーマンスを追求することはありません。",
+    p1Title: "長期的視野",
+    p1Text: "私たちは流行や投機から離れて投資します。私たちの地平線は四半期ではなく、数十年単位で測定されます。",
+    p2Title: "規律と方法",
+    p2Text: "すべての決定は堅牢なデータに基づいています。規律は常に直感に優先します。",
+    p2List: ["深いファンダメンタル分析", "堅牢なデータ", "明確な配分プロセス", "正確なリスク評価"],
+    p3Title: "インテリジェントな分散投資",
+    p3Text: "私たちは3つの主要な投資分野で活動しています。各エクスポージャーは特定の価値（利回り、安定性、凸性）をもたらさなければなりません。",
+    p3List: [
+      "<strong>Listed Markets:</strong> 株式、債券、期日付きファンド、流動性戦略。",
+      "<strong>Private Markets:</strong> プライベートエクイティ、ベンチャーキャピタル、セカンダリー、プライベートデット。",
+      "<strong>Alternative Markets:</strong> 不動産、リート、厳選された暗号資産、非相関資産。"
+    ],
+    p4Title: "リスク管理",
+    p4Text: "リスクは脅威ではなく資源です。私たちはパフォーマンス、ボラティリティ、流動性、回復力のバランスをとるためにそれを正確に分配します。目標は、サイクルを乗り越える資産です。",
+    p5Title: "絶対的な独立性",
+    p5Text: "HFG CAPITALは自社商品を販売せず、いかなるネットワークにも依存しません。唯一の羅針盤は家族の資産の利益です。"
+  },
+  vn: {
+    title: "Triết lý đầu tư",
+    subtitle: "Khung kỷ luật và tầm nhìn dài hạn",
+    intro: "Triết lý của chúng tôi được hướng dẫn bởi một niềm tin cốt lõi: thời gian sẽ thưởng cho những người xây dựng một cách bài bản.<br>Chúng tôi hoạt động với sự kiên nhẫn, nghiêm ngặt và độc lập, tính đến các chu kỳ kinh tế và cân bằng cấu trúc.<br>Hiệu suất không bao giờ được tìm kiếm bằng cách đánh đổi rủi ro hoặc sự ổn định tài sản.",
+    p1Title: "Tầm nhìn dài hạn",
+    p1Text: "Chúng tôi đầu tư tránh xa các xu hướng nhất thời và đầu cơ. Tầm nhìn của chúng tôi được đo bằng thập kỷ, không bao giờ bằng quý.",
+    p2Title: "Kỷ luật & Phương pháp",
+    p2Text: "Mọi quyết định đều dựa trên dữ liệu vững chắc. Kỷ luật luôn chiến thắng trực giác.",
+    p2List: ["Phân tích cơ bản sâu sắc", "Dữ liệu vững chắc", "Quy trình phân bổ rõ ràng", "Đánh giá rủi ro chính xác"],
+    p3Title: "Đa dạng hóa thông minh",
+    p3Text: "Chúng tôi hoạt động trên ba vũ trụ đầu tư chính. Mỗi vị thế phải mang lại giá trị cụ thể (lợi suất, ổn định, tính lồi).",
+    p3List: [
+      "<strong>Listed Markets:</strong> Cổ phiếu, trái phiếu, quỹ định kỳ và chiến lược thanh khoản.",
+      "<strong>Private Markets:</strong> Vốn cổ phần tư nhân, đầu tư mạo hiểm, thứ cấp, nợ tư nhân.",
+      "<strong>Alternative Markets:</strong> Bất động sản, REIT, tài sản tiền điện tử chọn lọc, tài sản không tương quan."
+    ],
+    p4Title: "Quản lý rủi ro",
+    p4Text: "Rủi ro là một nguồn lực, không phải là mối đe dọa. Chúng tôi phân bổ nó chính xác để cân bằng hiệu suất, biến động, thanh khoản và khả năng phục hồi. Mục tiêu: tài sản vượt qua các chu kỳ.",
+    p5Title: "Độc lập tuyệt đối",
+    p5Text: "HFG CAPITAL không phân phối sản phẩm nội bộ và không phụ thuộc vào bất kỳ mạng lưới nào. La bàn duy nhất là lợi ích của tài sản gia đình."
+  },
+  id: {
+    title: "Filosofi Investasi",
+    subtitle: "Kerangka kerja disiplin dan visi jangka panjang",
+    intro: "Filosofi kami dipandu oleh keyakinan utama: waktu memberi penghargaan kepada mereka yang membangun secara metodis.<br>Kami beroperasi dengan kesabaran, ketelitian, dan kemandirian, dengan mempertimbangkan siklus ekonomi dan keseimbangan struktural.<br>Kinerja tidak pernah dicari dengan mengorbankan risiko atau stabilitas aset.",
+    p1Title: "Visi Jangka Panjang",
+    p1Text: "Kami berinvestasi jauh dari tren dan spekulasi. Cakrawala kami diukur dalam dekade, tidak pernah dalam kuartal.",
+    p2Title: "Disiplin & Metode",
+    p2Text: "Setiap keputusan didasarkan pada data yang kuat. Disiplin selalu menang atas intuisi.",
+    p2List: ["Analisis fundamental mendalam", "Data yang kuat", "Proses alokasi yang jelas", "Penilaian risiko yang tepat"],
+    p3Title: "Diversifikasi Cerdas",
+    p3Text: "Kami beroperasi di tiga alam investasi utama. Setiap eksposur harus membawa nilai spesifik (imbal hasil, stabilitas, konveksitas).",
+    p3List: [
+      "<strong>Listed Markets:</strong> Saham, obligasi, dana berjangka, dan strategi likuid.",
+      "<strong>Private Markets:</strong> Ekuitas swasta, modal ventura, sekunder, utang swasta.",
+      "<strong>Alternative Markets:</strong> Real estat, REIT, aset kripto pilihan, aset tidak berkorelasi."
+    ],
+    p4Title: "Manajemen Risiko",
+    p4Text: "Risiko adalah sumber daya, bukan ancaman. Kami mendistribusikannya dengan tepat untuk menyeimbangkan kinerja, volatilitas, likuiditas, dan ketahanan. Tujuannya: kekayaan yang bertahan melalui siklus.",
+    p5Title: "Kemandirian Mutlak",
+    p5Text: "HFG CAPITAL tidak mendistribusikan produk internal dan tidak bergantung pada jaringan apa pun. Satu-satunya kompas adalah kepentingan kekayaan keluarga."
+  }
+};
+
+/* --- LANGUES UI & MENU --- */
+const uiLanguages = {
+  fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", menuAbout: "Qui sommes-nous", btnOpen: "Accès", modalTitle: "Espace Privé", btnSubmit: "Entrer", footer: "© 2025 HFG CAPITAL | Bureau d'Investissement Privé" },
+  en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", menuAbout: "About Us", btnOpen: "Access", modalTitle: "Private Access", btnSubmit: "Enter", footer: "© 2025 HFG CAPITAL | Private Investment Office" },
+  cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", menuAbout: "关于我们", btnOpen: "进入", modalTitle: "私人专区", btnSubmit: "进入", footer: "© 2025 HFG CAPITAL | 私人投資辦公室" },
+  es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", menuAbout: "Quiénes somos", btnOpen: "Acceso", modalTitle: "Acceso Privado", btnSubmit: "Entrar", footer: "© 2025 HFG CAPITAL | Oficina de Inversiones Privadas" },
+  de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", menuAbout: "Über uns", btnOpen: "Zugang", modalTitle: "Privater Zugang", btnSubmit: "Eintreten", footer: "© 2025 HFG CAPITAL | Privates Anlagebüro" },
+  it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", menuAbout: "Chi siamo", btnOpen: "Accesso", modalTitle: "Accesso Riservato", btnSubmit: "Entra", footer: "© 2025 HFG CAPITAL | Ufficio di Investimento Privato" },
+  ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", menuAbout: "О нас", btnOpen: "Вход", modalTitle: "Частный доступ", btnSubmit: "Войти", footer: "© 2025 HFG CAPITAL | Частный Инвестиционный Офис" },
+  jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", menuAbout: "会社概要", btnOpen: "アクセス", modalTitle: "プライベートアクセス", btnSubmit: "入る", footer: "© 2025 HFG CAPITAL | プライベート投資オフィス" },
+  vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", menuAbout: "Giới thiệu", btnOpen: "Truy cập", modalTitle: "Truy cập riêng", btnSubmit: "Vào", footer: "© 2025 HFG CAPITAL | Văn phòng đầu tư tư nhân" },
+  id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", menuAbout: "Tentang Kami", btnOpen: "Akses", modalTitle: "Akses Pribadi", btnSubmit: "Masuk", footer: "© 2025 HFG CAPITAL | Kantor Investasi Pribadi" }
+};
+
+const menuTranslations = {
+  fr: { home: "Accueil", manifesto: "Manifesto", contacts: "Contacts" },
+  en: { home: "Home", manifesto: "Manifesto", contacts: "Contact" },
+  cn: { home: "首页", manifesto: "愿景宣言", contacts: "联系" },
+  es: { home: "Inicio", manifesto: "Manifiesto", contacts: "Contacto" },
+  de: { home: "Startseite", manifesto: "Manifest", contacts: "Kontakt" },
+  it: { home: "Home", manifesto: "Manifesto", contacts: "Contatti" },
+  ru: { home: "Главная", manifesto: "Манифест", contacts: "Контакты" },
+  jp: { home: "ホーム", manifesto: "マニフェスト", contacts: "お問い合わせ" },
+  vn: { home: "Trang chủ", manifesto: "Tuyên ngôn", contacts: "Liên hệ" },
+  id: { home: "Beranda", manifesto: "Manifesto", contacts: "Kontak" }
+};
+
+/* --- INITIALISATION --- */
+const bgImages = ["img/rouge_02.png", "img/jaune_01.png", "img/bleu_01.png", "img/violet_01.png"];
+
+window.addEventListener('load', () => {
+  const bgElement = document.getElementById('bgImage');
+  const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
+  bgElement.src = randomBg;
+  bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
+
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeBtn').classList.add('active');
+  }
+
+  generateLangMenu();
+  setLanguage(activeLang);
+});
+
+/* --- FONCTIONS --- */
+function toggleLangMenu() { document.getElementById('langMenu').classList.toggle('show'); }
+
+function setLanguage(lang) {
+  localStorage.setItem('hfg_lang', lang);
+  activeLang = lang;
+
+  // UI
+  const ui = uiLanguages[lang] || uiLanguages['en'];
+  document.getElementById('currentFlag').src = ui.flag;
+  document.getElementById('currentLangLabel').innerText = ui.label;
+  document.getElementById('openLoginBtn').innerText = ui.btnOpen;
+  document.getElementById('modalTitle').innerText = ui.modalTitle;
+  document.getElementById('btnText').innerText = ui.btnSubmit;
+  document.getElementById('footerText').innerText = ui.footer;
+
+  // MENU NAV
+  document.getElementById('menuAbout').innerText = ui.menuAbout; // "Qui sommes nous" specifique
+  const menuT = menuTranslations[lang] || menuTranslations['en'];
+  document.getElementById('menuHome').innerText = menuT.home;
+  document.getElementById('menuManifesto').innerText = menuT.manifesto;
+  document.getElementById('menuContacts').innerText = menuT.contacts;
+
+  // CONTENU TEXTE
+  const t = contentTranslations[lang] || contentTranslations['en'];
+  document.getElementById('pageTitle').innerText = t.title;
+  document.getElementById('pageSubtitle').innerText = t.subtitle;
+  document.getElementById('pageIntro').innerHTML = t.intro;
+
+  document.getElementById('p1Title').innerText = t.p1Title;
+  document.getElementById('p1Text').innerText = t.p1Text;
+
+  document.getElementById('p2Title').innerText = t.p2Title;
+  document.getElementById('p2Text').innerText = t.p2Text;
+  // Liste P2
+  const list2 = document.getElementById('p2List');
+  list2.innerHTML = "";
+  t.p2List.forEach(item => {
+    const li = document.createElement('li');
+    li.innerText = item;
+    list2.appendChild(li);
+  });
+
+  document.getElementById('p3Title').innerText = t.p3Title;
+  document.getElementById('p3Text').innerText = t.p3Text;
+  // Liste P3
+  const list3 = document.getElementById('p3List');
+  list3.innerHTML = "";
+  t.p3List.forEach(item => {
+    const li = document.createElement('li');
+    li.innerHTML = item; // InnerHTML car contient du <strong>
+    list3.appendChild(li);
+  });
+
+  document.getElementById('p4Title').innerText = t.p4Title;
+  document.getElementById('p4Text').innerText = t.p4Text;
+
+  document.getElementById('p5Title').innerText = t.p5Title;
+  document.getElementById('p5Text').innerText = t.p5Text;
+
+  document.getElementById('langMenu').classList.remove('show');
+}
+
+function generateLangMenu() {
+  const menu = document.getElementById('langMenu');
+  menu.innerHTML = '';
+  for (const code in uiLanguages) {
+    const opt = document.createElement('div');
+    opt.className = 'lang-option';
+    opt.innerHTML = `<img src="${uiLanguages[code].flag}"> ${uiLanguages[code].full}`;
+    opt.onclick = () => setLanguage(code);
+    menu.appendChild(opt);
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.lang-container') && !e.target.closest('.menu-container')) {
+    document.getElementById('langMenu').classList.remove('show');
+  }
+});
+
+/* --- BOUTONS --- */
+const menuBtn = document.getElementById('menuBtn');
+const mainMenuOverlay = document.getElementById('mainMenuOverlay');
+menuBtn.addEventListener('click', () => { mainMenuOverlay.classList.toggle('open'); menuBtn.classList.toggle('open'); });
+mainMenuOverlay.addEventListener('click', (e) => { if(e.target===mainMenuOverlay){ mainMenuOverlay.classList.remove('open'); menuBtn.classList.remove('open'); }});
+
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  themeBtn.classList.toggle('active');
+  localStorage.setItem('hfg_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+});
+
+/* --- MODAL --- */
+const modal = document.getElementById('modalOverlay');
+function openModal() { modal.classList.add('active'); setTimeout(()=>document.getElementById('userId').focus(),300); }
+function closeModal() { modal.classList.remove('active'); }
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.getElementById('loginForm').addEventListener('submit', (e) => { e.preventDefault(); alert("Redirection..."); });
+</script>
+</body>
+</html>
