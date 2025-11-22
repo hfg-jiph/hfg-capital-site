@@ -131,6 +131,30 @@
       bottom: 5px;
       transform: rotate(-45deg);
     }
+
+    /* Icône citadelle (bouton home) */
+    .home-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 18px;           /* espace entre menu & langue */
+    }
+    
+    .home-icon-img {
+      height: 34px;             /* hauteur demandée */
+      width: auto;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+      transition: opacity 0.25s ease;
+    }
+    
+    /* effet hover discret */
+    .home-icon-img:hover {
+      opacity: 0.85;
+    }
+
     
     /* --- MENU PRINCIPAL --- */
     .main-menu-overlay {
@@ -521,6 +545,10 @@
         </button>
       </div>
 
+      <a href="index.html" class="home-icon">
+        <img src="img/chateau.png" alt="HFG Home" class="home-icon-img">
+      </a>
+      
       <div class="lang-container" id="langContainer">
         <div class="lang-btn" onclick="toggleLangMenu()">
           <img id="currentFlag" src="https://flagcdn.com/fr.svg" alt="FR">
