@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>HFG CAPITAL | Manifesto</title>
+  <meta name="description" content="HFG CAPITAL - Manifesto & Valeurs" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="shortcut icon" href="favicon/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- VARIABLES --- */
+    :root {
+      --primary-dark: #1a1a1a;
+      --gold-accent: #D4AF37;
+      --font-motto: 'Cinzel', serif; 
+      --font-sans: 'Montserrat', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      background-color: #000;
+      position: relative; 
+      color: white;
+    }
+
+    /* --- BACKGROUND --- */
+    .bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+    .bg-image {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: opacity 1s ease;
+      animation: zoomIn 40s infinite alternate linear;
+    }
+    @keyframes zoomIn { from { transform: scale(1); } to { transform: scale(1.15); } }
+    body.dark-mode .bg-image { filter: grayscale(100%) brightness(0.25); }
+
+    /* --- HEADER --- */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 40px; z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+
+    /* --- UI ELEMENTS --- */
+    .menu-btn, .theme-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.1);
+      cursor: pointer; transition: all 0.3s;
+    }
+    .menu-btn:hover, .theme-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--gold-accent); }
+    
+    .menu-btn-lines { width: 15px; height: 11px; position: relative; }
+    .menu-btn-lines span { position: absolute; left: 0; right: 0; height: 1px; background: #fff; transition: 0.25s; }
+    .menu-btn-lines span:nth-child(1) { top: 0; }
+    .menu-btn-lines span:nth-child(2) { top: 5px; }
+    .menu-btn-lines span:nth-child(3) { bottom: 0; }
+    .menu-btn.open .menu-btn-lines span:nth-child(1) { top: 5px; transform: rotate(45deg); }
+    .menu-btn.open .menu-btn-lines span:nth-child(2) { opacity: 0; }
+    .menu-btn.open .menu-btn-lines span:nth-child(3) { bottom: 5px; transform: rotate(-45deg); }
+
+    .theme-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.9); transition: 0.3s; }
+    .theme-btn.active .theme-dot { background: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.95); }
+
+    /* --- LANGUES --- */
+    .lang-container { position: relative; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
+      padding: 0px 12px; height: 34px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; font-size: 0.75rem;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--gold-accent); }
+    .lang-btn img { width: 20px; height: 13px; object-fit: cover; border-radius: 3px; }
+    .lang-menu {
+      position: absolute; top: 45px; left: 0;
+      background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px; padding: 5px 0; display: none; flex-direction: column; 
+      width: max-content; min-width: 150px; max-height: 60vh; overflow-y: auto;
+    }
+    .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
+    .lang-option { padding: 10px 20px; color: #ccc; cursor: pointer; font-size: 0.75rem; display: flex; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); align-items: center; }
+    .lang-option:hover { background: rgba(212, 175, 55, 0.15); color: white; }
+    .lang-option img { width: 20px; height: 13px; border-radius: 2px; }
+
+    .login-trigger {
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); color: white;
+      border: 1px solid rgba(255,255,255,0.2); height: 34px; padding: 0px 24px;
+      display: flex; align-items: center; border-radius: 20px;
+      font-family: var(--font-sans); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 2px;
+      cursor: pointer; transition: all 0.4s ease;
+    }
+    .login-trigger:hover { background: var(--gold-accent); color: var(--primary-dark); }
+
+    /* --- MENU NAVIGATION --- */
+    .main-menu-overlay {
+      position: fixed; inset: 0; background: transparent; display: none;
+      align-items: stretch; justify-content: flex-start; z-index: 900;
+    }
+    .main-menu-overlay.open { display: flex; }
+    .main-menu {
+      width: 320px; max-width: calc(100% - 80px); margin-top: 70px;
+      background: transparent; padding: 24px; text-align: left;
+      transform: translateX(-100%); transition: transform 0.25s ease;
+    }
+    .main-menu-overlay.open .main-menu { transform: translateX(0); }
+    .main-menu ul { list-style: none; }
+    .main-menu a {
+      font-family: var(--font-sans); font-size: 0.675rem; text-transform: uppercase;
+      letter-spacing: 0.22em; color: rgba(255,255,255,0.85); text-decoration: none;
+      padding: 10px 0; display: block; transition: color 0.2s ease;
+    }
+    .main-menu a:hover { color: var(--gold-accent); }
+
+    /* --- CONTENU PRINCIPAL (Manifesto Style) --- */
+    .content-wrapper {
+      position: relative; z-index: 5;
+      padding-top: 120px; padding-bottom: 60px;
+      width: 100%; max-width: 1000px; margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center;
+      opacity: 0; animation: fadeInUp 1.5s ease-out forwards;
+    }
+
+    .text-container {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 60px;
+      margin: 0 20px;
+      border-radius: 4px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+      width: 100%;
+    }
+
+    h1 {
+      font-family: var(--font-motto);
+      font-size: 1.8rem; font-weight: 400; text-transform: uppercase;
+      letter-spacing: 3px; margin-bottom: 40px; color: var(--gold-accent);
+      text-align: center; line-height: 1.3;
+    }
+
+    h2 {
+      font-family: var(--font-motto);
+      font-size: 1.4rem; font-weight: 400; text-transform: uppercase;
+      letter-spacing: 3px; margin-top: 60px; margin-bottom: 30px; 
+      color: #fff; text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 50px;
+    }
+
+    /* SECTION MANIFESTO (POÉTIQUE) */
+    .manifesto-text {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      line-height: 2;
+      text-align: center; /* Centré pour l'aspect déclaration */
+      color: #e0e0e0;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    .manifesto-text strong {
+      color: #fff;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    .highlight-latin {
+      font-family: var(--font-motto);
+      color: var(--gold-accent);
+      font-size: 1.1rem;
+    }
+
+    /* SECTION VALEURS (GRID) */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      text-align: left;
+    }
+
+    .value-card {
+      padding: 20px;
+      background: rgba(255,255,255,0.02);
+      border-left: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.3s;
+    }
+    .value-card:hover { background: rgba(255,255,255,0.05); border-left-color: var(--gold-accent); }
+
+    .value-card h3 {
+      font-family: var(--font-motto);
+      font-size: 1rem; color: #fff; margin-bottom: 10px;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    .value-card p {
+      font-size: 0.85rem; line-height: 1.6; color: #ccc;
+    }
+
+    .conclusion-box {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #fff;
+      border: 1px solid var(--gold-accent);
+      padding: 20px;
+      letter-spacing: 1px;
+      font-family: var(--font-motto);
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      padding: 30px 0; text-align: center;
+      font-size: 0.6rem; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: 1.5px;
+    }
+
+    /* --- MODAL --- */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px);
+      z-index: 1000; display: none; justify-content: center; align-items: center;
+      opacity: 0; transition: opacity 0.4s ease; padding: 20px;
+    }
+    .modal-overlay.active { display: flex; opacity: 1; }
+    .modal-box {
+      background: #fff; width: 100%; max-width: 420px; padding: 50px 40px;
+      text-align: center; transform: translateY(20px); transition: transform 0.4s ease;
+    }
+    .modal-overlay.active .modal-box { transform: translateY(0); }
+    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 32px; cursor: pointer; color: #bbb; }
+    .close-modal:hover { color: var(--primary-dark); }
+    .modal-title { font-family: var(--font-motto); font-size: 1.6rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; }
+    .input-group { margin-bottom: 20px; text-align: left; }
+    .input-group input { width: 100%; padding: 15px; border: 1px solid #e0e0e0; background: #fafafa; outline: none; font-family: var(--font-sans); }
+    .input-group input:focus { border-color: var(--gold-accent); background: #fff; }
+    .btn-submit { width: 100%; padding: 15px; background: var(--primary-dark); color: white; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 10px; }
+    
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 600px) {
+      header { padding: 15px 20px; }
+      .text-container { padding: 30px 20px; margin: 0 15px; }
+      h1 { font-size: 1.4rem; }
+      .manifesto-text { font-size: 0.9rem; text-align: left; } /* Gauche sur mobile pour lisibilité */
+      .values-grid { grid-template-columns: 1fr; }
+      .conclusion-box { font-size: 0.8rem; padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-container">
+    <img src="" id="bgImage" class="bg-image" alt="Background">
+  </div>
+
+  <div class="main-menu-overlay" id="mainMenuOverlay">
+    <nav class="main-menu">
+      <ul>
+        <li><a id="menuHome" href="index.html">Accueil</a></li>
+        <li><a id="menuAbout" href="about.html">Qui sommes-nous</a></li>
+        <li><a id="menuPhilosophy" href="philosophie.html">Philosophie</a></li>
+        <li><a id="menuContacts" href="contacts.html">Contacts</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <header>
+    <div class="header-left">
+      <div class="menu-container">
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">
+          <div class="menu-btn-lines"><span></span><span></span><span></span></div>
+        </button>
+      </div>
+
+      <button class="theme-btn" id="themeBtn" aria-label="Thème">
+        <span class="theme-dot"></span>
+      </button>
+      
+      <div class="lang-container">
+        <div class="lang-btn" onclick="toggleLangMenu()">
+          <img id="currentFlag" src="https://flagcdn.com/fr.svg" alt="FR">
+          <span id="currentLangLabel">FR</span>
+          <small>▼</small>
+        </div>
+        <div class="lang-menu" id="langMenu"></div>
+      </div>
+    </div>
+
+    <button class="login-trigger" id="openLoginBtn" onclick="openModal()">Accès</button>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="text-container">
+      <h1 id="pageTitle">Manifesto HFG CAPITAL</h1>
+      
+      <div class="manifesto-text" id="manifestoText">
+        </div>
+
+      <h2 id="valuesTitle">Valeurs & Gouvernance</h2>
+
+      <div class="values-grid">
+        <div class="value-card">
+          <h3 id="val1Title">Devise</h3>
+          <p id="val1Text"></p>
+        </div>
+        <div class="value-card">
+          <h3 id="val2Title">Indépendance</h3>
+          <p id="val2Text"></p>
+        </div>
+        <div class="value-card">
+          <h3 id="val3Title">Exigence</h3>
+          <p id="val3Text"></p>
+        </div>
+        <div class="value-card">
+          <h3 id="val4Title">Transparence</h3>
+          <p id="val4Text"></p>
+        </div>
+        <div class="value-card">
+          <h3 id="val5Title">Discrétion</h3>
+          <p id="val5Text"></p>
+        </div>
+        <div class="value-card">
+          <h3 id="val6Title">Responsabilité</h3>
+          <p id="val6Text"></p>
+        </div>
+      </div>
+
+      <div class="conclusion-box" id="conclusionText">
+        </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-copyright" id="footerText">© 2025 HFG CAPITAL | Private Investment Office</div>
+  </footer>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h3 class="modal-title" id="modalTitle">Espace Privé</h3>
+      <form id="loginForm">
+        <div class="input-group"><input type="text" id="userId" placeholder="Identifiant" required></div>
+        <div class="input-group"><input type="password" id="password" placeholder="Mot de passe" required></div>
+        <button type="submit" class="btn-submit" id="submitBtn"><span id="btnText">Entrer</span></button>
+      </form>
+    </div>
+  </div>
+
+<script>
+/* --- PERSISTANCE --- */
+const savedLang = localStorage.getItem('hfg_lang') || 'fr';
+const savedTheme = localStorage.getItem('hfg_theme');
+let activeLang = savedLang;
+
+/* --- TRADUCTIONS DU MANIFESTO --- */
+const contentTranslations = {
+  fr: {
+    mainTitle: "Manifesto HFG CAPITAL",
+    manifesto: `Nous croyons que le patrimoine est une responsabilité.<br>Une force construite lentement, qui exige prudence, clairvoyance et humilité.<br><br>Nous croyons en la puissance du temps long.<br>Les cycles changent, mais la discipline reste.<br><br>Nous croyons en la discrétion.<br>Ce qui compte doit être protégé.<br><br>Nous croyons aux décisions réfléchies.<br>Pas au bruit. Pas aux tendances éphémères.<br><br>Nous croyons en trois mots :<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Nous croyons que la dernière citadelle — <span class="highlight-latin">Ultima Arx</span> — est celle que l’on bâtit pierre après pierre, sans céder aux effets de foule.<br><br>Nous sommes <strong>HFG CAPITAL</strong>.<br>Et notre engagement est simple : préserver, développer et transmettre.`,
+    valuesTitle: "Valeurs & Gouvernance",
+    v1T: "Devise", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Préserver. Faire croître. Transmettre.",
+    v2T: "Indépendance", v2Tx: "Une gouvernance volontairement resserrée, des décisions rapides et une totale liberté d’allocation. Aucun produit imposé.",
+    v3T: "Exigence", v3Tx: "La rigueur est au cœur de notre modèle : qualité des actifs, liquidité, gouvernance, risques structurels. Chaque investissement doit justifier sa place.",
+    v4T: "Transparence", v4Tx: "Une information claire, compréhensible et structurée : allocations, performances, risques, reporting, documents réglementaires.",
+    v5T: "Discrétion", v5Tx: "La confidentialité est totale. Aucune donnée ne transite hors de nos systèmes internes et sécurisés.",
+    v6T: "Responsabilité", v6Tx: "Nos décisions sont prises pour aujourd’hui, mais aussi pour les générations à venir. Le patrimoine s'inscrit dans une temporalité longue.",
+    conclusion: "HFG CAPITAL est guidé par une ambition unique : faire du patrimoine une force durable, stable, disciplinée et transmise avec justesse."
+  },
+  en: {
+    mainTitle: "HFG CAPITAL Manifesto",
+    manifesto: `We believe that wealth is a responsibility.<br>A force built slowly, requiring prudence, foresight, and humility.<br><br>We believe in the power of the long term.<br>Cycles change, but discipline remains.<br><br>We believe in discretion.<br>What matters must be protected.<br><br>We believe in thoughtful decisions.<br>Not in noise. Not in fleeting trends.<br><br>We believe in three words:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>We believe that the last citadel — <span class="highlight-latin">Ultima Arx</span> — is the one built stone by stone, without yielding to the crowd.<br><br>We are <strong>HFG CAPITAL</strong>.<br>And our commitment is simple: preserve, develop, and transmit.`,
+    valuesTitle: "Values & Governance",
+    v1T: "Motto", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Preserve. Grow. Transmit.",
+    v2T: "Independence", v2Tx: "Deliberately tight governance, rapid decisions, and total freedom of allocation. No imposed products.",
+    v3T: "Exigence", v3Tx: "Rigor is at the heart of our model: asset quality, liquidity, governance, structural risks. Every investment must justify its place.",
+    v4T: "Transparency", v4Tx: "Clear, understandable, and structured information: allocations, performance, risks, reporting, regulatory documents.",
+    v5T: "Discretion", v5Tx: "Confidentiality is absolute. No data leaves our secure internal systems.",
+    v6T: "Responsibility", v6Tx: "Our decisions are made for today, but also for future generations. Wealth is inscribed in a timeline of decades.",
+    conclusion: "HFG CAPITAL is guided by a unique ambition: to make wealth a lasting, stable, disciplined force, transmitted with precision."
+  },
+  cn: {
+    mainTitle: "HFG CAPITAL 宣言",
+    manifesto: `我们相信财富是一种责任。<br>一种缓慢构建的力量，需要谨慎、远见和谦逊。<br><br>我们相信长期主义的力量。<br>周期会变，但纪律长存。<br><br>我们相信审慎。<br>重要的事物必须被保护。<br><br>我们相信深思熟虑的决策。<br>拒绝噪音。拒绝短暂的潮流。<br><br>我们相信三个词：<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>我们相信最后的堡垒 — <span class="highlight-latin">Ultima Arx</span> — 是那一块块石头砌成的，不屈从于人群效应。<br><br>我们是 <strong>HFG CAPITAL</strong>。<br>我们的承诺很简单：保存、发展和传承。`,
+    valuesTitle: "价值观与治理",
+    v1T: "格言", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>保存。增长。传承。",
+    v2T: "独立", v2Tx: "刻意精简的治理，快速的决策以及完全的配置自由。没有强加的产品。",
+    v3T: "严谨", v3Tx: "严谨是我们模式的核心：资产质量、流动性、治理、结构性风险。每一项投资都必须证明其存在的合理性。",
+    v4T: "透明", v4Tx: "清晰、易懂且结构化的信息：配置、绩效、风险、报告、监管文件。",
+    v5T: "保密", v5Tx: "绝对的机密性。没有任何数据会流出我们的内部安全系统。",
+    v6T: "责任", v6Tx: "我们的决策不仅为了今天，也为了后代。财富铭刻在数几十年的时间轴上。",
+    conclusion: "HFG CAPITAL 被唯一的雄心所指引：使财富成为一种持久、稳定、纪律严明且精准传承的力量。"
+  },
+  es: {
+    mainTitle: "Manifiesto HFG CAPITAL",
+    manifesto: `Creemos que el patrimonio es una responsabilidad.<br>Una fuerza construida lentamente, que exige prudencia, previsión y humildad.<br><br>Creemos en el poder del largo plazo.<br>Los ciclos cambian, pero la disciplina permanece.<br><br>Creemos en la discreción.<br>Lo que importa debe ser protegido.<br><br>Creemos en decisiones reflexivas.<br>No en el ruido. No en las tendencias efímeras.<br><br>Creemos en tres palabras:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Creemos que la última ciudadela — <span class="highlight-latin">Ultima Arx</span> — es la que se construye piedra a piedra, sin ceder a la multitud.<br><br>Somos <strong>HFG CAPITAL</strong>.<br>Y nuestro compromiso es simple: preservar, desarrollar y transmitir.`,
+    valuesTitle: "Valores y Gobernanza",
+    v1T: "Lema", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Preservar. Hacer crecer. Transmitir.",
+    v2T: "Independencia", v2Tx: "Una gobernanza deliberadamente ajustada, decisiones rápidas y total libertad de asignación. Ningún producto impuesto.",
+    v3T: "Exigencia", v3Tx: "El rigor está en el corazón de nuestro modelo: calidad de activos, liquidez, gobernanza, riesgos estructurales.",
+    v4T: "Transparencia", v4Tx: "Información clara, comprensible y estructurada: asignaciones, rendimiento, riesgos, informes.",
+    v5T: "Discreción", v5Tx: "La confidencialidad es total. Ningún dato sale de nuestros sistemas internos seguros.",
+    v6T: "Responsabilidad", v6Tx: "Nuestras decisiones se toman para hoy, pero también para las generaciones futuras.",
+    conclusion: "HFG CAPITAL se guía por una única ambición: hacer del patrimonio una fuerza duradera, estable, disciplinada y transmitida con precisión."
+  },
+  de: {
+    mainTitle: "Manifest HFG CAPITAL",
+    manifesto: `Wir glauben, dass Vermögen eine Verantwortung ist.<br>Eine Kraft, die langsam aufgebaut wird und Vorsicht, Weitsicht und Demut erfordert.<br><br>Wir glauben an die Kraft der Langfristigkeit.<br>Zyklen ändern sich, aber Disziplin bleibt.<br><br>Wir glauben an Diskretion.<br>Was zählt, muss geschützt werden.<br><br>Wir glauben an wohlüberlegte Entscheidungen.<br>Nicht an Lärm. Nicht an flüchtige Trends.<br><br>Wir glauben an drei Worte:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Wir glauben, dass die letzte Zitadelle — <span class="highlight-latin">Ultima Arx</span> — diejenige ist, die Stein für Stein gebaut wird, ohne dem Masseneffekt nachzugeben.<br><br>Wir sind <strong>HFG CAPITAL</strong>.<br>Und unser Engagement ist einfach: bewahren, entwickeln und weitergeben.`,
+    valuesTitle: "Werte & Governance",
+    v1T: "Motto", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Bewahren. Vermehren. Weitergeben.",
+    v2T: "Unabhängigkeit", v2Tx: "Eine bewusst straffe Governance, schnelle Entscheidungen und völlige Allokationsfreiheit. Keine auferlegten Produkte.",
+    v3T: "Anspruch", v3Tx: "Strenge ist das Herzstück unseres Modells: Asset-Qualität, Liquidität, Governance, strukturelle Risiken.",
+    v4T: "Transparenz", v4Tx: "Klare, verständliche und strukturierte Informationen: Allokationen, Performance, Risiken, Berichte.",
+    v5T: "Diskretion", v5Tx: "Die Vertraulichkeit ist absolut. Keine Daten verlassen unsere sicheren internen Systeme.",
+    v6T: "Verantwortung", v6Tx: "Unsere Entscheidungen werden für heute getroffen, aber auch für kommende Generationen.",
+    conclusion: "HFG CAPITAL wird von einem einzigen Ehrgeiz geleitet: Vermögen zu einer dauerhaften, stabilen, disziplinierten und präzise übertragenen Kraft zu machen."
+  },
+  it: {
+    mainTitle: "Manifesto HFG CAPITAL",
+    manifesto: `Crediamo che il patrimonio sia una responsabilità.<br>Una forza costruita lentamente, che richiede prudenza, lungimiranza e umiltà.<br><br>Crediamo nel potere del lungo termine.<br>I cicli cambiano, ma la disciplina resta.<br><br>Crediamo nella discrezione.<br>Ciò che conta deve essere protetto.<br><br>Crediamo in decisioni ponderate.<br>Non nel rumore. Non nelle tendenze effimere.<br><br>Crediamo in tre parole:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Crediamo che l'ultima cittadella — <span class="highlight-latin">Ultima Arx</span> — sia quella che si costruisce pietra su pietra, senza cedere alla folla.<br><br>Siamo <strong>HFG CAPITAL</strong>.<br>E il nostro impegno è semplice: preservare, sviluppare e trasmettere.`,
+    valuesTitle: "Valori & Governance",
+    v1T: "Motto", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Preservare. Accrescere. Tramandare.",
+    v2T: "Indipendenza", v2Tx: "Una governance volutamente ristretta, decisioni rapide e totale libertà di allocazione.",
+    v3T: "Esigenza", v3Tx: "Il rigore è al centro del nostro modello: qualità degli asset, liquidità, governance, rischi strutturali.",
+    v4T: "Trasparenza", v4Tx: "Informazioni chiare, comprensibili e strutturate: allocazioni, performance, rischi, reportistica.",
+    v5T: "Discrezione", v5Tx: "La riservatezza è totale. Nessun dato transita fuori dai nostri sistemi interni sicuri.",
+    v6T: "Responsabilità", v6Tx: "Le nostre decisioni sono prese per oggi, ma anche per le generazioni future.",
+    conclusion: "HFG CAPITAL è guidato da un'unica ambizione: rendere il patrimonio una forza duratura, stabile, disciplinata e trasmessa con precisione."
+  },
+  ru: {
+    mainTitle: "Манифест HFG CAPITAL",
+    manifesto: `Мы верим, что капитал — это ответственность.<br>Сила, создаваемая медленно, требующая осторожности, дальновидности и смирения.<br><br>Мы верим в силу долгосрочной перспективы.<br>Циклы меняются, но дисциплина остается.<br><br>Мы верим в конфиденциальность.<br>То, что важно, должно быть защищено.<br><br>Мы верим в обдуманные решения.<br>Не в шум. Не в мимолетные тренды.<br><br>Мы верим в три слова:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Мы верим, что последняя цитадель — <span class="highlight-latin">Ultima Arx</span> — это та, которую строят камень за камнем, не поддаваясь толпе.<br><br>Мы — <strong>HFG CAPITAL</strong>.<br>И наше обязательство простое: сохранять, развивать и передавать.`,
+    valuesTitle: "Ценности и управление",
+    v1T: "Девиз", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Сохранять. Приумножать. Передавать.",
+    v2T: "Независимость", v2Tx: "Намеренно сжатое управление, быстрые решения и полная свобода распределения.",
+    v3T: "Требовательность", v3Tx: "Строгость в основе нашей модели: качество активов, ликвидность, управление, риски.",
+    v4T: "Прозрачность", v4Tx: "Четкая и структурированная информация: распределение, эффективность, риски, отчетность.",
+    v5T: "Конфиденциальность", v5Tx: "Полная секретность. Никакие данные не выходят за пределы наших защищенных систем.",
+    v6T: "Ответственность", v6Tx: "Наши решения принимаются для сегодняшнего дня, но также и для будущих поколений.",
+    conclusion: "HFG CAPITAL движим одной амбицией: сделать капитал устойчивой, стабильной, дисциплинированной силой."
+  },
+  jp: {
+    mainTitle: "HFG CAPITAL マニフェスト",
+    manifesto: `私たちは、資産とは責任であると信じています。<br>ゆっくりと築かれる力であり、慎重さ、先見性、そして謙虚さが求められます。<br><br>私たちは長期的視点の力を信じています。<br>サイクルは変わりますが、規律は残ります。<br><br>私たちは慎重さを信じています。<br>重要なものは守られなければなりません。<br><br>私たちは熟考された決断を信じています。<br>雑音ではなく。一時的な流行ではなく。<br><br>私たちは3つの言葉を信じています：<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>私たちは、最後の砦 — <span class="highlight-latin">Ultima Arx</span> — とは、群集心理に屈することなく、石を一つ一つ積み上げて築くものだと信じています。<br><br>私たちは <strong>HFG CAPITAL</strong> です。<br>そして私たちの約束はシンプルです：保存し、発展させ、伝承する。`,
+    valuesTitle: "価値観とガバナンス",
+    v1T: "モットー", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>保存する。成長させる。伝承する。",
+    v2T: "独立性", v2Tx: "意図的に引き締められたガバナンス、迅速な意思決定、そして完全な配分の自由。",
+    v3T: "厳格さ", v3Tx: "厳格さは私たちのモデルの核心です：資産の質、流動性、ガバナンス、構造的リスク。",
+    v4T: "透明性", v4Tx: "明確で理解しやすく構造化された情報：配分、パフォーマンス、リスク、報告。",
+    v5T: "機密性", v5Tx: "機密性は完全です。データが私たちの安全な内部システムの外に出ることはありません。",
+    v6T: "責任", v6Tx: "私たちの決定は今日のためだけでなく、将来の世代のためにも行われます。",
+    conclusion: "HFG CAPITALは唯一の野心に導かれています：資産を持続可能で安定的、規律ある力にし、正確に伝承すること。"
+  },
+  vn: {
+    mainTitle: "Tuyên ngôn HFG CAPITAL",
+    manifesto: `Chúng tôi tin rằng tài sản là một trách nhiệm.<br>Một sức mạnh được xây dựng chậm rãi, đòi hỏi sự thận trọng, tầm nhìn xa và sự khiêm tốn.<br><br>Chúng tôi tin vào sức mạnh của dài hạn.<br>Chu kỳ thay đổi, nhưng kỷ luật vẫn còn.<br><br>Chúng tôi tin vào sự kín đáo.<br>Những gì quan trọng phải được bảo vệ.<br><br>Chúng tôi tin vào những quyết định thấu đáo.<br>Không phải tiếng ồn. Không phải xu hướng nhất thời.<br><br>Chúng tôi tin vào ba từ:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Chúng tôi tin rằng thành trì cuối cùng — <span class="highlight-latin">Ultima Arx</span> — là thành trì được xây dựng từng viên đá một, không nhượng bộ trước đám đông.<br><br>Chúng tôi là <strong>HFG CAPITAL</strong>.<br>Và cam kết của chúng tôi rất đơn giản: bảo tồn, phát triển và trao truyền.`,
+    valuesTitle: "Giá trị & Quản trị",
+    v1T: "Phương châm", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Bảo tồn. Phát triển. Trao truyền.",
+    v2T: "Độc lập", v2Tx: "Quản trị chặt chẽ có chủ đích, quyết định nhanh chóng và tự do phân bổ hoàn toàn.",
+    v3T: "Yêu cầu cao", v3Tx: "Sự nghiêm ngặt là cốt lõi mô hình của chúng tôi: chất lượng tài sản, thanh khoản, quản trị.",
+    v4T: "Minh bạch", v4Tx: "Thông tin rõ ràng, dễ hiểu và có cấu trúc: phân bổ, hiệu suất, rủi ro, báo cáo.",
+    v5T: "Kín đáo", v5Tx: "Bảo mật là tuyệt đối. Không có dữ liệu nào đi ra ngoài hệ thống nội bộ an toàn của chúng tôi.",
+    v6T: "Trách nhiệm", v6Tx: "Các quyết định của chúng tôi được đưa ra cho hôm nay, nhưng cũng cho các thế hệ mai sau.",
+    conclusion: "HFG CAPITAL được dẫn dắt bởi một tham vọng duy nhất: biến tài sản thành một sức mạnh bền vững, ổn định, kỷ luật."
+  },
+  id: {
+    mainTitle: "Manifesto HFG CAPITAL",
+    manifesto: `Kami percaya bahwa kekayaan adalah sebuah tanggung jawab.<br>Kekuatan yang dibangun perlahan, membutuhkan kehati-hatian, pandangan jauh ke depan, dan kerendahan hati.<br><br>Kami percaya pada kekuatan jangka panjang.<br>Siklus berubah, tetapi disiplin tetap ada.<br><br>Kami percaya pada kebijaksanaan.<br>Apa yang penting harus dilindungi.<br><br>Kami percaya pada keputusan yang matang.<br>Bukan kebisingan. Bukan tren sesaat.<br><br>Kami percaya pada tiga kata:<br><span class="highlight-latin">Custodire. Augere. Tradere.</span><br><br>Kami percaya bahwa benteng terakhir — <span class="highlight-latin">Ultima Arx</span> — adalah yang dibangun batu demi batu, tanpa menyerah pada kerumunan.<br><br>Kami adalah <strong>HFG CAPITAL</strong>.<br>Dan komitmen kami sederhana: melestarikan, mengembangkan, dan mewariskan.`,
+    valuesTitle: "Nilai & Tata Kelola",
+    v1T: "Semboyan", v1Tx: "Patrimonium Custodire, Augere et Tradere.<br>Melestarikan. Menumbuhkan. Mewariskan.",
+    v2T: "Kemandirian", v2Tx: "Tata kelola yang sengaja diperketat, keputusan cepat, dan kebebasan alokasi total.",
+    v3T: "Ketelitian", v3Tx: "Ketelitian adalah inti dari model kami: kualitas aset, likuiditas, tata kelola, risiko struktural.",
+    v4T: "Transparansi", v4Tx: "Informasi yang jelas, dapat dimengerti, dan terstruktur: alokasi, kinerja, risiko, pelaporan.",
+    v5T: "Diskresi", v5Tx: "Kerahasiaan adalah mutlak. Tidak ada data yang keluar dari sistem internal kami yang aman.",
+    v6T: "Tanggung Jawab", v6Tx: "Keputusan kami dibuat untuk hari ini, tetapi juga untuk generasi mendatang.",
+    conclusion: "HFG CAPITAL dipandu oleh satu ambisi: menjadikan kekayaan sebagai kekuatan yang abadi, stabil, disiplin, dan diwariskan dengan tepat."
+  }
+};
+
+/* --- CONFIG UI & MENU --- */
+const uiLanguages = {
+  fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", menuManifesto: "Manifesto", btnOpen: "Accès", modalTitle: "Espace Privé", btnSubmit: "Entrer", footer: "© 2025 HFG CAPITAL | Bureau d'Investissement Privé" },
+  en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", menuManifesto: "Manifesto", btnOpen: "Access", modalTitle: "Private Access", btnSubmit: "Enter", footer: "© 2025 HFG CAPITAL | Private Investment Office" },
+  cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", menuManifesto: "愿景宣言", btnOpen: "进入", modalTitle: "私人专区", btnSubmit: "进入", footer: "© 2025 HFG CAPITAL | 私人投資辦公室" },
+  es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", menuManifesto: "Manifiesto", btnOpen: "Acceso", modalTitle: "Acceso Privado", btnSubmit: "Entrar", footer: "© 2025 HFG CAPITAL | Oficina de Inversiones Privadas" },
+  de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", menuManifesto: "Manifest", btnOpen: "Zugang", modalTitle: "Privater Zugang", btnSubmit: "Eintreten", footer: "© 2025 HFG CAPITAL | Privates Anlagebüro" },
+  it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", menuManifesto: "Manifesto", btnOpen: "Accesso", modalTitle: "Accesso Riservato", btnSubmit: "Entra", footer: "© 2025 HFG CAPITAL | Ufficio di Investimento Privato" },
+  ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", menuManifesto: "Манифест", btnOpen: "Вход", modalTitle: "Частный доступ", btnSubmit: "Войти", footer: "© 2025 HFG CAPITAL | Частный Инвестиционный Офис" },
+  jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", menuManifesto: "マニフェスト", btnOpen: "アクセス", modalTitle: "プライベートアクセス", btnSubmit: "入る", footer: "© 2025 HFG CAPITAL | プライベート投資オフィス" },
+  vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", menuManifesto: "Tuyên ngôn", btnOpen: "Truy cập", modalTitle: "Truy cập riêng", btnSubmit: "Vào", footer: "© 2025 HFG CAPITAL | Văn phòng đầu tư tư nhân" },
+  id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", menuManifesto: "Manifesto", btnOpen: "Akses", modalTitle: "Akses Pribadi", btnSubmit: "Masuk", footer: "© 2025 HFG CAPITAL | Kantor Investasi Pribadi" }
+};
+
+const menuTranslations = {
+  fr: { home: "Accueil", about: "Qui sommes-nous", contacts: "Contacts" },
+  en: { home: "Home", about: "About Us", contacts: "Contact" },
+  cn: { home: "首页", about: "关于我们", contacts: "联系" },
+  es: { home: "Inicio", about: "Quiénes somos", contacts: "Contacto" },
+  de: { home: "Startseite", about: "Über uns", contacts: "Kontakt" },
+  it: { home: "Home", about: "Chi siamo", contacts: "Contatti" },
+  ru: { home: "Главная", about: "О нас", contacts: "Контакты" },
+  jp: { home: "ホーム", about: "会社概要", contacts: "お問い合わせ" },
+  vn: { home: "Trang chủ", about: "Giới thiệu", contacts: "Liên hệ" },
+  id: { home: "Beranda", about: "Tentang Kami", contacts: "Kontak" }
+};
+
+/* --- INITIALISATION --- */
+const bgImages = ["img/rouge_02.png", "img/jaune_01.png", "img/bleu_01.png", "img/violet_01.png"];
+
+window.addEventListener('load', () => {
+  const bgElement = document.getElementById('bgImage');
+  const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
+  bgElement.src = randomBg;
+  bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
+
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeBtn').classList.add('active');
+  }
+
+  generateLangMenu();
+  setLanguage(activeLang);
+});
+
+function toggleLangMenu() { document.getElementById('langMenu').classList.toggle('show'); }
+
+function setLanguage(lang) {
+  localStorage.setItem('hfg_lang', lang);
+  activeLang = lang;
+
+  const ui = uiLanguages[lang] || uiLanguages['en'];
+  document.getElementById('currentFlag').src = ui.flag;
+  document.getElementById('currentLangLabel').innerText = ui.label;
+  document.getElementById('openLoginBtn').innerText = ui.btnOpen;
+  document.getElementById('modalTitle').innerText = ui.modalTitle;
+  document.getElementById('btnText').innerText = ui.btnSubmit;
+  document.getElementById('footerText').innerText = ui.footer;
+
+  document.getElementById('menuManifesto').innerText = ui.menuManifesto;
+  const menuT = menuTranslations[lang] || menuTranslations['en'];
+  document.getElementById('menuHome').innerText = menuT.home;
+  document.getElementById('menuAbout').innerText = menuT.about;
+  document.getElementById('menuContacts').innerText = menuT.contacts;
+
+  const t = contentTranslations[lang] || contentTranslations['en'];
+  document.getElementById('pageTitle').innerText = t.mainTitle;
+  document.getElementById('manifestoText').innerHTML = t.manifesto;
+  document.getElementById('valuesTitle').innerText = t.valuesTitle;
+
+  document.getElementById('val1Title').innerText = t.v1T;
+  document.getElementById('val1Text').innerHTML = t.v1Tx;
+  document.getElementById('val2Title').innerText = t.v2T;
+  document.getElementById('val2Text').innerText = t.v2Tx;
+  document.getElementById('val3Title').innerText = t.v3T;
+  document.getElementById('val3Text').innerText = t.v3Tx;
+  document.getElementById('val4Title').innerText = t.v4T;
+  document.getElementById('val4Text').innerText = t.v4Tx;
+  document.getElementById('val5Title').innerText = t.v5T;
+  document.getElementById('val5Text').innerText = t.v5Tx;
+  document.getElementById('val6Title').innerText = t.v6T;
+  document.getElementById('val6Text').innerText = t.v6Tx;
+  document.getElementById('conclusionText').innerText = t.conclusion;
+
+  document.getElementById('langMenu').classList.remove('show');
+}
+
+function generateLangMenu() {
+  const menu = document.getElementById('langMenu');
+  menu.innerHTML = '';
+  for (const code in uiLanguages) {
+    const opt = document.createElement('div');
+    opt.className = 'lang-option';
+    opt.innerHTML = `<img src="${uiLanguages[code].flag}"> ${uiLanguages[code].full}`;
+    opt.onclick = () => setLanguage(code);
+    menu.appendChild(opt);
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.lang-container') && !e.target.closest('.menu-container')) {
+    document.getElementById('langMenu').classList.remove('show');
+  }
+});
+
+const menuBtn = document.getElementById('menuBtn');
+const mainMenuOverlay = document.getElementById('mainMenuOverlay');
+menuBtn.addEventListener('click', () => { mainMenuOverlay.classList.toggle('open'); menuBtn.classList.toggle('open'); });
+mainMenuOverlay.addEventListener('click', (e) => { if(e.target===mainMenuOverlay){ mainMenuOverlay.classList.remove('open'); menuBtn.classList.remove('open'); }});
+
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  themeBtn.classList.toggle('active');
+  localStorage.setItem('hfg_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+});
+
+const modal = document.getElementById('modalOverlay');
+function openModal() { modal.classList.add('active'); setTimeout(()=>document.getElementById('userId').focus(),300); }
+function closeModal() { modal.classList.remove('active'); }
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.getElementById('loginForm').addEventListener('submit', (e) => { e.preventDefault(); alert("Redirection..."); });
+</script>
+</body>
+</html>
