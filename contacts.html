@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>HFG CAPITAL | Contacts</title>
+  <meta name="description" content="HFG CAPITAL - Private Investment Office" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="shortcut icon" href="favicon/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- VARIABLES --- */
+    :root {
+      --primary-dark: #1a1a1a;
+      --gold-accent: #D4AF37;
+      --font-motto: 'Cinzel', serif; 
+      --font-sans: 'Montserrat', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      background-color: #000;
+      position: relative;
+      color: white;
+    }
+
+    /* --- BACKGROUND --- */
+    .bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+    .bg-image {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: opacity 1s ease;
+      animation: zoomIn 40s infinite alternate linear;
+    }
+    @keyframes zoomIn { from { transform: scale(1); } to { transform: scale(1.15); } }
+    body.dark-mode .bg-image { filter: grayscale(100%) brightness(0.25); }
+
+    /* --- HEADER --- */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 40px; z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    }
+
+    .header-left { display: flex; align-items: center; gap: 10px; }
+
+    /* --- UI BUTTONS --- */
+    .menu-btn, .theme-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.1);
+      cursor: pointer; transition: all 0.3s;
+    }
+
+    .menu-btn-lines { width: 15px; height: 11px; position: relative; }
+    .menu-btn-lines span { position: absolute; left: 0; right: 0; height: 1px; background: #fff; transition: 0.25s; }
+    .menu-btn-lines span:nth-child(1) { top: 0; }
+    .menu-btn-lines span:nth-child(2) { top: 5px; }
+    .menu-btn-lines span:nth-child(3) { bottom: 0; }
+
+    .menu-btn.open .menu-btn-lines span:nth-child(1) { top: 5px; transform: rotate(45deg); }
+    .menu-btn.open .menu-btn-lines span:nth-child(2) { opacity: 0; }
+    .menu-btn.open .menu-btn-lines span:nth-child(3) { bottom: 5px; transform: rotate(-45deg); }
+
+    .theme-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.9); transition: 0.3s; }
+    .theme-btn.active .theme-dot { background: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.95); }
+
+    /* --- LANGUES --- */
+    .lang-container { position: relative; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
+      padding: 0px 12px; height: 34px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; font-size: 0.75rem;
+    }
+    .lang-btn img { width: 20px; height: 13px; object-fit: cover; border-radius: 3px; }
+
+    .lang-menu {
+      position: absolute; top: 45px; left: 0;
+      background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px; padding: 5px 0; display: none;
+      width: max-content; min-width: 150px; max-height: 60vh; overflow-y: auto;
+    }
+    .lang-menu.show { display: flex; flex-direction: column; }
+
+    .lang-option {
+      padding: 10px 20px; color: #ccc; cursor: pointer; font-size: 0.75rem;
+      display: flex; gap: 12px; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    /* --- LOGIN BUTTON --- */
+    .login-trigger {
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); color: white;
+      border: 1px solid rgba(255,255,255,0.2); height: 34px; padding: 0px 24px;
+      display: flex; align-items: center; border-radius: 20px;
+      text-transform: uppercase; font-size: 0.75rem; letter-spacing: 2px; cursor: pointer;
+    }
+
+    /* --- MENU NAVIGATION --- */
+    .main-menu-overlay {
+      position: fixed; inset: 0; background: transparent;
+      display: none; align-items: stretch; justify-content: flex-start; z-index: 900;
+    }
+    .main-menu-overlay.open { display: flex; }
+
+    .main-menu {
+      width: 320px; max-width: calc(100% - 80px); margin-top: 70px;
+      background: transparent; padding: 24px; text-align: left;
+      transform: translateX(-100%); transition: transform 0.25s ease;
+    }
+    .main-menu-overlay.open .main-menu { transform: translateX(0); }
+
+    .main-menu a {
+      font-size: 0.675rem; text-transform: uppercase;
+      letter-spacing: 0.22em; color: rgba(255,255,255,0.85);
+      padding: 10px 0; display: block;
+    }
+
+    /* --- CONTENT --- */
+    .content-wrapper {
+      padding-top: 130px; padding-bottom: 80px;
+      max-width: 800px; width: 100%; margin: auto;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .text-container {
+      width: 100%;
+      background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      padding: 50px;
+      border-radius: 4px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+      animation: fadeInUp 1.2s ease both;
+    }
+
+    h1 {
+      font-family: var(--font-motto); font-size: 1.8rem;
+      letter-spacing: 3px; text-transform: uppercase;
+      text-align: center; color: var(--gold-accent);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      text-align: center; opacity: 0.8;
+      font-size: 0.9rem; margin-bottom: 40px;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    /* --- FORMULAIRE --- */
+    .contact-form .input-group {
+      margin-bottom: 20px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%; padding: 15px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: white; font-size: 0.9rem;
+      outline: none; resize: vertical;
+    }
+
+    .btn-submit {
+      width: 100%; padding: 15px;
+      background: var(--primary-dark);
+      color: white; border: none;
+      letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      padding: 30px 0; text-align: center;
+      font-size: 0.6rem; opacity: 0.5;
+      letter-spacing: 1.5px; text-transform: uppercase;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- BACKGROUND -->
+  <div class="bg-container">
+    <img src="" id="bgImage" class="bg-image" alt="Background">
+  </div>
+
+  <!-- MENU NAVIGATION -->
+  <div class="main-menu-overlay" id="mainMenuOverlay">
+    <nav class="main-menu">
+      <ul>
+        <li><a id="menuHome" href="index.html">Home</a></li>
+        <li><a id="menuAbout" href="about.html">About</a></li>
+        <li><a id="menuPhilosophy" href="philosophy.html">Philosophy</a></li>
+        <li><a id="menuManifesto" href="manifesto.html">Manifesto</a></li>
+        <li><a id="menuContacts" href="contacts.html"> </a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <header>
+    <div class="header-left">
+
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">
+        <div class="menu-btn-lines"><span></span><span></span><span></span></div>
+      </button>
+
+      <button class="theme-btn" id="themeBtn" aria-label="Thème">
+        <span class="theme-dot"></span>
+      </button>
+
+      <div class="lang-container">
+        <div class="lang-btn" onclick="toggleLangMenu()">
+          <img id="currentFlag" src="https://flagcdn.com/fr.svg">
+          <span id="currentLangLabel">FR</span>
+          <small>▼</small>
+        </div>
+        <div class="lang-menu" id="langMenu"></div>
+      </div>
+    </div>
+
+    <button class="login-trigger" id="openLoginBtn" onclick="openModal()">Accès</button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="content-wrapper">
+    <div class="text-container">
+
+      <h1 id="pageTitle">Contacts</h1>
+      <h2 id="pageSubtitle">Pour nous écrire en toute confidentialité</h2>
+
+      <form action="https://formspree.io/f/xgvqnowr" method="POST" class="contact-form">
+
+        <div class="input-group">
+          <input type="text" name="name" placeholder="Nom (optionnel)">
+        </div>
+
+        <div class="input-group">
+          <input type="email" name="email" placeholder="Email (optionnel)">
+        </div>
+
+        <div class="input-group">
+          <textarea name="message" rows="4" required placeholder="Votre message"></textarea>
+        </div>
+
+        <!-- Anti-bot honeypot -->
+        <input type="text" name="_gotcha" style="display:none">
+
+        <button class="btn-submit" type="submit" id="btnSend">Envoyer</button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <footer>
+    <div id="footerText">© 2025 HFG CAPITAL | Private Investment Office</div>
+  </footer>
+
+<script>
+/* --- BACKGROUND RANDOMIZER --- */
+const bgImages = ["img/rouge_02.png", "img/jaune_01.png", "img/bleu_01.png", "img/violet_01.png"];
+window.addEventListener("load", () => {
+  const bg = document.getElementById("bgImage");
+  bg.src = bgImages[Math.floor(Math.random() * bgImages.length)];
+});
+
+/* --- MENU --- */
+const menuBtn = document.getElementById("menuBtn");
+const menuOverlay = document.getElementById("mainMenuOverlay");
+menuBtn.addEventListener("click", () => {
+  menuOverlay.classList.toggle("open");
+  menuBtn.classList.toggle("open");
+});
+menuOverlay.addEventListener("click", e => {
+  if (e.target === menuOverlay) {
+    menuOverlay.classList.remove("open");
+    menuBtn.classList.remove("open");
+  }
+});
+
+/* --- THEME --- */
+const themeBtn = document.getElementById("themeBtn");
+themeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  themeBtn.classList.toggle("active");
+});
+
+/* --- LANGUES (même système que tes autres pages) --- */
+const uiLanguages = {
+  fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français",
+        pageTitle:"Contacts", pageSubtitle:"Pour nous écrire en toute confidentialité",
+        home:"Accueil", about:"Qui sommes-nous", philosophy:"Philosophie",
+        manifesto:"Manifesto", contacts:"Contacts", send:"Envoyer",
+        login:"Accès", footer:"© 2025 HFG CAPITAL | Bureau d'Investissement Privé"
+  },
+
+  en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English",
+        pageTitle:"Contact", pageSubtitle:"Write to us confidentially",
+        home:"Home", about:"About Us", philosophy:"Philosophy",
+        manifesto:"Manifesto", contacts:"Contact", send:"Send",
+        login:"Access", footer:"© 2025 HFG CAPITAL | Private Investment Office"
+  },
+
+  cn: { flag:"https://flagcdn.com/cn.svg", label:"CN", full:"中文",
+        pageTitle:"联系我们", pageSubtitle:"请以保密方式联系我们",
+        home:"首页", about:"关于我们", philosophy:"投资哲学",
+        manifesto:"愿景宣言", contacts:"联系", send:"发送",
+        login:"进入", footer:"© 2025 HFG CAPITAL | 私人投资办公室"
+  },
+
+  es:{ flag:"https://flagcdn.com/es.svg", label:"ES", full:"Español",
+       pageTitle:"Contacto", pageSubtitle:"Escríbanos con total confidencialidad",
+       home:"Inicio", about:"Quiénes somos", philosophy:"Filosofía",
+       manifesto:"Manifiesto", contacts:"Contacto", send:"Enviar",
+       login:"Acceso", footer:"© 2025 HFG CAPITAL | Oficina de Inversiones Privadas"
+  },
+
+  de:{ flag:"https://flagcdn.com/de.svg", label:"DE", full:"Deutsch",
+       pageTitle:"Kontakt", pageSubtitle:"Schreiben Sie uns vertraulich",
+       home:"Startseite", about:"Über uns", philosophy:"Philosophie",
+       manifesto:"Manifest", contacts:"Kontakt", send:"Senden",
+       login:"Zugang", footer:"© 2025 HFG CAPITAL | Privates Anlagebüro"
+  },
+
+  it:{ flag:"https://flagcdn.com/it.svg", label:"IT", full:"Italiano",
+       pageTitle:"Contatti", pageSubtitle:"Scrivici in totale riservatezza",
+       home:"Home", about:"Chi siamo", philosophy:"Filosofia",
+       manifesto:"Manifesto", contacts:"Contatti", send:"Inviare",
+       login:"Accesso", footer:"© 2025 HFG CAPITAL | Ufficio di Investimento Privato"
+  },
+
+  ru:{ flag:"https://flagcdn.com/ru.svg", label:"RU", full:"Русский",
+       pageTitle:"Контакты", pageSubtitle:"Напишите нам конфиденциально",
+       home:"Главная", about:"О нас", philosophy:"Философия",
+       manifesto:"Манифест", contacts:"Контакты", send:"Отправить",
+       login:"Вход", footer:"© 2025 HFG CAPITAL | Частный Инвестиционный Офис"
+  },
+
+  jp:{ flag:"https://flagcdn.com/jp.svg", label:"JP", full:"日本語",
+       pageTitle:"お問い合わせ", pageSubtitle:"秘密厳守でご連絡ください",
+       home:"ホーム", about:"会社概要", philosophy:"投資哲学",
+       manifesto:"マニフェスト", contacts:"お問い合わせ", send:"送信",
+       login:"アクセス", footer:"© 2025 HFG CAPITAL | プライベート投資オフィス"
+  },
+
+  vn:{ flag:"https://flagcdn.com/vn.svg", label:"VN", full:"Tiếng Việt",
+       pageTitle:"Liên hệ", pageSubtitle:"Liên hệ với chúng tôi một cách bảo mật",
+       home:"Trang chủ", about:"Giới thiệu", philosophy:"Triết lý",
+       manifesto:"Tuyên ngôn", contacts:"Liên hệ", send:"Gửi",
+       login:"Truy cập", footer:"© 2025 HFG CAPITAL | Văn phòng đầu tư tư nhân"
+  },
+
+  id:{ flag:"https://flagcdn.com/id.svg", label:"ID", full:"Bahasa Indonesia",
+       pageTitle:"Kontak", pageSubtitle:"Hubungi kami secara rahasia",
+       home:"Beranda", about:"Tentang Kami", philosophy:"Filosofi",
+       manifesto:"Manifesto", contacts:"Kontak", send:"Kirim",
+       login:"Akses", footer:"© 2025 HFG CAPITAL | Kantor Investasi Pribadi"
+  }
+};
+
+function toggleLangMenu() {
+  document.getElementById("langMenu").classList.toggle("show");
+}
+
+function generateLangMenu() {
+  const menu = document.getElementById("langMenu");
+  menu.innerHTML = "";
+  for (const code in uiLanguages) {
+    const opt = document.createElement("div");
+    opt.className = "lang-option";
+    opt.innerHTML = `<img src="${uiLanguages[code].flag}"> ${uiLanguages[code].full}`;
+    opt.onclick = () => setLanguage(code);
+    menu.appendChild(opt);
+  }
+}
+
+let activeLang = localStorage.getItem("hfg_lang") || "fr";
+
+function setLanguage(lang) {
+  activeLang = lang;
+  localStorage.setItem("hfg_lang", lang);
+  const ui = uiLanguages[lang];
+
+  document.getElementById("currentFlag").src = ui.flag;
+  document.getElementById("currentLangLabel").innerText = ui.label;
+
+  document.getElementById("pageTitle").innerText = ui.pageTitle;
+  document.getElementById("pageSubtitle").innerText = ui.pageSubtitle;
+
+  document.getElementById("menuHome").innerText = ui.home;
+  document.getElementById("menuAbout").innerText = ui.about;
+  document.getElementById("menuPhilosophy").innerText = ui.philosophy;
+  document.getElementById("menuManifesto").innerText = ui.manifesto;
+  document.getElementById("menuContacts").innerText = ui.contacts;
+  document.getElementById("btnSend").innerText = ui.send;
+  document.getElementById("openLoginBtn").innerText = ui.login;
+
+  document.getElementById("footerText").innerText = ui.footer;
+
+  document.getElementById("langMenu").classList.remove("show");
+}
+
+generateLangMenu();
+setLanguage(activeLang);
+
+/* --- MODALE LOGIN (restée identique à tes autres pages) --- */
+function openModal(){ alert("Espace privé"); }
+</script>
+
+</body>
+</html>
