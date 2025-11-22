@@ -751,6 +751,11 @@ if (themeBtn) {
   themeBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
     themeBtn.classList.toggle('active');
+    if (document.body.classList.contains('dark-mode')) {
+      localStorage.setItem('hfg_theme', 'dark');
+    } else {
+      localStorage.setItem('hfg_theme', 'light');
+  }
   });
 }
 
@@ -775,13 +780,25 @@ function guessLangFromBrowser() {
 }
 
 window.addEventListener('load', () => {
+  // --- 1. Gestion du fond d'écran (Inchangé) ---
   const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
   bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
   bgElement.src = randomBg;
   
+  // --- 2. Restauration du Thème (Nouveau) ---
+  const savedTheme = localStorage.getItem('hfg_theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    if (themeBtn) themeBtn.classList.add('active');
+  }
+
   generateLangMenu();
 
-  const initialLang = guessLangFromBrowser();
+  // --- 3. Restauration de la Langue (Nouveau) ---
+  // On vérifie s'il y a une sauvegarde, sinon on utilise la langue du navigateur
+  const savedLang = localStorage.getItem('hfg_lang');
+  const initialLang = savedLang || guessLangFromBrowser();
+  
   setLanguage(initialLang);
 
   scrollTitle();
@@ -848,6 +865,7 @@ function toggleLangMenu() {
 }
 
 function setLanguage(lang) {
+  localStorage.setItem('hfg_lang', lang);
   activeLang = lang;
   const data = languages[lang];
   document.getElementById('currentFlag').src = data.flag;
