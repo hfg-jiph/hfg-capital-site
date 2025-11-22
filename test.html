@@ -55,6 +55,10 @@
       will-change: transform;
     }
 
+    body.dark-mode .bg-image {
+      filter: grayscale(100%) brightness(0.25);
+    }
+
     @keyframes zoomIn {
       from { transform: scale(1); }
       to { transform: scale(1.15); }
@@ -131,6 +135,38 @@
     .menu-btn.open .menu-btn-lines span:nth-child(3) {
       bottom: 5px;
       transform: rotate(-45deg);
+    }
+
+    /* Bouton mode sombre – même base que menu-btn */
+    .theme-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      margin-left: 8px;
+    
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+    
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.3s ease;
+    }
+    
+    .theme-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Petite icône cercle / lune */
+    .theme-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.85);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
     }
 
 
@@ -533,6 +569,12 @@
           </div>
         </button>
       </div>
+
+      <!-- BOUTON MODE SOMBRE -->
+      <button class="theme-btn" id="themeBtn" aria-label="Activer le mode sombre">
+        <span class="theme-icon"></span>
+      </button>
+      <!-- FIN BOUTON MODE SOMBRE -->
       
       <div class="lang-container" id="langContainer">
         <div class="lang-btn" onclick="toggleLangMenu()">
@@ -691,7 +733,12 @@ const btnLoader = document.getElementById('btnLoader');
 const openLoginBtn = document.getElementById('openLoginBtn');
 
 const mainMenuOverlay = document.getElementById('mainMenuOverlay');
-const menuBtn = document.getElementById('menuBtn');
+const themeBtn = document.getElementById('themeBtn');
+
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+});
+
 
 /* --- INIT --- */
 function guessLangFromBrowser() {
