@@ -88,6 +88,7 @@
       height: 34px;
       border-radius: 20px; /*50%*/
       border: 1px solid rgba(255,255,255,0.2); /*1px solid rgba(255,255,255,0.5);*/
+      backdrop-filter: blur(5px);
       background: rgba(255, 255, 255, 0.1); /*rgba(0,0,0,0.45);*/
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
@@ -95,7 +96,7 @@
     }
 
     .menu-btn:hover {
-      background: rgba(0,0,0,0.45); 
+      background: rgba(255, 255, 255, 0.2); 
       border-color: var(--gold-accent);
     }
 
@@ -132,28 +133,7 @@
       transform: rotate(-45deg);
     }
 
-    /* Icône citadelle (bouton home) */
-    .home-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 18px;           /* espace entre menu & langue */
-    }
-    
-    .home-icon-img {
-      height: 34px;             /* hauteur demandée */
-      width: auto;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-drag: none;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-      transition: opacity 0.25s ease;
-    }
-    
-    /* effet hover discret */
-    .home-icon-img:hover {
-      opacity: 0.85;
-    }
+
 
     
     /* --- MENU PRINCIPAL --- */
@@ -282,7 +262,7 @@
 
     /* --- LOGIN BUTTON --- */
     .login-trigger {
-      background: rgba(255, 255, 255, 0.1)
+      background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
       color: white;
       border: 1px solid rgba(255,255,255,0.2);
