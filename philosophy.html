@@ -263,7 +263,7 @@
       <ul>
         <li><a id="menuHome" href="index.html">Accueil</a></li>
         <li><a id="menuAbout" href="about.html">Qui sommes-nous</a></li>
-        <li><a id="menuPhilosophy" href="philosophy.html" style="color:var(--gold-accent);">Philosophie</a></li>
+        <li><a id="menuPhilosophy" href="philosophy.html">Philosophie</a></li>
         <li><a id="menuManifesto" href="manifesto.html">Manifesto</a></li>
         <li><a id="menuContacts" href="contacts.html">Contacts</a></li>
       </ul>
@@ -676,7 +676,6 @@ function setLanguage(lang) {
   document.getElementById('menuHome').innerText = menuT.home;
   document.getElementById('menuManifesto').innerText = menuT.manifesto;
   document.getElementById('menuContacts').innerText = menuT.contacts;
-  document.getElementById('menuPhilosophy').innerText = menuT.philosophy;
 
   const t = contentTranslations[lang] || contentTranslations['en'];
   document.getElementById('pageTitle').innerText = t.title;
