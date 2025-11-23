@@ -515,7 +515,7 @@
 <body>
 
   <div class="bg-container">
-    <img id="bgImage" class="bg-image" alt="Background" style="display: block;">
+    <img id="bgImage" img src="" class="bg-image" alt="Background" style="display: block;">
   </div>
 
   <!-- MENU PLEIN ÉCRAN -->
@@ -740,59 +740,36 @@ function guessLangFromBrowser() {
   return 'en'; // fallback propre
 }
 
-/* --- INIT BACKGROUND ROBUSTE --- */
-function initBackground() {
+/* --- LOGIQUE DE CHARGEMENT UNIQUE (window.load) --- */
+window.addEventListener('load', () => {
   const STORAGE_KEY_BG = 'hfg_bg_session';
   const bgElement = document.getElementById('bgImage');
-  
-  // 1. Tenter de récupérer l'image en session
-  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
 
-  // 2. Vérification : Si pas d'image, OU si l'image stockée n'est plus dans la liste (sécurité)
-  // On choisit une nouvelle image
-  if (!currentBg || !bgImages.includes(currentBg)) {
-    const randomIndex = Math.floor(Math.random() * bgImages.length);
-    currentBg = bgImages[randomIndex];
-    
-    // 3. On sauvegarde immédiatement la nouvelle image
-    try {
-        sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
-    } catch (e) {
-        console.warn("SessionStorage non disponible", e);
+  if (bgElement) {
+    // 1. Récupérer l'image stockée
+    let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+
+    // 2. Si pas d'image ou si l'image stockée n'est plus dans la liste (sécurité)
+    if (!currentBg || !bgImages.includes(currentBg)) {
+      // On choisit une nouvelle image au hasard
+      const randomIndex = Math.floor(Math.random() * bgImages.length);
+      currentBg = bgImages[randomIndex];
+      
+      // On sauvegarde ce choix
+      sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
     }
+
+    // 3. Appliquer l'image
+    bgElement.src = currentBg;
+    
+    // Gestion d'erreur (si l'image n'existe pas, on reset pour la prochaine fois)
+    bgElement.onerror = function() {
+      this.style.display = 'none';
+      sessionStorage.removeItem(STORAGE_KEY_BG);
+    };
   }
-
-  // 4. Gestion de l'erreur de chargement (si l'image n'existe pas physiquement)
-  bgElement.onerror = function () {
-    this.style.display = 'none';
-    document.body.style.backgroundColor = '#111';
-    // Si l'image est cassée, on nettoie le storage pour retenter une autre au prochain chargement
-    sessionStorage.removeItem(STORAGE_KEY_BG);
-  };
-
-  // 5. Appliquer l'image
-  bgElement.src = currentBg;
-}
-
-/* --- LANCEMENT --- */
-document.addEventListener('DOMContentLoaded', () => {
-  // Lancer l'initialisation du fond en premier
-  initBackground();
-
-  // Reste de votre code d'initialisation...
-  const savedTheme = localStorage.getItem('hfg_theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
-    if (themeBtn) themeBtn.classList.add('active');
-  }
-
-  generateLangMenu();
-
-  const savedLang = localStorage.getItem('hfg_lang');
-  const initialLang = savedLang || guessLangFromBrowser();
-  setLanguage(initialLang);
-  scrollTitle();
 });
+
 
 /* --- MENU PRINCIPAL --- */
 function toggleMainMenu(forceClose = false) {
