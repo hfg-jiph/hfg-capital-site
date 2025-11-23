@@ -515,7 +515,7 @@
 <body>
 
   <div class="bg-container">
-    <img id="bgImage" img src="" class="bg-image" alt="Background" style="display: block;">
+    <img id="bgImage" src="" class="bg-image" alt="Background" style="display: block;">
   </div>
 
   <!-- MENU PLEIN ÉCRAN -->
@@ -923,6 +923,28 @@ styleSheet.innerText = `
   }
 `;
 document.head.appendChild(styleSheet);
+
+/* --- INITIALISATION GÉNÉRALE (Langue, Thème, Titre) --- */
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Restaurer le thème (Sombre/Clair)
+  const savedTheme = localStorage.getItem('hfg_theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    if (themeBtn) themeBtn.classList.add('active');
+  }
+
+  // 2. Initialiser le menu des langues
+  generateLangMenu();
+  
+  // 3. Définir la langue (sauvegardée ou devinée)
+  const savedLang = localStorage.getItem('hfg_lang');
+  const initialLang = savedLang || guessLangFromBrowser();
+  setLanguage(initialLang);
+
+  // 4. Lancer le défilement du titre
+  scrollTitle();
+});
+  
 </script>
 </body>
 </html>
