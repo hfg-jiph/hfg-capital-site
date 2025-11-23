@@ -53,8 +53,9 @@
       transition: opacity 1s ease;
       animation: zoomIn 40s infinite alternate linear;
       will-change: transform;
+      /* On cache l'image par défaut tant qu'elle n'est pas chargée pour éviter l'icone 'image brisée' */
+      display: none; 
     }
-
 
     @keyframes zoomIn {
       from { transform: scale(1); }
@@ -87,10 +88,10 @@
       justify-content: center;
       width: 34px;
       height: 34px;
-      border-radius: 20px; /*50%*/
-      border: 1px solid rgba(255,255,255,0.2); /*1px solid rgba(255,255,255,0.5);*/
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
       backdrop-filter: blur(5px);
-      background: rgba(255, 255, 255, 0.1); /*rgba(0,0,0,0.45);*/
+      background: rgba(255, 255, 255, 0.1);
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       transition: background 0.3s, border-color 0.3s;
@@ -134,29 +135,24 @@
       transform: rotate(-45deg);
     }
 
-    /* Mode sombre : l'image devient gris sombre */
+    /* Mode sombre */
     body.dark-mode .bg-image {
       filter: grayscale(100%) brightness(0.25);
     }
     
-    /* Bouton mode sombre – même base que menu-btn */
-    /* Bouton toggle thème, même gabarit que les autres (34px) */
     .theme-btn {
       width: 34px;
       height: 34px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-    
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(5px);
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 20px;
-    
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       transition: background 0.3s ease, border-color 0.3s ease;
-     /* margin-left: 8px;*/ /* petit espace après le menu */
     }
     
     .theme-btn:hover {
@@ -164,7 +160,6 @@
       border-color: var(--gold-accent);
     }
     
-    /* Cercle intérieur (état normal : contour) */
     .theme-dot {
       width: 14px;
       height: 14px;
@@ -174,12 +169,10 @@
       transition: background 0.3s ease, border-color 0.3s ease;
     }
     
-    /* Quand le mode sombre est actif : cercle rempli */
     .theme-btn.active .theme-dot {
-      background: rgba(255,255,255,0.95);   /* ou var(--gold-accent) si tu veux doré */
+      background: rgba(255,255,255,0.95);
       border-color: rgba(255,255,255,0.95);
     }
-
 
     /* --- MENU NAVIGATION --- */
     .main-menu-overlay {
@@ -201,10 +194,6 @@
     }
     .main-menu a:hover { color: var(--gold-accent); }
 
-    
-
-
-
     /* --- LANGUAGE SELECTOR --- */
     .lang-container { position: relative; }
 
@@ -214,9 +203,8 @@
       gap: 8px;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
-      padding: 0px 12px; /*6px 12px */
+      padding: 0px 12px;
       height: 34px;
-      display: flex;
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.2);
       color: white;
@@ -249,7 +237,7 @@
       flex-direction: column;
       width: max-content; 
       min-width: 150px;
-      box-shadow: 0 10px 30px rgba(55,255,255,0.1); /*0,0,0,0.5*/
+      box-shadow: 0 10px 30px rgba(55,255,255,0.1);
     }
 
     .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
@@ -277,7 +265,7 @@
       color: white;
       border: 1px solid rgba(255,255,255,0.2);
       height: 34px;
-      padding: 0px 24px; /*10px 30px*/
+      padding: 0px 24px;
       display: flex;
       align-items: center;
       border-radius: 20px;
@@ -515,10 +503,9 @@
 <body>
 
   <div class="bg-container">
-    <img id="bgImage" src="" class="bg-image" alt="Background" style="display: block;">
+    <img id="bgImage" class="bg-image" alt="Background">
   </div>
 
-  <!-- MENU PLEIN ÉCRAN -->
   <div class="main-menu-overlay" id="mainMenuOverlay">
     <nav class="main-menu">
       <ul>
@@ -542,11 +529,9 @@
         </button>
       </div>
 
-      <!-- BOUTON MODE SOMBRE -->
       <button class="theme-btn" id="themeBtn" aria-label="Basculer le fond sombre">
         <span class="theme-dot"></span>
       </button>
-      <!-- FIN BOUTON MODE SOMBRE -->
       
       <div class="lang-container" id="langContainer">
         <div class="lang-btn" onclick="toggleLangMenu()">
@@ -611,88 +596,36 @@ const languages = {
 };
 
 const menuTranslations = {
-  fr: {
-    about: "Qui sommes-nous",
-    philosophy: "Philosophie",
-    manifesto: "Manifesto",
-    contacts: "Contacts"
-  },
-  en: {
-    about: "About Us",
-    philosophy: "Philosophy",
-    manifesto: "Manifesto",
-    contacts: "Contact"
-  },
-  cn: {
-    about: "关于我们",
-    philosophy: "投资理念",
-    manifesto: "愿景宣言",
-    contacts: "联系"
-  },
-  es: {
-    about: "Quiénes somos",
-    philosophy: "Filosofía",
-    manifesto: "Manifiesto",
-    contacts: "Contacto"
-  },
-  de: {
-    about: "Über uns",
-    philosophy: "Philosophie",
-    manifesto: "Manifest",
-    contacts: "Kontakt"
-  },
-  it: {
-    about: "Chi siamo",
-    philosophy: "Filosofia",
-    manifesto: "Manifesto",
-    contacts: "Contatti"
-  },
-  ru: {
-    about: "О нас",
-    philosophy: "Философия",
-    manifesto: "Манифест",
-    contacts: "Контакты"
-  },
-  jp: {
-    about: "会社概要",
-    philosophy: "投資哲学",
-    manifesto: "マニフェスト",
-    contacts: "お問い合わせ"
-  },
-  vn: {
-    about: "Giới thiệu",
-    philosophy: "Triết lý",
-    manifesto: "Tuyên ngôn",
-    contacts: "Liên hệ"
-  },
-  id: {
-    about: "Tentang Kami",
-    philosophy: "Filosofi",
-    manifesto: "Manifesto",
-    contacts: "Kontak"
-  }
+  fr: { about: "Qui sommes-nous", philosophy: "Philosophie", manifesto: "Manifesto", contacts: "Contacts" },
+  en: { about: "About Us", philosophy: "Philosophy", manifesto: "Manifesto", contacts: "Contact" },
+  cn: { about: "关于我们", philosophy: "投资理念", manifesto: "愿景宣言", contacts: "联系" },
+  es: { about: "Quiénes somos", philosophy: "Filosofía", manifesto: "Manifiesto", contacts: "Contacto" },
+  de: { about: "Über uns", philosophy: "Philosophie", manifesto: "Manifest", contacts: "Kontakt" },
+  it: { about: "Chi siamo", philosophy: "Filosofia", manifesto: "Manifesto", contacts: "Contatti" },
+  ru: { about: "О нас", philosophy: "Философия", manifesto: "Манифест", contacts: "Контакты" },
+  jp: { about: "会社概要", philosophy: "投資哲学", manifesto: "マニフェスト", contacts: "お問い合わせ" },
+  vn: { about: "Giới thiệu", philosophy: "Triết lý", manifesto: "Tuyên ngôn", contacts: "Liên hệ" },
+  id: { about: "Tentang Kami", philosophy: "Filosofi", manifesto: "Manifesto", contacts: "Kontak" }
 };
 
-  function updateMenuLanguage(lang) {
+function updateMenuLanguage(lang) {
   const t = menuTranslations[lang];
-
   document.getElementById("menuAbout").innerText = t.about;
   document.getElementById("menuPhilosophy").innerText = t.philosophy;
   document.getElementById("menuManifesto").innerText = t.manifesto;
   document.getElementById("menuContacts").innerText = t.contacts;
 }
 
-  
 let activeLang = "fr";
 
 /* --- IMAGES DE FOND --- */
 const bgImages = [
-                        "img/rouge_02.png",                       "img/rouge_04.png",
-  "img/jaune_01.png",   "img/jaune_02.png",                       "img/jaune_04.png", 
-  "img/vert_01.png",    "img/vert_02.png",    
-                        "img/bleu_02.png",   "img/bleu_03.png",   "img/bleu_04.png",   "img/bleu_05.png",
-                        "img/orange_02.png", 
-  "img/violet_01.png",                       "img/violet_03.png"
+  "img/rouge_02.png", "img/rouge_04.png",
+  "img/jaune_01.png", "img/jaune_02.png", "img/jaune_04.png", 
+  "img/vert_01.png",  "img/vert_02.png",    
+  "img/bleu_02.png",  "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png",
+  "img/orange_02.png", 
+  "img/violet_01.png", "img/violet_03.png"
 ];
 
 /* --- DOM --- */
@@ -704,10 +637,9 @@ const errorMsg = document.getElementById('errorMsg');
 const btnSubmit = document.getElementById('submitBtn');
 const btnLoader = document.getElementById('btnLoader');
 const openLoginBtn = document.getElementById('openLoginBtn');
-
+const menuBtn = document.getElementById('menuBtn'); // CORRIGÉ : Ajout de la variable manquante
 const mainMenuOverlay = document.getElementById('mainMenuOverlay');
 const themeBtn = document.getElementById('themeBtn');
-const menuBtn = document.getElementById('menuBtn');
 
 if (themeBtn) {
   themeBtn.addEventListener('click', () => {
@@ -717,16 +649,13 @@ if (themeBtn) {
       localStorage.setItem('hfg_theme', 'dark');
     } else {
       localStorage.setItem('hfg_theme', 'light');
-  }
+    }
   });
 }
-
-
 
 /* --- INIT --- */
 function guessLangFromBrowser() {
   const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-
   if (browserLang.startsWith('fr')) return 'fr';
   if (browserLang.startsWith('en')) return 'en';
   if (browserLang.startsWith('zh') || browserLang.startsWith('cn')) return 'cn';
@@ -737,39 +666,36 @@ function guessLangFromBrowser() {
   if (browserLang.startsWith('ja')) return 'jp';
   if (browserLang.startsWith('vi')) return 'vn';
   if (browserLang.startsWith('id')) return 'id';
-
-  return 'en'; // fallback propre
+  return 'en'; 
 }
 
-/* --- LOGIQUE DE CHARGEMENT UNIQUE (window.load) --- */
-window.addEventListener('load', () => {
+/* --- LOGIQUE DE CHARGEMENT RAPIDE (SANS ATTENDRE LOAD) --- */
+/* On exécute ceci immédiatement pour fixer le fond avant que Chrome ne panique */
+(function initBackgroundNow() {
   const STORAGE_KEY_BG = 'hfg_bg_session';
-  const bgElement = document.getElementById('bgImage');
+  const bgEl = document.getElementById('bgImage');
 
-  if (bgElement) {
-    // 1. Récupérer l'image stockée
+  if (bgEl) {
     let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
 
-    // 2. Si pas d'image ou si l'image stockée n'est plus dans la liste (sécurité)
+    // Si pas d'image ou image invalide, on en tire une nouvelle
     if (!currentBg || !bgImages.includes(currentBg)) {
-      // On choisit une nouvelle image au hasard
       const randomIndex = Math.floor(Math.random() * bgImages.length);
       currentBg = bgImages[randomIndex];
-      
-      // On sauvegarde ce choix
       sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
     }
 
-    // 3. Appliquer l'image
-    bgElement.src = currentBg;
-    
-    // Gestion d'erreur (si l'image n'existe pas, on reset pour la prochaine fois)
-    bgElement.onerror = function() {
+    // On applique l'image
+    bgEl.src = currentBg;
+    bgEl.style.display = 'block';
+
+    // Gestion d'erreur APRES avoir mis le src
+    bgEl.onerror = function() {
       this.style.display = 'none';
       sessionStorage.removeItem(STORAGE_KEY_BG);
     };
   }
-});
+})();
 
 
 /* --- MENU PRINCIPAL --- */
