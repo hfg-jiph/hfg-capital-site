@@ -37,16 +37,15 @@
       flex-direction: column;
     }
 
-    /* --- BACKGROUND IDENTIQUE INDEX --- */
+    /* --- BACKGROUND --- */
     .bg-container {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
     }
     .bg-image {
       width: 100%; height: 100%; object-fit: cover;
       transition: opacity 1s ease;
-      display: none; /* Géré par JS */
+      display: none; 
     }
-    
     body.dark-mode .bg-image { filter: grayscale(100%) brightness(0.25); }
 
     /* --- HEADER --- */
@@ -122,12 +121,19 @@
       font-size: 0.75rem; transition: 0.3s;
     }
     .lang-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: var(--gold-accent); }
-    .lang-btn img { width: 20px; height: 13px; object-fit: cover; border-radius: 3px; }
+    
+    /* CORRECTION DRAPEAUX : Cette règle s'applique aux deux emplacements */
+    .lang-btn img, .lang-option img { 
+      width: 20px; height: 13px; object-fit: cover; border-radius: 3px; 
+    }
+
     .lang-menu {
       position: absolute; top: 45px; left: 0;
       background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(255,255,255,0.2);
       border-radius: 8px; padding: 5px 0; display: none; flex-direction: column;
       width: max-content; min-width: 150px;
+      /* On s'assure que le menu ne dépasse pas */
+      max-height: 80vh; overflow-y: auto;
     }
     .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
     .lang-option {
@@ -147,7 +153,7 @@
     }
     .login-trigger:hover { background: var(--gold-accent); color: var(--primary-dark); }
 
-    /* --- CONTENU SPECIFIQUE CONTACTS --- */
+    /* --- CONTENU --- */
     main {
       flex: 1;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -183,11 +189,7 @@
       border-radius: 0;
     }
     
-    .form-control:focus {
-      background: rgba(255,255,255,0.1);
-      border-color: var(--gold-accent);
-    }
-    
+    .form-control:focus { background: rgba(255,255,255,0.1); border-color: var(--gold-accent); }
     textarea.form-control { resize: vertical; min-height: 120px; }
 
     .btn-send {
@@ -196,10 +198,22 @@
       border: none; font-family: var(--font-sans); font-weight: 600;
       text-transform: uppercase; letter-spacing: 2px;
       cursor: pointer; transition: 0.3s; margin-top: 10px;
+      display: flex; justify-content: center; align-items: center; gap: 10px;
     }
     
     .btn-send:hover { background: #fff; }
-    .btn-send:disabled { opacity: 0.7; cursor: wait; }
+    .btn-send:disabled { opacity: 0.7; cursor: not-allowed; background: #999; }
+
+    /* LOADER ICON */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-left-color: #000;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none; /* Caché par défaut */
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
 
     .form-status {
       margin-top: 20px; text-align: center; font-size: 0.85rem; min-height: 20px;
@@ -217,7 +231,7 @@
       text-transform: uppercase; letter-spacing: 1.5px;
     }
 
-    /* --- MODAL LOGIN (IDENTIQUE) --- */
+    /* --- MODAL LOGIN --- */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
@@ -247,7 +261,6 @@
     }
     .modal-error { color: #9e1b1b; font-size: 0.8rem; margin-top: 20px; display: none; }
 
-    /* --- ANIMATIONS & MEDIA --- */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -309,7 +322,12 @@
         <div class="form-group">
           <textarea name="message" id="inputMessage" class="form-control" placeholder="Votre message..." required></textarea>
         </div>
-        <button type="submit" class="btn-send" id="btnSend">Envoyer</button>
+        
+        <button type="submit" class="btn-send" id="btnSend">
+          <span id="btnSendText">Envoyer</span>
+          <div class="spinner" id="btnSpinner"></div>
+        </button>
+        
         <div class="form-status" id="formStatus"></div>
       </form>
     </div>
@@ -338,14 +356,12 @@
 /* --- CONFIGURATION LANGUES --- */
 const languages = {
   fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", 
-        // Header & Login
         title: "Espace Privé", btnOpen: "Accès", placeholders: ["Identifiant", "Mot de passe"], btnSubmit: "Entrer", error: "Identification impossible.", footer: "© 2025 HFG CAPITAL | Bureau d'Investissement Privé",
-        // Menu
         menu: { home: "Accueil", about: "Qui sommes-nous", philosophy: "Philosophie", manifesto: "Manifesto", contacts: "Contacts" },
-        // Contact Form
         contactTitle: "Contacts",
         formPlaceholders: { name: "Nom", email: "Email", message: "Votre message..." },
         btnSend: "Envoyer",
+        btnSending: "Envoi...",
         status: { success: "Message envoyé avec succès.", error: "Une erreur est survenue." }
   },
   en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", 
@@ -354,6 +370,7 @@ const languages = {
         contactTitle: "Contact Us",
         formPlaceholders: { name: "Name", email: "Email", message: "Your message..." },
         btnSend: "Send",
+        btnSending: "Sending...",
         status: { success: "Message sent successfully.", error: "Oops! There was a problem." }
   },
   cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", 
@@ -362,6 +379,7 @@ const languages = {
         contactTitle: "联系我们",
         formPlaceholders: { name: "姓名", email: "电子邮件", message: "您的留言..." },
         btnSend: "发送",
+        btnSending: "发送中...",
         status: { success: "消息发送成功。", error: "发生错误。" }
   },
   es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", 
@@ -370,6 +388,7 @@ const languages = {
         contactTitle: "Contacto",
         formPlaceholders: { name: "Nombre", email: "Email", message: "Su mensaje..." },
         btnSend: "Enviar",
+        btnSending: "Enviando...",
         status: { success: "Mensaje enviado con éxito.", error: "Hubo un error." }
   },
   de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", 
@@ -378,6 +397,7 @@ const languages = {
         contactTitle: "Kontakt",
         formPlaceholders: { name: "Name", email: "E-Mail", message: "Ihre Nachricht..." },
         btnSend: "Senden",
+        btnSending: "Senden...",
         status: { success: "Nachricht erfolgreich gesendet.", error: "Ein Fehler ist aufgetreten." }
   },
   it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", 
@@ -386,6 +406,7 @@ const languages = {
         contactTitle: "Contatti",
         formPlaceholders: { name: "Nome", email: "Email", message: "Il tuo messaggio..." },
         btnSend: "Invia",
+        btnSending: "Invio...",
         status: { success: "Messaggio inviato con successo.", error: "Si è verificato un errore." }
   },
   ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", 
@@ -394,14 +415,16 @@ const languages = {
         contactTitle: "Контакты",
         formPlaceholders: { name: "Имя", email: "Email", message: "Ваше сообщение..." },
         btnSend: "Отправить",
+        btnSending: "Отправка...",
         status: { success: "Сообщение успешно отправлено.", error: "Произошла ошибка." }
   },
   jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", 
         title: "プライベートアクセス", btnOpen: "アクセス", placeholders: ["IDコード", "パスワード"], btnSubmit: "入る", error: "認証に失敗しました。", footer: "© 2025 HFG CAPITAL | プライベート投資オフィス",
         menu: { home: "ホーム", about: "会社概要", philosophy: "投資哲学", manifesto: "マニフェスト", contacts: "お問い合わせ" },
         contactTitle: "お問い合わせ",
-        formPlaceholders: { name: "お名前", email: "メールアドレス", message: "メッセージ..." },
+        formPlaceholders: { name: "お名前", email: "メールアドレス", message: "メッセージ...", btnSending: "送信中..." },
         btnSend: "送信",
+        btnSending: "送信中...",
         status: { success: "メッセージが送信されました。", error: "エラーが発生しました。" }
   },
   vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", 
@@ -410,6 +433,7 @@ const languages = {
         contactTitle: "Liên hệ",
         formPlaceholders: { name: "Tên", email: "Email", message: "Tin nhắn của bạn..." },
         btnSend: "Gửi",
+        btnSending: "Đang gửi...",
         status: { success: "Gửi tin nhắn thành công.", error: "Có lỗi xảy ra." }
   },
   id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", 
@@ -418,6 +442,7 @@ const languages = {
         contactTitle: "Kontak",
         formPlaceholders: { name: "Nama", email: "Email", message: "Pesan Anda..." },
         btnSend: "Kirim",
+        btnSending: "Mengirim...",
         status: { success: "Pesan berhasil dikirim.", error: "Terjadi kesalahan." }
   }
 };
@@ -434,13 +459,11 @@ const bgImages = [
   "img/violet_01.png", "img/violet_03.png"
 ];
 
-/* Exécuté immédiatement pour éviter le flash */
 (function initBackground() {
   const STORAGE_KEY_BG = 'hfg_bg_session';
   const bgEl = document.getElementById('bgImage');
   if(bgEl) {
     let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
-    // Si pas d'image en session (ou invalide), on en prend une nouvelle
     if (!currentBg || !bgImages.includes(currentBg)) {
       const randomIndex = Math.floor(Math.random() * bgImages.length);
       currentBg = bgImages[randomIndex];
@@ -505,12 +528,10 @@ function setLanguage(lang) {
   activeLang = lang;
   const d = languages[lang];
 
-  // Header
+  // Header & Footer
   document.getElementById('currentFlag').src = d.flag;
   document.getElementById('currentLangLabel').innerText = d.label;
   openLoginBtn.innerText = d.btnOpen;
-
-  // Footer
   document.getElementById('footerText').innerText = d.footer;
 
   // Menu
@@ -527,30 +548,40 @@ function setLanguage(lang) {
   document.getElementById('btnText').innerText = d.btnSubmit;
   errorMsg.innerHTML = d.error;
 
-  // Contact Form Content
+  // Contact Form
   document.getElementById('pageTitle').innerText = d.contactTitle;
   document.getElementById('inputName').placeholder = d.formPlaceholders.name;
   document.getElementById('inputEmail').placeholder = d.formPlaceholders.email;
   document.getElementById('inputMessage').placeholder = d.formPlaceholders.message;
-  document.getElementById('btnSend').innerText = d.btnSend;
   
-  // Clear status on lang change
+  // Only update btn text if not currently loading
+  if(!document.getElementById('btnSend').disabled) {
+    document.getElementById('btnSendText').innerText = d.btnSend;
+  }
+  
   formStatus.innerHTML = '';
   langMenu.classList.remove('show');
 }
 
-/* --- CONTACT FORM (FORMSPREE AJAX) --- */
+/* --- CONTACT FORM --- */
 const contactForm = document.getElementById("contactForm");
 
 async function handleSubmit(event) {
   event.preventDefault();
   const status = document.getElementById("formStatus");
   const btn = document.getElementById("btnSend");
+  const btnText = document.getElementById("btnSendText");
+  const spinner = document.getElementById("btnSpinner");
   const data = new FormData(event.target);
   
-  const currentLangData = languages[activeLang].status;
+  const currentLangData = languages[activeLang];
+  const originalBtnText = currentLangData.btnSend;
 
+  // SHOW LOADING
   btn.disabled = true;
+  btnText.innerText = currentLangData.btnSending;
+  spinner.style.display = "block";
+  status.innerHTML = "";
 
   fetch(event.target.action, {
     method: contactForm.method,
@@ -558,7 +589,7 @@ async function handleSubmit(event) {
     headers: { 'Accept': 'application/json' }
   }).then(response => {
     if (response.ok) {
-      status.innerHTML = currentLangData.success;
+      status.innerHTML = currentLangData.status.success;
       status.className = "form-status status-success";
       contactForm.reset();
     } else {
@@ -566,21 +597,24 @@ async function handleSubmit(event) {
         if (Object.hasOwn(data, 'errors')) {
           status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
         } else {
-          status.innerHTML = currentLangData.error;
+          status.innerHTML = currentLangData.status.error;
         }
         status.className = "form-status status-error";
       })
     }
   }).catch(error => {
-    status.innerHTML = currentLangData.error;
+    status.innerHTML = currentLangData.status.error;
     status.className = "form-status status-error";
   }).finally(() => {
+    // RESTORE BUTTON
     btn.disabled = false;
+    btnText.innerText = originalBtnText;
+    spinner.style.display = "none";
   });
 }
 contactForm.addEventListener("submit", handleSubmit);
 
-/* --- LOGIN MODAL LOGIC --- */
+/* --- LOGIN MODAL --- */
 function openModal() { modal.classList.add('active'); setTimeout(()=>document.getElementById('userId').focus(),300); }
 function closeModal() { modal.classList.remove('active'); errorMsg.style.display='none'; }
 modal.addEventListener('click', (e) => { if(e.target===modal) closeModal(); });
@@ -595,7 +629,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const u = document.getElementById('userId').value.trim();
   const p = document.getElementById('password').value.trim();
   
-  // Hash verification (Simplified for demo)
   const hU = await sha256(u);
   const hP = await sha256(p);
   const tU = "1243c7d55047487795517160a99520d309163606156578729999583763132351";
