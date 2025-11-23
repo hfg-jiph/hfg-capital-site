@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>HFG CAPITAL | Accueil</title>
-  <meta name="description" content="HFG CAPITAL - Private Investment Office - Welcome" />
+  <title>HFG CAPITAL</title>
+  <meta name="description" content="HFG CAPITAL - Private Investment Office" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
@@ -12,31 +12,56 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* --- VARIABLES & RESET (Copie de l'original) --- */
+    /* --- VARIABLES & RESET --- */
     :root {
       --primary-dark: #1a1a1a;
       --gold-accent: #D4AF37;
       --text-light: #ffffff;
-      --font-motto: 'Cinzel', serif; 
-      --font-sans: 'Montserrat', sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: var(--font-sans);
+      font-family: 'Montserrat', sans-serif;
       height: 100vh;
+      height: 100dvh;
       width: 100vw;
       overflow: hidden;
       background-color: #000;
       position: relative; 
-      color: var(--text-light); /* Pour que le texte soit visible */
+      /* Force le mode sombre pour obscurcir l'image de fond */
+      filter: grayscale(100%) brightness(0.25);
     }
 
-    /* --- MAIN CONTENT (Adaptation de l'original) --- */
+    /* --- BACKGROUND PLEIN ÉCRAN --- */
+    .bg-container {
+      position: fixed;
+      top: 0; left: 0; 
+      width: 100%; height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-image {
+      width: 100%; 
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: opacity 1s ease;
+      animation: zoomIn 40s infinite alternate linear;
+      will-change: transform;
+      display: none; 
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(1); }
+      to { transform: scale(1.15); }
+    }
+
+    /* --- MAIN CONTENT (Contient juste le logo) --- */
     main {
       position: absolute;
       top: 50%; left: 50%;
@@ -44,128 +69,104 @@
       text-align: center;
       width: 100%;
       padding: 0 20px;
-      color: white;
       z-index: 5;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      /* Annule le filtre body pour que le logo soit visible */
+      filter: initial; 
+      cursor: pointer; /* Indique que c'est cliquable */
     }
 
-    /* Animation pour l'apparition progressive */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- LOGO (Copie de l'original) --- */
     .logo-main {
       width: auto;
       max-width: 85%;
       max-height: 160px;
       margin-bottom: 25px;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-      animation: fadeIn 2s ease-out forwards;
-    }
-
-    /* --- DEVISE (Copie de l'original) --- */
-    .motto {
-      font-family: var(--font-motto); 
-      font-size: 1.35rem;
-      color: #f0f0f0;
-      font-weight: 400; 
-      letter-spacing: 2px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-      text-transform: uppercase;
-      margin: 0 auto 30px auto; /* Ajout d'une marge en bas pour séparer la grille */
-      max-width: 900px;
-      line-height: 1.4;
-      animation: fadeIn 2s ease-out forwards;
-      animation-delay: 0.5s;
-    }
-    
-    /* --- GRID SPÉCIFIQUE --- */
-    .image-grid {
-      display: flex;
-      flex-wrap: wrap; /* Pour les deux lignes */
-      justify-content: center;
-      gap: 5px; /* Petit espace entre les carrés */
-      margin-top: 15px;
-      width: 100%;
-      max-width: 450px; /* Limite la largeur (environ 7x50px + marges) */
-      animation: fadeIn 2s ease-out forwards;
-      animation-delay: 1s;
-      opacity: 0;
-    }
-
-    .grid-row {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      gap: 5px;
-      margin-bottom: 5px;
-    }
-
-    .image-square {
-      width: 50px; /* Taille fixe pour le carré */
-      height: 50px; 
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
-    }
-    
-    .image-square:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 10px var(--gold-accent);
-    }
-
-    .image-square img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+      opacity: 0; 
+      animation: fadeInUp 2.5s ease-out forwards;
+      animation-delay: 0.2s;
     }
 
     /* --- RESPONSIVE --- */
     @media (max-width: 600px) {
-      .logo-main { max-height: 100px; margin-bottom: 15px; } 
-      .motto { font-size: 0.9rem; padding: 0 10px; margin-bottom: 20px; }
-      .image-square { width: 38px; height: 38px; } /* Plus petit sur mobile */
-      .image-grid { gap: 3px; max-width: 300px; }
+      .logo-main { max-height: 100px; } 
     }
   </style>
 </head>
 <body>
 
-  <main>
+  <div class="bg-container">
+    <img id="bgImage" class="bg-image" alt="Background">
+  </div>
+
+  <main onclick="enterSite()">
     <img src="img/logo.jpeg" alt="HFG CAPITAL" class="logo-main">
-    
-    <h2 class="motto">Patrimonium Custodire, Augere et Tradere</h2>
-    
-    <div class="image-grid">
-      <div class="grid-row">
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/rouge_02.png" alt="Rouge 02"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/rouge_04.png" alt="Rouge 04"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/jaune_01.png" alt="Jaune 01"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/jaune_02.png" alt="Jaune 02"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/jaune_04.png" alt="Jaune 04"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/vert_01.png" alt="Vert 01"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/vert_02.png" alt="Vert 02"></div>
-      </div>
-      <div class="grid-row">
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/bleu_02.png" alt="Bleu 02"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/bleu_03.png" alt="Bleu 03"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/bleu_04.png" alt="Bleu 04"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/bleu_05.png" alt="Bleu 05"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/orange_02.png" alt="Orange 02"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/violet_01.png" alt="Violet 01"></div>
-        <div class="image-square" onclick="window.location.href='index.html'"><img src="img/violet_03.png" alt="Violet 03"></div>
-      </div>
-    </div>
-    
   </main>
+
+<script>
+/* --- FOND ET LOGIQUE DE REDIRECTION --- */
+const bgImages = [
+  "img/rouge_02.png", "img/rouge_04.png",
+  "img/jaune_01.png", "img/jaune_02.png", "img/jaune_04.png", 
+  "img/vert_01.png",  "img/vert_02.png",    
+  "img/bleu_02.png",  "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png",
+  "img/orange_02.png", 
+  "img/violet_01.png", "img/violet_03.png"
+];
+
+const STORAGE_KEY_BG = 'hfg_bg_session';
+const STORAGE_KEY_THEME = 'hfg_theme'; // On sauvegarde le thème par défaut
+const STORAGE_KEY_LANG = 'hfg_lang';   // On sauvegarde la langue par défaut
+
+/* --- LOGIQUE DE CHARGEMENT RAPIDE DU FOND --- */
+(function initBackgroundNow() {
+  const bgEl = document.getElementById('bgImage');
+
+  if (bgEl) {
+    let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+
+    // Si pas d'image ou image invalide, on en tire une nouvelle
+    if (!currentBg || !bgImages.includes(currentBg)) {
+      const randomIndex = Math.floor(Math.random() * bgImages.length);
+      currentBg = bgImages[randomIndex];
+      sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+    }
+
+    // On applique l'image
+    bgEl.src = currentBg;
+    bgEl.style.display = 'block';
+
+    // Gestion d'erreur APRES avoir mis le src
+    bgEl.onerror = function() {
+      this.style.display = 'none';
+      sessionStorage.removeItem(STORAGE_KEY_BG);
+    };
+  }
+})();
+
+/* --- DÉFINITION DU THÈME ET DE LA LANGUE PAR DÉFAUT/SAUVEGARDÉE --- */
+document.addEventListener('DOMContentLoaded', () => {
+  // Définit le thème sur 'dark' (comme l'image est obscurcie par défaut)
+  localStorage.setItem(STORAGE_KEY_THEME, 'dark');
   
+  // Si aucune langue n'est enregistrée, on la devine et la sauvegarde
+  if (!localStorage.getItem(STORAGE_KEY_LANG)) {
+    const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    let initialLang = 'en'; // Défaut si non trouvé
+    if (browserLang.startsWith('fr')) initialLang = 'fr';
+    // ... (Ajouter d'autres déductions si nécessaire)
+    localStorage.setItem(STORAGE_KEY_LANG, initialLang);
+  }
+});
+
+/* --- REDIRECTION SUR CLIC --- */
+function enterSite() {
+    window.location.href = "home.html";
+}
+</script>
 </body>
 </html>
