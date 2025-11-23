@@ -515,7 +515,7 @@
 <body>
 
   <div class="bg-container">
-    <img src="" id="bgImage" class="bg-image" alt="Background">
+    <img id="bgImage" class="bg-image" alt="Background" style="display: block;">
   </div>
 
   <!-- MENU PLEIN ÉCRAN -->
@@ -740,66 +740,46 @@ function guessLangFromBrowser() {
   return 'en'; // fallback propre
 }
 
+/* --- INIT BACKGROUND ROBUSTE --- */
 function initBackground() {
   const STORAGE_KEY_BG = 'hfg_bg_session';
+  const bgElement = document.getElementById('bgImage');
+  
+  // 1. Tenter de récupérer l'image en session
   let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
 
-  if (!currentBg) {
+  // 2. Vérification : Si pas d'image, OU si l'image stockée n'est plus dans la liste (sécurité)
+  // On choisit une nouvelle image
+  if (!currentBg || !bgImages.includes(currentBg)) {
     const randomIndex = Math.floor(Math.random() * bgImages.length);
     currentBg = bgImages[randomIndex];
-    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+    
+    // 3. On sauvegarde immédiatement la nouvelle image
+    try {
+        sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+    } catch (e) {
+        console.warn("SessionStorage non disponible", e);
+    }
   }
 
+  // 4. Gestion de l'erreur de chargement (si l'image n'existe pas physiquement)
   bgElement.onerror = function () {
     this.style.display = 'none';
     document.body.style.backgroundColor = '#111';
+    // Si l'image est cassée, on nettoie le storage pour retenter une autre au prochain chargement
+    sessionStorage.removeItem(STORAGE_KEY_BG);
   };
+
+  // 5. Appliquer l'image
   bgElement.src = currentBg;
 }
-  
-/*window.addEventListener('load', () => {
-  // --- 1. Gestion du fond d'écran (Inchangé) ---
-  //const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
-  //bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
-  //bgElement.src = randomBg;
-// --- 1. Gestion du fond d'écran (Stabilité par Session) ---
-  const STORAGE_KEY_BG = 'hfg_bg_session';
-  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
 
-  if (!currentBg) {
-    // Si aucune image n'est stockée pour cette session, on en choisit une aléatoirement
-    const randomIndex = Math.floor(Math.random() * bgImages.length);
-    currentBg = bgImages[randomIndex];
- 
-    // Stockage de l'image choisie dans le sessionStorage
-    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
-  }
-
-  // Application de l'image (qu'elle soit nouvelle ou récupérée de la session)
-  bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
-  bgElement.src = currentBg;
-
-  // --- 2. Restauration du Thème (Nouveau) ---
-  const savedTheme = localStorage.getItem('hfg_theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
-    if (themeBtn) themeBtn.classList.add('active');
-  }
-
-  generateLangMenu();
-
-  // --- 3. Restauration de la Langue (Nouveau) ---
-  // On vérifie s'il y a une sauvegarde, sinon on utilise la langue du navigateur
-  const savedLang = localStorage.getItem('hfg_lang');
-  const initialLang = savedLang || guessLangFromBrowser();
-
-  setLanguage(initialLang);
-  scrollTitle();
-});*/
- document.addEventListener('DOMContentLoaded', () => {
+/* --- LANCEMENT --- */
+document.addEventListener('DOMContentLoaded', () => {
+  // Lancer l'initialisation du fond en premier
   initBackground();
 
-  // le reste de ton init :
+  // Reste de votre code d'initialisation...
   const savedTheme = localStorage.getItem('hfg_theme');
   if (savedTheme === 'dark') {
     document.body.classList.add('dark-mode');
