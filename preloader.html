@@ -80,7 +80,7 @@
       /* Opacité et pointer-events gérés par GSAP */
     }
 
-    /* --- NOUVEAU : LIGNE HORIZONTALE ET POURCENTAGE --- */
+    /* --- LIGNE HORIZONTALE ET POURCENTAGE --- */
     
     /* Conteneur de la ligne, centré verticalement */
     .line-container {
@@ -103,12 +103,13 @@
         transform-origin: left center; /* S'étire de gauche à droite */
     }
 
-    /* Le pourcentage, centré sur la ligne */
+    /* Le pourcentage, centré sur la ligne, décalé de 5px vers le haut */
     .progress-percent {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        /* Décalage de -50% pour centrer + -5px vers le haut */
+        transform: translate(-50%, calc(-50% - 5px)); 
         font-family: var(--font-sans);
         font-size: 16px;
         color: var(--text-light);
@@ -187,44 +188,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Préparation initiale des éléments
+    // Le logo doit être 100% invisible
     gsap.set(logo, { opacity: 0, pointerEvents: 'none' }); 
-    gsap.set(lineContainer, { opacity: 1 }); // Le conteneur doit être visible pour voir la ligne
+    // Le conteneur de la ligne et la ligne sont prêts
+    gsap.set(lineContainer, { opacity: 1 }); 
     
     // Timeline pour organiser les animations
     const masterTL = gsap.timeline({ delay: 0.5 }); 
 
-    // A. Tracé de la ligne blanche (via scaleX)
-    masterTL.to(loadingLine, {
-        scaleX: 1, // Étend la ligne à 100% de la largeur du conteneur
-        duration: 1.0, 
-        ease: 'power2.inOut',
-    })
-    
-    // B. Apparition du pourcentage et progression (commence à la fin du tracé)
-    .to(progressPercent, {
+    // A. Apparition du pourcentage et tracé de la ligne (début de la séquence)
+    masterTL.to([progressPercent, loadingLine], {
         opacity: 1,
         duration: 0.3,
-        ease: 'power1.out'
-    }, ">") // Commence à la fin du tracé de la ligne
-
+        ease: 'power1.out',
+    })
+    
+    // B. Progression du pourcentage et extension de la ligne (Synchronisé)
+    .to(loadingLine, {
+        scaleX: 1, // Étend la ligne de 0% à 100%
+        duration: 3.0, // Durée de progression
+        ease: 'power2.inOut',
+    }, "<") // Commence en même temps que l'incrémentation du %
+    
     .to({ value: 0 }, {
         value: 100,
-        duration: 2.5, // Durée de l'incrémentation du pourcentage
+        duration: 3.0, // Durée de progression (Identique à la ligne)
         ease: 'power2.inOut',
         roundProps: 'value', 
         onUpdate: function() {
             progressPercent.textContent = Math.round(this.targets()[0].value) + '%';
         }
-    }, ">") 
+    }, "<") // Commence en même temps que la ligne
 
-    // C. Disparition du pourcentage et de la ligne (début de la révélation du logo)
+    // C. Disparition du pourcentage et de la ligne
     .to([progressPercent, lineContainer], {
         opacity: 0,
         duration: 0.8,
         ease: 'power1.out'
-    }, ">-0.2") // Commence 0.2s avant la fin du pourcentage pour un chevauchement fluide
+    }, ">-0.4") // Commence 0.4s avant la fin du pourcentage/ligne pour une transition fluide
     
-    // D. Révélation du logo
+    // D. Révélation du logo (commence strictement après la disparition du loader)
     .fromTo(logo, 
         {
             opacity: 0.1, scale: 1.05, filter: 'blur(5px)',
@@ -234,11 +237,12 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: 2, 
             ease: "power2.out", 
             onComplete: () => {
+                // Rend le logo cliquable après l'animation
                 logo.style.opacity = 1; 
                 logo.style.pointerEvents = 'auto'; 
             }
         }, 
-        "<" // Commence EXACTEMENT en même temps que la disparition de la ligne/pourcentage
+        "<" // Commence EXACTEMENT en même temps que la disparition de la ligne/pourcentage (étape C)
     );
 });
 
