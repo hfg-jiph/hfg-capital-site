@@ -38,21 +38,25 @@
       position: relative; 
     }
 
-    /* --- BACKGROUND PLEIN ÉCRAN (Caché) --- */
+    /* --- BACKGROUND PLEIN ÉCRAN (Caché mais chargé) --- */
     .bg-container {
       position: fixed;
       top: 0; left: 0; 
       width: 100%; height: 100%;
       z-index: -1;
       overflow: hidden;
-      visibility: hidden; 
+      visibility: hidden; /* Cache le conteneur et l'image */
     }
 
     .bg-image {
-      /* ... styles inchangés ... */
-      width: 100%; height: 100%; object-fit: cover; object-position: center center;
-      transition: opacity 1s ease; animation: zoomIn 40s infinite alternate linear;
-      will-change: transform; display: none; 
+      width: 100%; 
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: opacity 1s ease;
+      animation: zoomIn 40s infinite alternate linear;
+      will-change: transform;
+      display: none; 
     }
 
     @keyframes zoomIn {
@@ -60,7 +64,7 @@
       to { transform: scale(1.15); }
     }
 
-    /* --- MAIN CONTENT (Contient logo ET overlay) --- */
+    /* --- MAIN CONTENT (Contient juste le logo) --- */
     main {
       position: absolute;
       top: 50%; left: 50%;
@@ -71,57 +75,51 @@
       z-index: 5;
       filter: initial; 
       cursor: pointer; 
-      /* Important : position relative pour positionner l'overlay */
-      position: relative; 
-      /* On donne une grande taille à main pour qu'il contienne le logo au centre */
-      height: 300px; 
     }
 
     .logo-main {
-      /* Le logo est toujours centré et dimensionné par max-width/height */
       width: auto;
       max-width: 85%;
       max-height: 160px;
+      margin-bottom: 25px;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
       opacity: 1; 
-      display: block; /* Pour que getBoundingClientRect fonctionne correctement */
-      margin: 0 auto; /* Pour le centrer dans main */
     }
 
-    /* --- CHARGEMENT : OVERLAY & BARRE --- */
-    .loader-overlay {
+    /* --- CHARGEMENT : JAUGE ET POURCENTAGE --- */
+    .loader-container {
       position: absolute;
-      /* On le positionne sur le logo en JS, mais ces valeurs par défaut garantissent un fallback */
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, 50px); /* Positionné sous le logo */
+      width: 250px;
+      max-width: 80%;
+      text-align: center;
       z-index: 6;
-      opacity: 0; 
+      opacity: 0; /* Caché initialement, GSAP le révélera */
+      pointer-events: none;
+    }
+
+    .progress-bar-container {
+      height: 2px;
+      background-color: rgba(255, 255, 255, 0.1);
+      margin-bottom: 8px;
       overflow: hidden;
-      background-color: rgba(0, 0, 0, 0.8); /* Fond de la jauge */
     }
 
     .progress-bar {
-      position: absolute;
-      top: 0; left: 0;
       height: 100%;
       width: 0%; /* Commence à 0% */
       background-color: var(--gold-accent);
       transform-origin: left;
-      /* Utiliser un mode de mélange pour un effet esthétique si le logo a une couleur de fond */
-      mix-blend-mode: screen; 
     }
 
     .progress-percent {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       font-family: var(--font-sans);
-      font-size: 16px;
-      color: var(--text-light);
-      font-weight: 500;
-      z-index: 11; /* Au-dessus de la barre de progression */
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 300;
+      letter-spacing: 1px;
     }
 
     /* --- RESPONSIVE --- */
@@ -137,21 +135,25 @@
   </div>
 
   <main onclick="enterSite()">
-    <img src="img/logo.jpeg" alt="HFG CAPITAL" id="logoMain" class="logo-main">
-    
-    <div id="loaderOverlay" class="loader-overlay">
-      <div id="progressBar" class="progress-bar"></div>
-      <div id="progressPercent" class="progress-percent">0%</div>
-    </div>
+    <img src="img/logo.jpeg" alt="HFG CAPITAL" class="logo-main">
   </main>
+  
+  <div class="loader-container">
+    <div class="progress-bar-container">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+    <div id="progressPercent" class="progress-percent">0%</div>
+  </div>
 
 
 <script>
 /* --- FOND ET LOGIQUE DE REDIRECTION --- */
 const bgImages = [
-  "img/rouge_02.png", "img/rouge_04.png", "img/jaune_01.png", "img/jaune_02.png", 
-  "img/jaune_04.png", "img/vert_01.png", "img/vert_02.png", "img/bleu_02.png",  
-  "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png", "img/orange_02.png", 
+  "img/rouge_02.png", "img/rouge_04.png",
+  "img/jaune_01.png", "img/jaune_02.png", "img/jaune_04.png", 
+  "img/vert_01.png",  "img/vert_02.png",    
+  "img/bleu_02.png",  "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png",
+  "img/orange_02.png", 
   "img/violet_01.png", "img/violet_03.png"
 ];
 
@@ -159,9 +161,10 @@ const STORAGE_KEY_BG = 'hfg_bg_session';
 const STORAGE_KEY_THEME = 'hfg_theme';
 const STORAGE_KEY_LANG = 'hfg_lang';
 
-/* LOGIQUE DE CHARGEMENT RAPIDE DU FOND (Sélection aléatoire et stockage) */
+/* --- LOGIQUE DE CHARGEMENT RAPIDE DU FOND (Sélection aléatoire et stockage) --- */
 (function initBackgroundNow() {
   const bgEl = document.getElementById('bgImage');
+
   if (bgEl) {
     let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
     if (!currentBg || !bgImages.includes(currentBg)) {
@@ -179,8 +182,8 @@ const STORAGE_KEY_LANG = 'hfg_lang';
 
 /* --- LOGIQUE D'ANIMATION GSAP & INIT --- */
 document.addEventListener('DOMContentLoaded', () => {
-    const logo = document.getElementById('logoMain');
-    const loaderOverlay = document.getElementById('loaderOverlay');
+    const logo = document.querySelector('.logo-main');
+    const loaderContainer = document.querySelector('.loader-container');
     const progressBar = document.getElementById('progressBar');
     const progressPercent = document.getElementById('progressPercent');
 
@@ -192,28 +195,16 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(STORAGE_KEY_LANG, initialLang);
     }
 
-    // --- NOUVEAU : Mesurer le logo pour dimensionner l'overlay ---
-    // On met le logo à opacité 1 momentanément pour que le navigateur calcule ses dimensions
-    gsap.set(logo, { opacity: 1 }); 
-    const logoRect = logo.getBoundingClientRect();
-    
-    // On applique les dimensions exactes du logo à l'overlay
-    gsap.set(loaderOverlay, {
-        width: logoRect.width,
-        height: logoRect.height
-    });
-    
     // 2. Séquence d'animation GSAP
     
-    // CRUCIAL: REND LE LOGO INVISIBLE POUR LE CHARGEMENT, MAIS EN PLACE
+    // !!! CRUCIAL: REND LE LOGO INVISIBLE DURANT LE CHARGEMENT !!!
     gsap.set(logo, { opacity: 0, pointerEvents: 'none' }); 
-    gsap.set(loaderOverlay, { opacity: 0 }); // S'assurer que l'overlay est caché
 
     // Timeline pour organiser les animations en séquence
-    const masterTL = gsap.timeline({ delay: 0.5 }); 
+    const masterTL = gsap.timeline({ delay: 0.5 }); // Petit délai avant de commencer
 
     // A. Animation d'apparition de la jauge
-    masterTL.to(loaderOverlay, {
+    masterTL.to(loaderContainer, {
         opacity: 1,
         duration: 0.5,
         ease: 'power1.inOut'
@@ -236,14 +227,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, "<") 
     
-    // C. Disparition de la jauge
-    .to(loaderOverlay, {
+    // C. Animation de disparition de la jauge (0.5s)
+    .to(loaderContainer, {
         opacity: 0,
         duration: 0.5,
         ease: 'power1.inOut'
-    }, ">-0.1") // Démarre juste avant la fin du remplissage
+    }, ">") // Commence APRÈS la fin de la progression (B)
     
-    // D. Révélation du logo (une fois la jauge en train de disparaître)
+    // D. Animation de révélation du logo (flou vers net)
     .fromTo(logo, 
         {
             opacity: 0.1, scale: 1.05, filter: 'blur(5px)',
@@ -258,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 logo.style.pointerEvents = 'auto'; 
             }
         }, 
-        ">-1.5" // Commence 1.5s avant la fin de l'étape C (pour un chevauchement fluide)
+        ">-0.2" // Démarre 0.2s après le début de la disparition de la jauge (C)
     );
 });
 
