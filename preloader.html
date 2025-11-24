@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-  <link rel="icon" type="type/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <link rel="shortcut icon" href="favicon/favicon.ico">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,12 +23,13 @@
       --primary-dark: #1a1a1a;
       --gold-accent: #D4AF37;
       --text-light: #ffffff;
+      --font-sans: 'Montserrat', sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: var(--font-sans);
       height: 100vh;
       height: 100dvh;
       width: 100vw;
@@ -73,7 +74,7 @@
       padding: 0 20px;
       z-index: 5;
       filter: initial; 
-      cursor: pointer; /* Indique que c'est cliquable */
+      cursor: pointer; 
     }
 
     .logo-main {
@@ -82,7 +83,43 @@
       max-height: 160px;
       margin-bottom: 25px;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-      opacity: 1; /* L'opacité est gérée par GSAP */
+      opacity: 1; 
+    }
+
+    /* --- NOUVEAUTÉS CSS : CHARGEMENT --- */
+    .loader-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 50px); /* Positionné sous le logo */
+      width: 250px;
+      max-width: 80%;
+      text-align: center;
+      z-index: 6;
+      opacity: 0; /* Caché initialement, GSAP le révélera */
+      pointer-events: none;
+    }
+
+    .progress-bar-container {
+      height: 2px;
+      background-color: rgba(255, 255, 255, 0.1);
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%; /* Commence à 0% */
+      background-color: var(--gold-accent);
+      transform-origin: left;
+    }
+
+    .progress-percent {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 300;
+      letter-spacing: 1px;
     }
 
     /* --- RESPONSIVE --- */
@@ -100,6 +137,14 @@
   <main onclick="enterSite()">
     <img src="img/logo.jpeg" alt="HFG CAPITAL" class="logo-main">
   </main>
+  
+  <div class="loader-container">
+    <div class="progress-bar-container">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+    <div id="progressPercent" class="progress-percent">0%</div>
+  </div>
+
 
 <script>
 /* --- FOND ET LOGIQUE DE REDIRECTION --- */
@@ -122,15 +167,11 @@ const STORAGE_KEY_LANG = 'hfg_lang';
 
   if (bgEl) {
     let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
-
-    // Si pas d'image ou image invalide, on en tire une nouvelle et on la stocke
     if (!currentBg || !bgImages.includes(currentBg)) {
       const randomIndex = Math.floor(Math.random() * bgImages.length);
       currentBg = bgImages[randomIndex];
       sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
     }
-    
-    // On applique l'image (même si elle est cachée par le CSS), pour la précharger
     bgEl.src = currentBg;
     bgEl.onerror = function() {
       sessionStorage.removeItem(STORAGE_KEY_BG);
@@ -142,47 +183,87 @@ const STORAGE_KEY_LANG = 'hfg_lang';
 /* --- LOGIQUE D'ANIMATION GSAP & INIT --- */
 document.addEventListener('DOMContentLoaded', () => {
     const logo = document.querySelector('.logo-main');
-    
-    // 1. Initialisation de l'animation GSAP du logo
-    
-    // Définition de l'état initial (FROM)
-    gsap.set(logo, {
-        opacity: 0.1,             // Très sombre
-        scale: 1.05,              // Légèrement zoomé
-        filter: 'blur(5px)'       // Flou initial
-    });
-    
-    // Définition de l'état final (TO)
-    gsap.to(logo, {
-        opacity: 1,               // Opacité normale
-        scale: 1,                 // Échelle normale
-        filter: 'blur(0px)',      // Nette
-        duration: 3,              // Durée de l'animation (3 secondes)
-        ease: "power2.out",       // Courbe d'accélération élégante
-        delay: 0.5,               // Délai avant de commencer
-        onComplete: () => {
-             // S'assurer que le logo est bien visible et cliquable après l'animation
-             logo.style.opacity = 1; 
-        }
-    });
+    const loaderContainer = document.querySelector('.loader-container');
+    const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
 
-    // 2. Définir la langue par défaut (Logique existante)
+    // 1. Définir la langue par défaut (Logique existante)
     if (!localStorage.getItem(STORAGE_KEY_LANG)) {
         const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
         let initialLang = 'en'; 
         if (browserLang.startsWith('fr')) initialLang = 'fr';
         localStorage.setItem(STORAGE_KEY_LANG, initialLang);
     }
+
+    // 2. Séquence de chargement GSAP
+    
+    // Cache le logo et le rend non cliquable tant que le chargement n'est pas fini
+    gsap.set(logo, { opacity: 0, pointerEvents: 'none' });
+
+    // Timeline pour organiser les animations
+    const masterTL = gsap.timeline({ delay: 0.5 });
+
+    // A. Animation d'apparition de la jauge
+    masterTL.to(loaderContainer, {
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power1.inOut'
+    })
+    
+    // B. Animation de progression (0% à 100% et remplissage de la jauge)
+    .to(progressBar, {
+        width: '100%',
+        duration: 2.5, // Durée du remplissage de la jauge
+        ease: 'power2.inOut'
+    }, "<") // Commence en même temps que l'animation du pourcentage
+    
+    .to({ value: 0 }, {
+        value: 100,
+        duration: 2.5, // Durée du pourcentage (doit être la même que la jauge)
+        ease: 'power2.inOut',
+        roundProps: 'value', 
+        onUpdate: function() {
+            progressPercent.textContent = Math.round(this.targets()[0].value) + '%';
+        }
+    }, "<") 
+    
+    // C. Animation de disparition de la jauge (après la fin du remplissage)
+    .to(loaderContainer, {
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power1.inOut'
+    }, ">-0.1") // Commence légèrement avant la fin du remplissage pour une transition fluide
+    
+    // D. Animation de révélation du logo (une fois la jauge disparue)
+    .fromTo(logo, 
+        {
+            opacity: 0.1, scale: 1.05, filter: 'blur(5px)',
+        },
+        {
+            opacity: 1, scale: 1, filter: 'blur(0px)',
+            duration: 2, 
+            ease: "power2.out", 
+            onComplete: () => {
+                // Rend le logo visible et cliquable après l'animation
+                logo.style.opacity = 1; 
+                logo.style.pointerEvents = 'auto'; 
+            }
+        }, 
+        ">-1.5" // Commence 1.5s avant la fin de la disparition de la jauge (début du fondu de la jauge)
+    );
 });
 
 
 /* --- REDIRECTION SUR CLIC --- */
 function enterSite() {
-    // Annuler l'animation GSAP s'il y a un clic précoce
+    // Si l'utilisateur clique pendant l'animation, on la tue et on fonce
     gsap.killTweensOf(".logo-main"); 
     gsap.killTweensOf(document.body);
+    gsap.killTweensOf(".loader-container"); 
+    gsap.killTweensOf("#progressBar"); 
+    gsap.killTweensOf("#progressPercent"); 
 
-    // Animation de fondu rapide du corps avant la redirection pour une transition nette
+    // Animation de fondu rapide du corps avant la redirection
     gsap.to(document.body, { 
         opacity: 0, 
         duration: 0.3, 
