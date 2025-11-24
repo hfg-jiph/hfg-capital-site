@@ -149,11 +149,9 @@
 <script>
 /* --- FOND ET LOGIQUE DE REDIRECTION --- */
 const bgImages = [
-  "img/rouge_02.png", "img/rouge_04.png",
-  "img/jaune_01.png", "img/jaune_02.png", "img/jaune_04.png", 
-  "img/vert_01.png",  "img/vert_02.png",    
-  "img/bleu_02.png",  "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png",
-  "img/orange_02.png", 
+  "img/rouge_02.png", "img/rouge_04.png", "img/jaune_01.png", "img/jaune_02.png", 
+  "img/jaune_04.png", "img/vert_01.png", "img/vert_02.png", "img/bleu_02.png",  
+  "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png", "img/orange_02.png", 
   "img/violet_01.png", "img/violet_03.png"
 ];
 
@@ -197,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Séquence d'animation GSAP
     
-    // !!! CRUCIAL: REND LE LOGO INVISIBLE DURANT LE CHARGEMENT !!!
+    // Rend le logo invisible et non cliquable
     gsap.set(logo, { opacity: 0, pointerEvents: 'none' }); 
 
     // Timeline pour organiser les animations en séquence
@@ -249,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 logo.style.pointerEvents = 'auto'; 
             }
         }, 
-        ">-0.2" // Démarre 0.2s après le début de la disparition de la jauge (C)
+        ">" // Commence APRÈS la fin de la disparition de la jauge (C)
     );
 });
 
