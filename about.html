@@ -27,221 +27,594 @@
     body {
       font-family: var(--font-sans);
       min-height: 100vh;
-      width: 100%;
-      background-color: #000; /* Fond noir par défaut pour éviter le flash blanc */
-      color: #fff;
+      width: 100vw;
       overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
+      background-color: #000;
+      position: relative; 
+      color: white;
     }
 
-    /* --- FOND D'ÉCRAN (FIXE & ARRIÈRE-PLAN) --- */
+    /* --- BACKGROUND --- */
     .bg-container {
-      position: fixed;
-      top: 0; 
-      left: 0;
-      width: 100%; 
-      height: 100%;
-      z-index: -1; /* TRES IMPORTANT : reste derrière le texte */
-      overflow: hidden;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
     }
-
     .bg-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0; /* Caché au départ pour transition douce */
-      transition: opacity 1.5s ease-in-out;
+      width: 100%; height: 100%; object-fit: cover;
+      transition: opacity 1s ease;
       animation: zoomIn 40s infinite alternate linear;
     }
+    @keyframes zoomIn { from { transform: scale(1); } to { transform: scale(1.15); } }
+    body.dark-mode .bg-image { filter: grayscale(100%) brightness(0.25); }
 
-    @keyframes zoomIn {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.15); }
+    /* --- HEADER --- */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 40px; z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
     }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+
+    /* --- BOUTONS UI --- */
+    .menu-btn, .theme-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.1);
+      cursor: pointer; transition: all 0.3s;
+    }
+    .menu-btn:hover, .theme-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--gold-accent); }
+    
+    .menu-btn-lines { width: 15px; height: 11px; position: relative; }
+    .menu-btn-lines span { position: absolute; left: 0; right: 0; height: 1px; background: #fff; transition: 0.25s; }
+    .menu-btn-lines span:nth-child(1) { top: 0; }
+    .menu-btn-lines span:nth-child(2) { top: 5px; }
+    .menu-btn-lines span:nth-child(3) { bottom: 0; }
+    .menu-btn.open .menu-btn-lines span:nth-child(1) { top: 5px; transform: rotate(45deg); }
+    .menu-btn.open .menu-btn-lines span:nth-child(2) { opacity: 0; }
+    .menu-btn.open .menu-btn-lines span:nth-child(3) { bottom: 5px; transform: rotate(-45deg); }
+
+    .theme-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.9); transition: 0.3s; }
+    .theme-btn.active .theme-dot { background: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.95); }
+
+    /* --- LANGUES --- */
+    .lang-container { position: relative; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
+      padding: 0px 12px; height: 34px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; font-size: 0.75rem;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--gold-accent); }
+    .lang-btn img { width: 20px; height: 13px; object-fit: cover; border-radius: 3px; }
+    .lang-menu {
+      position: absolute; top: 45px; left: 0;
+      background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px; padding: 5px 0; display: none; flex-direction: column; 
+      width: max-content; min-width: 150px;
+      max-height: 60vh; overflow-y: auto; /* Scroll si trop de langues */
+    }
+    .lang-menu.show { display: flex; animation: fadeIn 0.3s; }
+    .lang-option { padding: 10px 20px; color: #ccc; cursor: pointer; font-size: 0.75rem; display: flex; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); align-items: center; }
+    .lang-option:hover { background: rgba(212, 175, 55, 0.15); color: white; }
+    .lang-option img { width: 20px; height: 13px; border-radius: 2px; }
+
+    .login-trigger {
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); color: white;
+      border: 1px solid rgba(255,255,255,0.2); height: 34px; padding: 0px 24px;
+      display: flex; align-items: center; border-radius: 20px;
+      font-family: var(--font-sans); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 2px;
+      cursor: pointer; transition: all 0.4s ease;
+    }
+    .login-trigger:hover { background: var(--gold-accent); color: var(--primary-dark); }
+
+
+
+/* --- MENU NAVIGATION --- */
+    .main-menu-overlay {
+      position: fixed; inset: 0; background: transparent; display: none;
+      align-items: stretch; justify-content: flex-start; z-index: 900;
+    }
+    .main-menu-overlay.open { display: flex; }
+    .main-menu {
+      width: 320px; max-width: calc(100% - 80px); margin-top: 70px;
+      background: transparent; padding: 24px; text-align: left;
+      transform: translateX(-100%); transition: transform 0.25s ease;
+    }
+    .main-menu-overlay.open .main-menu { transform: translateX(0); }
+    .main-menu ul { list-style: none; }
+    .main-menu a {
+      font-family: var(--font-sans); font-size: 0.675rem; text-transform: uppercase;
+      letter-spacing: 0.22em; color: rgba(255,255,255,0.85); text-decoration: none;
+      padding: 10px 0; display: block; transition: color 0.2s ease;
+    }
+    .main-menu a:hover { color: var(--gold-accent); }
+
+
+    
 
     /* --- CONTENU PRINCIPAL --- */
-    main {
-      flex: 1;
-      position: relative;
-      z-index: 1; /* Passe DEVANT l'image */
-      padding: 100px 20px 60px; /* Espace pour le menu fixe */
-      max-width: 1200px;
-      margin: 0 auto;
-      text-align: center;
+    .content-wrapper {
+      position: relative; z-index: 5;
+      padding-top: 120px; /* Espace header + aération */
+      padding-bottom: 60px;
+      width: 100%; max-width: 1100px; margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center;
+      opacity: 0; animation: fadeInUp 1.5s ease-out forwards;
+    }
+
+    .text-container {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 60px;
+      margin: 0 20px;
+      border-radius: 4px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.6);
     }
 
     h1 {
       font-family: var(--font-motto);
-      font-size: 2.5rem;
-      margin-bottom: 3rem;
-      color: var(--gold-accent);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .values-section {
-      display: flex;
-      flex-direction: column;
-      gap: 4rem;
-      margin-top: 2rem;
-    }
-
-    .value-block h2 {
-      font-family: var(--font-motto);
       font-size: 1.8rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 30px;
       color: var(--gold-accent);
-      margin-bottom: 1rem;
+      text-align: center;
+      line-height: 1.3;
     }
 
-    .value-block p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 0 auto;
+    .intro-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      text-align: justify;
+      margin-bottom: 60px;
       color: #e0e0e0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 40px;
     }
 
-    /* --- HEADER / MENU (Simplified Styles from Index) --- */
-    header {
-      position: absolute; top: 0; width: 100%; z-index: 10;
-      padding: 20px; display: flex; justify-content: space-between; align-items: center;
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 colonnes strictes sur desktop */
+      gap: 40px;
     }
-    .logo { font-family: var(--font-motto); font-size: 1.2rem; color: #fff; text-decoration: none; font-weight: 600; }
-    
-    .menu-btn { cursor: pointer; z-index: 20; width: 30px; height: 20px; position: relative; }
-    .menu-btn span { display: block; width: 100%; height: 2px; background: var(--gold-accent); position: absolute; transition: 0.3s; }
-    .menu-btn span:nth-child(1) { top: 0; }
-    .menu-btn span:nth-child(2) { top: 9px; }
-    .menu-btn span:nth-child(3) { top: 18px; }
-    .menu-btn.open span:nth-child(1) { transform: rotate(45deg); top: 9px; }
-    .menu-btn.open span:nth-child(2) { opacity: 0; }
-    .menu-btn.open span:nth-child(3) { transform: rotate(-45deg); top: 9px; }
 
-    /* OVERLAY MENU */
-    .menu-overlay {
+    .pillar { text-align: left; }
+
+    .pillar h3 {
+      font-family: var(--font-motto);
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+      border-left: 3px solid var(--gold-accent);
+      padding-left: 15px;
+      /* FORCER UNE SEULE LIGNE */
+      white-space: nowrap; 
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pillar p {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: #ccc;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      padding: 30px 0; text-align: center;
+      font-size: 0.6rem; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: 1.5px;
+    }
+
+    /* --- MODAL (Access) --- */
+    .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.95);
-      z-index: 15;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      opacity: 0; visibility: hidden; transition: 0.4s;
+      background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px);
+      z-index: 1000; display: none; justify-content: center; align-items: center;
+      opacity: 0; transition: opacity 0.4s ease; padding: 20px;
     }
-    .menu-overlay.open { opacity: 1; visibility: visible; }
-    .menu-overlay a {
-      color: #fff; font-family: var(--font-motto); font-size: 2rem;
-      text-decoration: none; margin: 15px 0; transition: color 0.3s;
+    .modal-overlay.active { display: flex; opacity: 1; }
+    .modal-box {
+      background: #fff; width: 100%; max-width: 420px; padding: 50px 40px;
+      text-align: center; transform: translateY(20px); transition: transform 0.4s ease;
     }
-    .menu-overlay a:hover { color: var(--gold-accent); }
+    .modal-overlay.active .modal-box { transform: translateY(0); }
+    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 32px; cursor: pointer; color: #bbb; }
+    .close-modal:hover { color: var(--primary-dark); }
+    .modal-title { font-family: var(--font-motto); font-size: 1.6rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase; }
+    .input-group { margin-bottom: 20px; text-align: left; }
+    .input-group input { width: 100%; padding: 15px; border: 1px solid #e0e0e0; background: #fafafa; outline: none; font-family: var(--font-sans); }
+    .input-group input:focus { border-color: var(--gold-accent); background: #fff; }
+    .btn-submit { width: 100%; padding: 15px; background: var(--primary-dark); color: white; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 10px; }
+    
+    /* Animations */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* RESPONSIVE */
+    @media (max-width: 992px) {
+      .pillars-grid { grid-template-columns: 1fr; gap: 40px; } /* 1 colonne sur tablette/mobile */
+      .pillar h3 { white-space: normal; } /* Sur mobile, on autorise le retour à la ligne si nécessaire ou on garde nowrap mais on réduit la police */
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 15px 20px; }
+      .text-container { padding: 30px 20px; margin: 0 15px; }
+      h1 { font-size: 1.3rem; }
+      .intro-text { font-size: 0.9rem; text-align: left; }
+      
+      /* Astuce pour garder les titres sur une ligne sur petit écran */
+      .pillar h3 { 
+        white-space: nowrap; 
+        font-size: 0.9rem; /* Police plus petite pour tenir */
+      }
+    }
   </style>
 </head>
 <body>
 
   <div class="bg-container">
-    <img id="bgImage" class="bg-image" src="" alt="Background">
+    <img src="" id="bgImage" class="bg-image" alt="Background">
+  </div>
+
+  <div class="main-menu-overlay" id="mainMenuOverlay">
+    <nav class="main-menu">
+      <ul>
+        <li><a id="menuHome" href="home.html">Accueil</a></li>
+        <li><a id="menuAbout" href="about.html" style="color:var(--gold-accent);"> ◆ </a></li>
+        <li><a id="menuPhilosophy" href="philosophy.html">Philosophie</a></li>
+        <li><a id="menuManifesto" href="manifesto.html">Manifesto</a></li>
+        <li><a id="menuContacts" href="contacts.html">Contacts</a></li>
+      </ul>
+    </nav>
   </div>
 
   <header>
-    <a href="index.html" class="logo">HFG CAPITAL</a>
-    <div class="menu-btn" id="menuBtn">
-      <span></span><span></span><span></span>
+    <div class="header-left">
+      <div class="menu-container">
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">
+          <div class="menu-btn-lines"><span></span><span></span><span></span></div>
+        </button>
+      </div>
+
+      <button class="theme-btn" id="themeBtn" aria-label="Thème">
+        <span class="theme-dot"></span>
+      </button>
+      
+      <div class="lang-container">
+        <div class="lang-btn" onclick="toggleLangMenu()">
+          <img id="currentFlag" src="https://flagcdn.com/fr.svg" alt="FR">
+          <span id="currentLangLabel">FR</span>
+          <small>▼</small>
+        </div>
+        <div class="lang-menu" id="langMenu"></div>
+      </div>
     </div>
+
+    <button class="login-trigger" id="openLoginBtn" onclick="openModal()">Accès</button>
   </header>
 
-  <div class="menu-overlay" id="mainMenuOverlay">
-    <a href="index.html">Accueil</a>
-    <a href="about.html" style="color: var(--gold-accent);">Qui sommes-nous</a>
-    <a href="philosophy.html">Philosophie</a>
-    <a href="manifesto.html">Manifesto</a>
-    <a href="contacts.html">Contacts</a>
+  <div class="content-wrapper">
+    <div class="text-container">
+      <h1 id="pageTitle">Préserver, développer, transmettre</h1>
+      
+      <div class="intro-text" id="pageIntro">
+        </div>
+
+      <div class="pillars-grid">
+        <div class="pillar">
+          <h3 id="pillar1Title">Custodire — Préserver</h3>
+          <p id="pillar1Text"></p>
+        </div>
+        <div class="pillar">
+          <h3 id="pillar2Title">Augere — Faire croître</h3>
+          <p id="pillar2Text"></p>
+        </div>
+        <div class="pillar">
+          <h3 id="pillar3Title">Tradere — Transmettre</h3>
+          <p id="pillar3Text"></p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <main>
-    <h1>Notre Identité</h1>
+  <footer>
+    <div class="footer-copyright" id="footerText">© 2025 HFG CAPITAL | Private Investment Office</div>
+  </footer>
 
-    <div class="values-section">
-      
-      <div class="value-block">
-        <h2>Custodire — Préserver</h2>
-        <p>
-          La préservation du patrimoine est la pierre angulaire de notre approche. 
-          Nous veillons à protéger les actifs contre l'érosion du temps et les incertitudes de marché, 
-          en assurant une sécurité pérenne pour les générations futures.
-        </p>
-      </div>
-
-      <div class="value-block">
-        <h2>Augere — Faire croître</h2>
-        <p>
-          Au-delà de la préservation, nous cherchons à valoriser le capital avec discernement.
-          Une croissance maîtrisée et durable est essentielle pour accompagner les ambitions 
-          de nos partenaires et renforcer leur impact.
-        </p>
-      </div>
-
-      <div class="value-block">
-        <h2>Tradere — Transmettre</h2>
-        <p>
-          La transmission est l'aboutissement de notre mission. 
-          Il s'agit de préparer l'avenir en transférant non seulement des valeurs financières, 
-          mais aussi une vision et une culture d'excellence.
-        </p>
-      </div>
-
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h3 class="modal-title" id="modalTitle">Espace Privé</h3>
+      <form id="loginForm">
+        <div class="input-group"><input type="text" id="userId" placeholder="Identifiant" required></div>
+        <div class="input-group"><input type="password" id="password" placeholder="Mot de passe" required></div>
+        <button type="submit" class="btn-submit" id="submitBtn"><span id="btnText">Entrer</span></button>
+      </form>
     </div>
-  </main>
+  </div>
 
-  <script>
-    /* 1. GESTION IMMEDIATE DU FOND D'ECRAN (Anti-Clignotement) */
-    (function initBackgroundNow() {
-      const bgImg = document.getElementById('bgImage');
-      // Liste de vos images (adaptez si besoin)
-      const images = [
-        'images/bg1.jpg', 
-        'images/bg2.jpg', 
-        'images/bg3.jpg' 
-      ];
-      
-      // Récupération de l'image de session ou choix aléatoire
-      let sessionBg = sessionStorage.getItem('hfg_bg_session');
-      if (!sessionBg) {
-        sessionBg = images[Math.floor(Math.random() * images.length)];
-        sessionStorage.setItem('hfg_bg_session', sessionBg);
-      }
-      
-      // Attribution de la source
-      if(bgImg) {
-        bgImg.src = sessionBg;
-        
-        // Affichage en douceur une fois l'image chargée
-        bgImg.onload = () => {
-          bgImg.style.opacity = '0.6'; // Ajustez l'opacité (0.6 = sombre, 1 = clair)
-        };
-        // Sécurité si déjà en cache
-        if (bgImg.complete) {
-          bgImg.style.opacity = '0.6';
-        }
-      }
-    })();
+<script>
+/* --- PERSISTANCE --- */
+const savedLang = localStorage.getItem('hfg_lang') || 'fr';
+const savedTheme = localStorage.getItem('hfg_theme');
+let activeLang = savedLang;
 
-    /* 2. GESTION DU MENU */
-    const menuBtn = document.getElementById('menuBtn');
-    const mainMenuOverlay = document.getElementById('mainMenuOverlay');
+/* --- TRADUCTIONS CONTENU "QUI SOMMES NOUS" --- */
+const contentTranslations = {
+  fr: {
+    pageTitle: "Préserver, développer, transmettre",
+    pageIntro: "HFG CAPITAL est un family office indépendant fondé en 2019 et structuré autour d’une mission simple : protéger aujourd’hui, développer avec justesse et transmettre avec sagesse.<br><br>Nous opérons sur plusieurs générations, avec une approche disciplinée, des décisions patientes et une vision résolument tournée vers le temps long.<br>Notre rôle est de construire, année après année, la stabilité et la croissance d’un patrimoine familial. Rien n’est laissé au hasard : allocation, analyse, rigueur, gouvernance.",
+    p1Title: "Custodire — Préserver",
+    p1Text: "Protéger le capital est la première responsabilité. Cela implique une gestion prudente, une maîtrise des risques et la construction d’une base financière solide avant toute recherche de performance. Nous privilégions la robustesse, la liquidité et la qualité des actifs.",
+    p2Title: "Augere — Faire croître",
+    p2Text: "La création de valeur est un processus patient. Nous déployons une croissance disciplinée, fondée sur des analyses fondamentales, une diversification intelligente et une allocation précise. Notre approche vise des rendements durables, éloignés des modes et de la spéculation.",
+    p3Title: "Tradere — Transmettre",
+    p3Text: "Transmettre n’est pas un acte ponctuel : c’est une stratégie. Nous préparons les générations futures par une structuration rigoureuse, une vision claire et un sens aigu du temps long. Chaque décision est pensée pour aujourd’hui… et pour dans quarante ans."
+  },
+  en: {
+    pageTitle: "Preserve, Grow, Transmit",
+    pageIntro: "HFG CAPITAL is an independent family office founded in 2019, structured around a simple mission: protect today, grow with precision, and transmit with wisdom.<br><br>We operate across multiple generations with a disciplined approach, patient decision-making, and a vision resolutely focused on the long term.<br>Our role is to build, year after year, the stability and growth of family wealth. Nothing is left to chance: allocation, analysis, rigor, governance.",
+    p1Title: "Custodire — Preserve",
+    p1Text: "Protecting capital is the primary responsibility. This implies prudent management, risk control, and building a solid financial base before seeking performance. We prioritize robustness, liquidity, and asset quality.",
+    p2Title: "Augere — Grow",
+    p2Text: "Value creation is a patient process. We deploy disciplined growth based on fundamental analysis, intelligent diversification, and precise allocation. Our approach aims for sustainable returns, far from trends and speculation.",
+    p3Title: "Tradere — Transmit",
+    p3Text: "Transmission is not a one-time act: it is a strategy. We prepare future generations through rigorous structuring, a clear vision, and a keen sense of the long term. Every decision is thought out for today... and for forty years from now."
+  },
+  cn: {
+    pageTitle: "保存，增长，传承",
+    pageIntro: "HFG CAPITAL 成立于2019年，是一家独立的家族办公室。我们的使命很简单：今日保护，精准增长，智慧传承。<br><br>我们跨越数代人运作，秉持纪律严明的方法、耐心的决策以及着眼长远的愿景。<br>我们的角色是年复一年地建立家族财富的稳定与增长。没有任何事情是偶然的：无论是资产配置、分析、严谨性还是治理。",
+    p1Title: "Custodire — 保存",
+    p1Text: "保护资本是首要责任。这意味着在追求绩效之前，必须进行审慎管理、风险控制并建立稳固的财务基础。我们优先考虑资产的稳健性、流动性和质量。",
+    p2Title: "Augere — 增长",
+    p2Text: "创造价值是一个耐心的过程。我们基于基本面分析、智能多元化和精确配置，部署有纪律的增长。我们的目标是获得可持续的回报，远离潮流和投机。",
+    p3Title: "Tradere — 传承",
+    p3Text: "传承不仅仅是一次性的行为：它是一项战略。我们通过严格的结构化、清晰的愿景和敏锐的长远意识为后代做准备。每一个决定都是为了今天……也是为了四十年后。"
+  },
+  es: {
+    pageTitle: "Preservar, Desarrollar, Transmitir",
+    pageIntro: "HFG CAPITAL es un family office independiente fundado en 2019 y estructurado en torno a una misión simple: proteger hoy, desarrollar con precisión y transmitir con sabiduría.<br><br>Operamos a través de varias generaciones, con un enfoque disciplinado, decisiones pacientes y una visión resueltamente enfocada en el largo plazo.<br>Nuestro papel es construir, año tras año, la estabilidad y el crecimiento del patrimonio familiar. Nada se deja al azar: asignación, análisis, rigor, gobernanza.",
+    p1Title: "Custodire — Preservar",
+    p1Text: "Proteger el capital es la primera responsabilidad. Esto implica una gestión prudente, control de riesgos y la construcción de una base financiera sólida antes de buscar rendimiento. Priorizamos la robustez, la liquidez y la calidad de los activos.",
+    p2Title: "Augere — Hacer crecer",
+    p2Text: "La creación de valor es un proceso paciente. Desplegamos un crecimiento disciplinado, basado en análisis fundamentales, diversificación inteligente y asignación precisa. Nuestro enfoque busca rendimientos sostenibles, lejos de modas y especulación.",
+    p3Title: "Tradere — Transmitir",
+    p3Text: "Transmitir no es un acto puntual: es una estrategia. Preparamos a las generaciones futuras mediante una estructuración rigurosa, una visión clara y un agudo sentido del largo plazo. Cada decisión está pensada para hoy... y para dentro de cuarenta años."
+  },
+  de: {
+    pageTitle: "Bewahren, Vermehren, Weitergeben",
+    pageIntro: "HFG CAPITAL ist ein unabhängiges Family Office, das 2019 gegründet wurde und einer einfachen Mission folgt: heute schützen, präzise entwickeln und weise übertragen.<br><br>Wir arbeiten über mehrere Generationen hinweg, mit einem disziplinierten Ansatz, geduldigen Entscheidungen und einer Vision, die entschlossen auf Langfristigkeit ausgerichtet ist.<br>Unsere Rolle besteht darin, Jahr für Jahr die Stabilität und das Wachstum des Familienvermögens aufzubauen. Nichts wird dem Zufall überlassen: Allokation, Analyse, Strenge, Governance.",
+    p1Title: "Custodire — Bewahren",
+    p1Text: "Kapitalschutz ist die erste Verantwortung. Dies bedeutet ein umsichtiges Management, Risikokontrolle und den Aufbau einer soliden finanziellen Basis vor jedem Streben nach Rendite. Wir priorisieren Robustheit, Liquidität und Qualität der Vermögenswerte.",
+    p2Title: "Augere — Vermehren",
+    p2Text: "Wertschöpfung ist ein geduldiger Prozess. Wir setzen auf diszipliniertes Wachstum, basierend auf Fundamentalanalyse, intelligenter Diversifikation und präziser Allokation. Unser Ansatz zielt auf nachhaltige Erträge ab, fernab von Moden und Spekulation.",
+    p3Title: "Tradere — Weitergeben",
+    p3Text: "Weitergeben ist kein einmaliger Akt: Es ist eine Strategie. Wir bereiten zukünftige Generationen durch strenge Strukturierung, eine klare Vision und einen ausgeprägten Sinn für Langfristigkeit vor. Jede Entscheidung ist für heute gedacht... und für in vierzig Jahren."
+  },
+  it: {
+    pageTitle: "Custodire, Accrescere, Tramandare",
+    pageIntro: "HFG CAPITAL è un family office indipendente fondato nel 2019, strutturato attorno a una missione semplice: proteggere oggi, sviluppare con precisione e trasmettere con saggezza.<br><br>Operiamo su più generazioni, con un approccio disciplinato, decisioni pazienti e una visione decisamente orientata al lungo termine.<br>Il nostro ruolo è costruire, anno dopo anno, la stabilità e la crescita del patrimonio familiare. Nulla è lasciato al caso: allocazione, analisi, rigore, governance.",
+    p1Title: "Custodire — Preservare",
+    p1Text: "Proteggere il capitale è la prima responsabilità. Ciò implica una gestione prudente, il controllo dei rischi e la costruzione di una base finanziaria solida prima di cercare rendimento. Privilegiamo la robustezza, la liquidità e la qualità degli asset.",
+    p2Title: "Augere — Accrescere",
+    p2Text: "La creazione di valore è un processo paziente. Attuiamo una crescita disciplinata, basata su analisi fondamentali, diversificazione intelligente e allocazione precisa. Il nostro approccio mira a rendimenti sostenibili, lontani dalle mode e dalla speculazione.",
+    p3Title: "Tradere — Tramandare",
+    p3Text: "Trasmettere non è un atto puntuale: è una strategia. Prepariamo le generazioni future attraverso una strutturazione rigorosa, una visione chiara e un acuto senso del lungo termine. Ogni decisione è pensata per oggi... e per tra quarant'anni."
+  },
+  ru: {
+    pageTitle: "Сохранять, Приумножать, Передавать",
+    pageIntro: "HFG CAPITAL — независимый семейный офис, основанный в 2019 году с простой миссией: защищать сегодня, грамотно развивать и мудро передавать.<br><br>Мы работаем с расчетом на несколько поколений, применяя дисциплинированный подход, принимая взвешенные решения и ориентируясь на долгосрочную перспективу.<br>Наша роль — год за годом выстраивать стабильность и рост семейного капитала. Ничто не оставлено на волю случая: распределение, анализ, строгость, управление.",
+    p1Title: "Custodire — Сохранять",
+    p1Text: "Защита капитала — наша главная ответственность. Это подразумевает разумное управление, контроль рисков и создание прочной финансовой базы перед поиском доходности. Мы отдаем приоритет надежности, ликвидности и качеству активов.",
+    p2Title: "Augere — Приумножать",
+    p2Text: "Создание стоимости — это терпеливый процесс. Мы обеспечиваем дисциплинированный рост, основанный на фундаментальном анализе, разумной диверсификации и точном распределении. Наш подход нацелен на устойчивую доходность, вдали от моды и спекуляций.",
+    p3Title: "Tradere — Передавать",
+    p3Text: "Передача наследства — это не разовый акт, а стратегия. Мы готовим будущие поколения через строгую структуризацию, ясное видение и острое чувство долгосрочной перспективы. Каждое решение принимается для сегодняшнего дня... и на сорок лет вперед."
+  },
+  jp: {
+    pageTitle: "保存、成長、伝承",
+    pageIntro: "HFG CAPITALは2019年に設立された独立系ファミリーオフィスであり、シンプルな使命を掲げています。それは、今日を守り、着実に成長させ、知恵を持って引き継ぐことです。<br><br>私たちは数世代にわたり、規律あるアプローチ、忍耐強い決断、そして長期的視野を持って運営しています。<br>私たちの役割は、年々、家族の資産の安定と成長を築くことです。配分、分析、厳格さ、ガバナンス、すべてにおいて偶然に任せることはありません。",
+    p1Title: "Custodire — 保存",
+    p1Text: "資本を守ることは第一の責任です。これには慎重な管理、リスク管理、そしてパフォーマンスを追求する前の強固な財務基盤の構築が含まれます。私たちは堅牢性、流動性、資産の質を優先します。",
+    p2Title: "Augere — 成長",
+    p2Text: "価値の創造は忍耐強いプロセスです。私たちはファンダメンタル分析、インテリジェントな分散投資、正確な配分に基づいた規律ある成長を展開します。私たちのアプローチは、流行や投機から離れた持続可能なリターンを目指しています。",
+    p3Title: "Tradere — 伝承",
+    p3Text: "伝承は一時的な行為ではなく、戦略です。私たちは厳格な構造化、明確なビジョン、そして鋭い長期的感覚を通じて次世代に備えます。すべての決定は今日のために、そして40年後のために考えられています。"
+  },
+  vn: {
+    pageTitle: "Bảo tồn, Phát triển, Trao truyền",
+    pageIntro: "HFG CAPITAL là văn phòng gia đình độc lập được thành lập năm 2019 với sứ mệnh đơn giản: bảo vệ hôm nay, phát triển chính xác và trao truyền một cách khôn ngoan.<br><br>Chúng tôi hoạt động qua nhiều thế hệ, với phương pháp kỷ luật, quyết định kiên nhẫn và tầm nhìn kiên định về dài hạn.<br>Vai trò của chúng tôi là xây dựng sự ổn định và tăng trưởng của tài sản gia đình theo từng năm. Không có gì bị bỏ mặc cho may rủi: phân bổ, phân tích, sự nghiêm ngặt, quản trị.",
+    p1Title: "Custodire — Bảo tồn",
+    p1Text: "Bảo vệ vốn là trách nhiệm hàng đầu. Điều này bao gồm quản lý thận trọng, kiểm soát rủi ro và xây dựng nền tảng tài chính vững chắc trước khi tìm kiếm hiệu suất. Chúng tôi ưu tiên sự vững chắc, tính thanh khoản và chất lượng tài sản.",
+    p2Title: "Augere — Phát triển",
+    p2Text: "Tạo ra giá trị là một quá trình kiên nhẫn. Chúng tôi triển khai sự tăng trưởng kỷ luật, dựa trên phân tích cơ bản, đa dạng hóa thông minh và phân bổ chính xác. Cách tiếp cận của chúng tôi nhắm đến lợi nhuận bền vững, tránh xa các xu hướng nhất thời và đầu cơ.",
+    p3Title: "Tradere — Trao truyền",
+    p3Text: "Trao truyền không phải là hành động nhất thời: đó là một chiến lược. Chúng tôi chuẩn bị cho các thế hệ tương lai thông qua cấu trúc chặt chẽ, tầm nhìn rõ ràng và ý thức sâu sắc về dài hạn. Mọi quyết định đều được cân nhắc cho hôm nay... và cho bốn mươi năm sau."
+  },
+  id: {
+    pageTitle: "Melestarikan, Menumbuhkan, Mewariskan",
+    pageIntro: "HFG CAPITAL adalah kantor keluarga independen yang didirikan pada tahun 2019 dengan misi sederhana: melindungi hari ini, menumbuhkan dengan tepat, dan mewariskan dengan bijak.<br><br>Kami beroperasi lintas generasi, dengan pendekatan disiplin, keputusan yang sabar, dan visi yang berorientasi jangka panjang.<br>Peran kami adalah membangun stabilitas dan pertumbuhan kekayaan keluarga dari tahun ke tahun. Tidak ada yang diserahkan pada kebetulan: alokasi, analisis, ketelitian, tata kelola.",
+    p1Title: "Custodire — Melestarikan",
+    p1Text: "Melindungi modal adalah tanggung jawab utama. Ini menyiratkan manajemen yang hati-hati, pengendalian risiko, dan membangun basis keuangan yang kuat sebelum mencari kinerja. Kami memprioritaskan ketahanan, likuiditas, dan kualitas aset.",
+    p2Title: "Augere — Menumbuhkan",
+    p2Text: "Penciptaan nilai adalah proses yang sabar. Kami menerapkan pertumbuhan disiplin berdasarkan analisis fundamental, diversifikasi cerdas, dan alokasi yang tepat. Pendekatan kami bertujuan untuk hasil yang berkelanjutan, jauh dari tren dan spekulasi.",
+    p3Title: "Tradere — Mewariskan",
+    p3Text: "Mewariskan bukan tindakan sesaat: itu adalah strategi. Kami mempersiapkan generasi masa depan melalui penataan yang ketat, visi yang jelas, dan rasa jangka panjang yang tajam. Setiap keputusan dipikirkan untuk hari ini... dan untuk empat puluh tahun dari sekarang."
+  }
+};
 
-    if(menuBtn && mainMenuOverlay) {
-      menuBtn.addEventListener('click', () => {
-        mainMenuOverlay.classList.toggle('open');
-        menuBtn.classList.toggle('open');
-      });
-      
-      mainMenuOverlay.addEventListener('click', (e) => {
-        if (e.target === mainMenuOverlay || e.target.tagName === 'A') {
-          mainMenuOverlay.classList.remove('open');
-          menuBtn.classList.remove('open');
-        }
-      });
-    }
-  </script>
+/* --- CONFIG DATA (Langues UI & Navigation) --- */
+const uiLanguages = {
+  fr: { flag: "https://flagcdn.com/fr.svg", label: "FR", full: "Français", menuHome: "Accueil", btnOpen: "Accès", modalTitle: "Espace Privé", btnSubmit: "Entrer", footer: "© 2025 HFG CAPITAL | Bureau d'Investissement Privé" },
+  en: { flag: "https://flagcdn.com/gb.svg", label: "EN", full: "English", menuHome: "Home", btnOpen: "Access", modalTitle: "Private Access", btnSubmit: "Enter", footer: "© 2025 HFG CAPITAL | Private Investment Office" },
+  cn: { flag: "https://flagcdn.com/cn.svg", label: "CN", full: "中文", menuHome: "首页", btnOpen: "进入", modalTitle: "私人专区", btnSubmit: "进入", footer: "© 2025 HFG CAPITAL | 私人投資辦公室" },
+  es: { flag: "https://flagcdn.com/es.svg", label: "ES", full: "Español", menuHome: "Inicio", btnOpen: "Acceso", modalTitle: "Acceso Privado", btnSubmit: "Entrar", footer: "© 2025 HFG CAPITAL | Oficina de Inversiones Privadas" },
+  de: { flag: "https://flagcdn.com/de.svg", label: "DE", full: "Deutsch", menuHome: "Startseite", btnOpen: "Zugang", modalTitle: "Privater Zugang", btnSubmit: "Eintreten", footer: "© 2025 HFG CAPITAL | Privates Anlagebüro" },
+  it: { flag: "https://flagcdn.com/it.svg", label: "IT", full: "Italiano", menuHome: "Home", btnOpen: "Accesso", modalTitle: "Accesso Riservato", btnSubmit: "Entra", footer: "© 2025 HFG CAPITAL | Ufficio di Investimento Privato" },
+  ru: { flag: "https://flagcdn.com/ru.svg", label: "RU", full: "Русский", menuHome: "Главная", btnOpen: "Вход", modalTitle: "Частный доступ", btnSubmit: "Войти", footer: "© 2025 HFG CAPITAL | Частный Инвестиционный Офис" },
+  jp: { flag: "https://flagcdn.com/jp.svg", label: "JP", full: "日本語", menuHome: "ホーム", btnOpen: "アクセス", modalTitle: "プライベートアクセス", btnSubmit: "入る", footer: "© 2025 HFG CAPITAL | プライベート投資オフィス" },
+  vn: { flag: "https://flagcdn.com/vn.svg", label: "VN", full: "Tiếng Việt", menuHome: "Trang chủ", btnOpen: "Truy cập", modalTitle: "Truy cập riêng", btnSubmit: "Vào", footer: "© 2025 HFG CAPITAL | Văn phòng đầu tư tư nhân" },
+  id: { flag: "https://flagcdn.com/id.svg", label: "ID", full: "Bahasa Indonesia", menuHome: "Beranda", btnOpen: "Akses", modalTitle: "Akses Pribadi", btnSubmit: "Masuk", footer: "© 2025 HFG CAPITAL | Kantor Investasi Pribadi" }
+};
 
+const menuTranslations = {
+  fr: { philosophy: "Philosophie", manifesto: "Manifesto", contacts: "Contacts" },
+  en: { philosophy: "Philosophy", manifesto: "Manifesto", contacts: "Contact" },
+  cn: { philosophy: "投资理念", manifesto: "愿景宣言", contacts: "联系" },
+  es: { philosophy: "Filosofía", manifesto: "Manifiesto", contacts: "Contacto" },
+  de: { philosophy: "Philosophie", manifesto: "Manifest", contacts: "Kontakt" },
+  it: { philosophy: "Filosofia", manifesto: "Manifesto", contacts: "Contatti" },
+  ru: { philosophy: "Философия", manifesto: "Манифест", contacts: "Контакты" },
+  jp: { philosophy: "投資哲学", manifesto: "マニフェスト", contacts: "お問い合わせ" },
+  vn: { philosophy: "Triết lý", manifesto: "Tuyên ngôn", contacts: "Liên hệ" },
+  id: { philosophy: "Filosofi", manifesto: "Manifesto", contacts: "Kontak" }
+};
+
+/* --- INITIALISATION --- */
+/* --- IMAGES DE FOND --- */
+const bgImages = [
+                        "img/rouge_02.png",                       "img/rouge_04.png",
+  "img/jaune_01.png",   "img/jaune_02.png",                       "img/jaune_04.png", 
+  "img/vert_01.png",    "img/vert_02.png",    
+                        "img/bleu_02.png",   "img/bleu_03.png",   "img/bleu_04.png",   "img/bleu_05.png",
+                        "img/orange_02.png", 
+  "img/violet_01.png",                       "img/violet_03.png"
+];
+
+/*window.addEventListener('load', () => {
+  const bgElement = document.getElementById('bgImage');
+  const randomBg = bgImages[Math.floor(Math.random() * bgImages.length)];
+  bgElement.src = randomBg;
+  bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
+  
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeBtn').classList.add('active');
+  }
+
+  generateLangMenu();
+  setLanguage(activeLang);
+});*/
+window.addEventListener('load', () => {
+  const bgElement = document.getElementById('bgImage');
+  
+  // --- Logique pour maintenir le fond d'écran de la session ---
+  const STORAGE_KEY_BG = 'hfg_bg_session';
+  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+
+  if (!currentBg) {
+    // Si aucune image n'est stockée, on en choisit une aléatoirement
+    const randomIndex = Math.floor(Math.random() * bgImages.length);
+    currentBg = bgImages[randomIndex];
+    
+    // On stocke l'image choisie pour le reste de la session
+    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+  }
+  
+  // Application de l'image
+  bgElement.src = currentBg;
+  bgElement.onerror = function() { this.style.display = 'none'; document.body.style.backgroundColor = '#111'; };
+
+
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeBtn').classList.add('active');
+  }
+
+  generateLangMenu();
+  setLanguage(activeLang);
+});
+
+  
+
+/* --- FONCTIONS UI --- */
+function toggleLangMenu() { document.getElementById('langMenu').classList.toggle('show'); }
+
+function setLanguage(lang) {
+  localStorage.setItem('hfg_lang', lang);
+  activeLang = lang;
+
+  // UI HEADER
+  const ui = uiLanguages[lang] || uiLanguages['en'];
+  document.getElementById('currentFlag').src = ui.flag;
+  document.getElementById('currentLangLabel').innerText = ui.label;
+  document.getElementById('openLoginBtn').innerText = ui.btnOpen;
+  document.getElementById('modalTitle').innerText = ui.modalTitle;
+  document.getElementById('btnText').innerText = ui.btnSubmit;
+  document.getElementById('footerText').innerText = ui.footer;
+  
+  // MENU
+  document.getElementById('menuHome').innerText = ui.menuHome;
+  const menuT = menuTranslations[lang] || menuTranslations['en'];
+  document.getElementById('menuPhilosophy').innerText = menuT.philosophy;
+  document.getElementById('menuManifesto').innerText = menuT.manifesto;
+  document.getElementById('menuContacts').innerText = menuT.contacts;
+
+  // CONTENU PAGE
+  const content = contentTranslations[lang] || contentTranslations['en'];
+  document.getElementById('pageTitle').innerText = content.pageTitle;
+  document.getElementById('pageIntro').innerHTML = content.pageIntro;
+  document.getElementById('pillar1Title').innerText = content.p1Title;
+  document.getElementById('pillar1Text').innerText = content.p1Text;
+  document.getElementById('pillar2Title').innerText = content.p2Title;
+  document.getElementById('pillar2Text').innerText = content.p2Text;
+  document.getElementById('pillar3Title').innerText = content.p3Title;
+  document.getElementById('pillar3Text').innerText = content.p3Text;
+
+  document.getElementById('langMenu').classList.remove('show');
+}
+
+function generateLangMenu() {
+  const menu = document.getElementById('langMenu');
+  menu.innerHTML = '';
+  for (const code in uiLanguages) {
+    const opt = document.createElement('div');
+    opt.className = 'lang-option';
+    opt.innerHTML = `<img src="${uiLanguages[code].flag}"> ${uiLanguages[code].full}`;
+    opt.onclick = () => setLanguage(code);
+    menu.appendChild(opt);
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.lang-container') && !e.target.closest('.menu-container')) {
+    document.getElementById('langMenu').classList.remove('show');
+  }
+});
+
+/* --- BOUTONS MENU & THEME --- */
+const menuBtn = document.getElementById('menuBtn');
+const mainMenuOverlay = document.getElementById('mainMenuOverlay');
+const themeBtn = document.getElementById('themeBtn');
+
+menuBtn.addEventListener('click', () => {
+  mainMenuOverlay.classList.toggle('open');
+  menuBtn.classList.toggle('open');
+});
+mainMenuOverlay.addEventListener('click', (e) => {
+  if (e.target === mainMenuOverlay) {
+    mainMenuOverlay.classList.remove('open');
+    menuBtn.classList.remove('open');
+  }
+});
+
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  themeBtn.classList.toggle('active');
+  localStorage.setItem('hfg_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+});
+
+/* --- MODAL LOGIQUE --- */
+const modal = document.getElementById('modalOverlay');
+function openModal() { modal.classList.add('active'); setTimeout(()=>document.getElementById('userId').focus(),300); }
+function closeModal() { modal.classList.remove('active'); }
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.getElementById('loginForm').addEventListener('submit', (e) => { e.preventDefault(); alert("Redirection portail..."); });
+</script>
 </body>
 </html>
