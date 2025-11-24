@@ -501,7 +501,7 @@ const bgImages = [
   generateLangMenu();
   setLanguage(activeLang);
 });*/
-window.addEventListener('load', () => {
+/*window.addEventListener('load', () => {
   const bgElement = document.getElementById('bgImage');
   
   // --- Logique pour maintenir le fond d'écran de la session ---
@@ -515,7 +515,24 @@ window.addEventListener('load', () => {
     
     // On stocke l'image choisie pour le reste de la session
     sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
-  }
+  }*/
+  /* --- LOGIQUE DE CHARGEMENT RAPIDE DU FOND (Sélection aléatoire et stockage) --- */
+  (function initBackgroundNow() {
+    const bgEl = document.getElementById('bgImage');
+  
+    if (bgEl) {
+      let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+      if (!currentBg || !bgImages.includes(currentBg)) {
+        const randomIndex = Math.floor(Math.random() * bgImages.length);
+        currentBg = bgImages[randomIndex];
+        sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+      }
+      bgEl.src = currentBg; 
+      bgEl.onerror = function() {
+        sessionStorage.removeItem(STORAGE_KEY_BG);
+      };
+    }
+  })();
   
   // Application de l'image
   bgElement.src = currentBg;
