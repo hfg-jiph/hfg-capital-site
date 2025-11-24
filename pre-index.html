@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* --- Styles... (identiques à précédemment) --- */
+    /* --- VARIABLES & RESET --- */
     :root {
       --primary-dark: #1a1a1a;
       --gold-accent: #D4AF37;
@@ -30,19 +30,19 @@
       height: 100dvh;
       width: 100vw;
       overflow: hidden;
-      background-color: #000;
+      background-color: #000; /* Le fond reste noir */
       position: relative; 
-      /* Force l'obscurcissement de l'image de fond via CSS */
-      filter: grayscale(100%) brightness(0.25);
+      /* Le filtre d'obscurcissement n'est plus nécessaire ici */
     }
 
-    /* --- BACKGROUND PLEIN ÉCRAN --- */
+    /* --- BACKGROUND PLEIN ÉCRAN (Caché) --- */
     .bg-container {
       position: fixed;
       top: 0; left: 0; 
       width: 100%; height: 100%;
       z-index: -1;
       overflow: hidden;
+      visibility: hidden; /* <--- NOUVEAUTÉ : Cache le conteneur et donc l'image de fond */
     }
 
     .bg-image {
@@ -70,7 +70,6 @@
       width: 100%;
       padding: 0 20px;
       z-index: 5;
-      /* Annule le filtre body pour que le logo soit visible */
       filter: initial; 
       cursor: pointer; 
     }
@@ -122,21 +121,21 @@ const STORAGE_KEY_BG = 'hfg_bg_session';
 const STORAGE_KEY_THEME = 'hfg_theme';
 const STORAGE_KEY_LANG = 'hfg_lang';
 
-/* --- LOGIQUE DE CHARGEMENT RAPIDE DU FOND --- */
+/* --- LOGIQUE DE CHARGEMENT RAPIDE DU FOND (Même si caché) --- */
 (function initBackgroundNow() {
   const bgEl = document.getElementById('bgImage');
 
   if (bgEl) {
     let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+    // Le script sélectionne et stocke l'image comme demandé
     if (!currentBg || !bgImages.includes(currentBg)) {
       const randomIndex = Math.floor(Math.random() * bgImages.length);
       currentBg = bgImages[randomIndex];
       sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
     }
     bgEl.src = currentBg;
-    bgEl.style.display = 'block';
+    // On n'affiche pas l'image, mais on laisse le script terminer pour stocker le chemin
     bgEl.onerror = function() {
-      this.style.display = 'none';
       sessionStorage.removeItem(STORAGE_KEY_BG);
     };
   }
@@ -144,20 +143,17 @@ const STORAGE_KEY_LANG = 'hfg_lang';
 
 /* --- DÉFINITION DE LA LANGUE PAR DÉFAUT/SAUVEGARDÉE --- */
 document.addEventListener('DOMContentLoaded', () => {
-  // Si aucune langue n'est enregistrée, on la devine et la sauvegarde
   if (!localStorage.getItem(STORAGE_KEY_LANG)) {
     const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
     let initialLang = 'en'; 
     if (browserLang.startsWith('fr')) initialLang = 'fr';
-    // ... (Ajouter d'autres déductions si nécessaire)
     localStorage.setItem(STORAGE_KEY_LANG, initialLang);
   }
-  // Le thème est géré uniquement au moment du clic sur le logo pour forcer le mode clair sur home.html
 });
 
 /* --- REDIRECTION SUR CLIC --- */
 function enterSite() {
-    // Ceci force le mode clair sur la page home.html
+    // Force le mode clair (pour enlever l'obscurcissement sur home.html)
     localStorage.setItem(STORAGE_KEY_THEME, 'light'); 
     window.location.href = "home.html";
 }
