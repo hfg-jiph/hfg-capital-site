@@ -34,11 +34,11 @@
       height: 100dvh;
       width: 100vw;
       overflow: hidden;
-      background-color: #000; /* Fond noir */
+      background-color: #000; /* Fond noir uni */
       position: relative; 
     }
 
-    /* --- BACKGROUND PLEIN ÉCRAN (Caché) --- */
+    /* --- BACKGROUND PLEIN ÉCRAN (Caché mais chargé) --- */
     .bg-container {
       position: fixed;
       top: 0; left: 0; 
@@ -86,7 +86,7 @@
       opacity: 1; 
     }
 
-    /* --- NOUVEAUTÉS CSS : CHARGEMENT --- */
+    /* --- CHARGEMENT : JAUGE ET POURCENTAGE --- */
     .loader-container {
       position: absolute;
       top: 50%;
@@ -161,7 +161,7 @@ const STORAGE_KEY_BG = 'hfg_bg_session';
 const STORAGE_KEY_THEME = 'hfg_theme';
 const STORAGE_KEY_LANG = 'hfg_lang';
 
-/* --- LOGIQUE DE CHARGEMENT RAPIDE DU FOND (Même si caché) --- */
+/* --- LOGIQUE DE CHARGEMENT RAPIDE DU FOND (Sélection aléatoire et stockage) --- */
 (function initBackgroundNow() {
   const bgEl = document.getElementById('bgImage');
 
@@ -195,13 +195,13 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(STORAGE_KEY_LANG, initialLang);
     }
 
-    // 2. Séquence de chargement GSAP
+    // 2. Séquence d'animation GSAP
     
-    // Cache le logo et le rend non cliquable tant que le chargement n'est pas fini
-    gsap.set(logo, { opacity: 0, pointerEvents: 'none' });
+    // !!! CRUCIAL: REND LE LOGO INVISIBLE DURANT LE CHARGEMENT !!!
+    gsap.set(logo, { opacity: 0, pointerEvents: 'none' }); 
 
-    // Timeline pour organiser les animations
-    const masterTL = gsap.timeline({ delay: 0.5 });
+    // Timeline pour organiser les animations en séquence
+    const masterTL = gsap.timeline({ delay: 0.5 }); // Petit délai avant de commencer
 
     // A. Animation d'apparition de la jauge
     masterTL.to(loaderContainer, {
@@ -213,13 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // B. Animation de progression (0% à 100% et remplissage de la jauge)
     .to(progressBar, {
         width: '100%',
-        duration: 2.5, // Durée du remplissage de la jauge
+        duration: 2.5, 
         ease: 'power2.inOut'
-    }, "<") // Commence en même temps que l'animation du pourcentage
+    }, "<") 
     
     .to({ value: 0 }, {
         value: 100,
-        duration: 2.5, // Durée du pourcentage (doit être la même que la jauge)
+        duration: 2.5, 
         ease: 'power2.inOut',
         roundProps: 'value', 
         onUpdate: function() {
@@ -227,14 +227,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, "<") 
     
-    // C. Animation de disparition de la jauge (après la fin du remplissage)
+    // C. Animation de disparition de la jauge (0.5s)
     .to(loaderContainer, {
         opacity: 0,
         duration: 0.5,
         ease: 'power1.inOut'
-    }, ">-0.1") // Commence légèrement avant la fin du remplissage pour une transition fluide
+    }, ">") // Commence APRÈS la fin de la progression (B)
     
-    // D. Animation de révélation du logo (une fois la jauge disparue)
+    // D. Animation de révélation du logo (flou vers net)
     .fromTo(logo, 
         {
             opacity: 0.1, scale: 1.05, filter: 'blur(5px)',
@@ -244,25 +244,21 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: 2, 
             ease: "power2.out", 
             onComplete: () => {
-                // Rend le logo visible et cliquable après l'animation
+                // Rend le logo cliquable après l'animation
                 logo.style.opacity = 1; 
                 logo.style.pointerEvents = 'auto'; 
             }
         }, 
-        ">-1.5" // Commence 1.5s avant la fin de la disparition de la jauge (début du fondu de la jauge)
+        ">-0.2" // Démarre 0.2s après le début de la disparition de la jauge (C)
     );
 });
 
 
 /* --- REDIRECTION SUR CLIC --- */
 function enterSite() {
-    // Si l'utilisateur clique pendant l'animation, on la tue et on fonce
-    gsap.killTweensOf(".logo-main"); 
-    gsap.killTweensOf(document.body);
-    gsap.killTweensOf(".loader-container"); 
-    gsap.killTweensOf("#progressBar"); 
-    gsap.killTweensOf("#progressPercent"); 
-
+    // Tuer toutes les animations GSAP en cours pour une redirection immédiate
+    gsap.killTweensOf("*"); 
+    
     // Animation de fondu rapide du corps avant la redirection
     gsap.to(document.body, { 
         opacity: 0, 
