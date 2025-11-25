@@ -118,7 +118,8 @@
       font-weight: 400;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--text-white);
+     /* color: var(--text-white);*/
+      color: var(--gold-accent);
       opacity: 0;
       white-space: nowrap;
     }
@@ -633,14 +634,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (container) {
       container.classList.remove('visible');
     }
-    assetText.textContent = "PATRIMONIUM";
+    assetText.textContent = "✦";
   }, null, "complete");
 
-  tl.fromTo(assetText,
+  /*tl.fromTo(assetText,
     { opacity: 0, scale: 0.9, y: 6 },
     { opacity: 1, scale: 1.05, y: 0, duration: 0.45, ease: "power2.out" },
     "complete"
+  );*/
+  tl.fromTo(assetText,
+    { opacity: 0, scale: 0.6, y: 4 },
+    { opacity: 1, scale: 1.6, y: 0, duration: 0.45, ease: "power2.out" },
+    "complete"
   );
+
 
   // contraction
   tl.to(ringContainer, {
