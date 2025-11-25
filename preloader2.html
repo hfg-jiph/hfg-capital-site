@@ -14,24 +14,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
-  <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CSSRulePlugin.min.js"></script>
 
   <style>
     /* --- VARIABLES & RESET --- */
     :root {
-      --primary-dark: #000000;
+      --primary-dark: #1a1a1a;
       --gold-accent: #D4AF37;
       --text-light: #ffffff;
       --font-sans: 'Montserrat', sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: var(--font-sans);
@@ -39,278 +33,265 @@
       height: 100dvh;
       width: 100vw;
       overflow: hidden;
-      background-color: var(--primary-dark);
-      color: var(--text-light);
+      background-color: #000;
+      position: relative; 
     }
 
-    /* --- BACKGROUND (image aléatoire MAIS invisible, fond noir) --- */
+    /* --- BACKGROUND (Caché au début) --- */
     .bg-container {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      overflow: hidden;
-      opacity: 0; /* on garde la logique mais on ne montre pas l'image */
-      pointer-events: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1; overflow: hidden;
+      /* On laisse l'opacité à 1, c'est l'overlay noir qui cache tout */
     }
 
     .bg-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(1.1);
+      width: 100%; height: 100%; object-fit: cover; object-position: center center;
+      transition: opacity 1s ease; animation: zoomIn 40s infinite alternate linear;
+      will-change: transform; display: none; 
     }
 
-    /* --- CONTAINER PRINCIPAL --- */
+    @keyframes zoomIn {
+      from { transform: scale(1); }
+      to { transform: scale(1.15); }
+    }
+
+    /* --- OVERLAY NOIR (Cache l'image de fond) --- */
+    .screen-overlay {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background-color: #000;
+        z-index: 10; 
+    }
+
+    /* --- MAIN LOGO (Apparaît à la fin) --- */
     main {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      cursor: pointer;
-      z-index: 3;
-      pointer-events: auto;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      text-align: center; width: 100%; padding: 0 20px;
+      z-index: 5; cursor: pointer; 
     }
 
     .logo-main {
-      width: auto;
-      max-width: 80%;
-      max-height: 160px;
-      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
-      opacity: 0; /* révélé par l'anim */
-      transform: scale(1.05);
+      width: auto; max-width: 85%; max-height: 160px;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
     }
 
-    .enter-hint {
-      margin-top: 16px;
-      font-size: 0.8rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      opacity: 0.45;
-      font-weight: 300;
+    /* --- SVG CHART / MOUNTAIN --- */
+    /* Le SVG prend tout l'écran, par dessus le noir */
+    .chart-container {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 20; pointer-events: none;
     }
 
-    /* --- PARTICULES / CONSTELLATION --- */
-    .particles-container {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      overflow: visible;
+    /* Style de la ligne */
+    #stockPath {
+        fill: none;
+        stroke: var(--text-light); /* Ou var(--gold-accent) si tu veux du doré */
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke; /* Garde l'épaisseur constante même si on redimensionne */
     }
 
-    .particle-dot {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(212,175,55,1) 0%, rgba(212,175,55,0.7) 40%, rgba(212,175,55,0) 70%);
-      box-shadow: 0 0 6px rgba(212,175,55,0.9);
-      opacity: 0;
-      transform: translate(-50%, -50%);
+    /* --- POURCENTAGE --- */
+    .progress-percent {
+        position: absolute;
+        top: 50%; left: 50%; transform: translate(-50%, -50%);
+        font-family: var(--font-sans);
+        font-size: 24px; /* Un peu plus gros pour l'impact */
+        color: var(--text-light);
+        font-weight: 300;
+        z-index: 21; opacity: 0;
+        letter-spacing: 2px;
     }
-
+    
     /* --- RESPONSIVE --- */
     @media (max-width: 600px) {
-      .logo-main { max-height: 110px; }
-      .enter-hint { font-size: 0.7rem; }
+      .logo-main { max-height: 100px; } 
     }
   </style>
 </head>
 <body>
 
-  <!-- Fond : image aléatoire, non visible, mais chargée + stockée -->
   <div class="bg-container">
     <img id="bgImage" class="bg-image" alt="Background">
   </div>
+  
+  <div id="screenOverlay" class="screen-overlay"></div>
 
-  <!-- Constellation -->
-  <div class="particles-container" id="particlesContainer"></div>
-
-  <!-- Logo + zone cliquable -->
   <main onclick="enterSite()">
-    <div>
-      <img src="img/logo_noir.jpg" alt="HFG CAPITAL" class="logo-main">
-      <div class="enter-hint">
-        CLIQUEZ POUR ENTRER
-      </div>
-    </div>
+    <img src="img/logo_noir.jpg" alt="HFG CAPITAL" class="logo-main">
   </main>
+  
+  <div class="chart-container">
+    <svg id="chartSvg" width="100%" height="100%" preserveAspectRatio="none">
+        <path id="stockPath" d="" />
+    </svg>
+  </div>
 
-  <script>
-    /* --- CONFIG IMAGES DE FOND & STOCKAGE --- */
-    const bgImages = [
-      "img/rouge_02.png", "img/rouge_04.png", "img/jaune_01.png", "img/jaune_02.png",
-      "img/jaune_04.png", "img/vert_01.png", "img/vert_02.png", "img/bleu_02.png",
-      "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png", "img/orange_02.png",
-      "img/violet_01.png", "img/violet_03.png"
-    ];
+  <div id="progressPercent" class="progress-percent">0%</div>
 
-    const STORAGE_KEY_BG   = 'hfg_bg_session';
-    const STORAGE_KEY_THEME = 'hfg_theme';
-    const STORAGE_KEY_LANG  = 'hfg_lang';
 
-    /* --- INIT BACKGROUND : choix aléatoire + stockage session --- */
-    (function initBackgroundNow() {
-      const bgEl = document.getElementById('bgImage');
+<script>
+/* --- 1. GESTION DU FOND (Ton code existant) --- */
+const bgImages = [
+  "img/rouge_02.png", "img/rouge_04.png", "img/jaune_01.png", "img/jaune_02.png", 
+  "img/jaune_04.png", "img/vert_01.png", "img/vert_02.png", "img/bleu_02.png",  
+  "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png", "img/orange_02.png", 
+  "img/violet_01.png", "img/violet_03.png"
+];
+const STORAGE_KEY_BG = 'hfg_bg_session';
+const STORAGE_KEY_THEME = 'hfg_theme';
+const STORAGE_KEY_LANG = 'hfg_lang';
 
-      if (bgEl) {
-        let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
-        if (!currentBg || !bgImages.includes(currentBg)) {
-          const randomIndex = Math.floor(Math.random() * bgImages.length);
-          currentBg = bgImages[randomIndex];
-          sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
-        }
-        bgEl.src = currentBg;
-        bgEl.onerror = function () {
-          sessionStorage.removeItem(STORAGE_KEY_BG);
-        };
-      }
-    })();
-
-    /* --- ANIMATION CONSTELLATION + LOGO --- */
-    document.addEventListener('DOMContentLoaded', () => {
-      const logo = document.querySelector('.logo-main');
-      const hint = document.querySelector('.enter-hint');
-      const particlesContainer = document.getElementById('particlesContainer');
-
-      // 1. Langue par défaut (comme avant)
-      if (!localStorage.getItem(STORAGE_KEY_LANG)) {
-        const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-        let initialLang = 'en';
-        if (browserLang.startsWith('fr')) initialLang = 'fr';
-        localStorage.setItem(STORAGE_KEY_LANG, initialLang);
-      }
-
-      const lang = localStorage.getItem(STORAGE_KEY_LANG) || 'en';
-      if (lang === 'en') {
-        hint.textContent = 'CLICK TO ENTER';
-      } else {
-        hint.textContent = 'CLIQUEZ POUR ENTRER';
-      }
-
-      // 2. Création des particules
-      const NUM_DOTS = 70;
-      const dots = [];
-      const targets = [];
-
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const cx = vw / 2;
-      const cy = vh / 2;
-
-      // Rectangle autour du logo (approximation) 
-      const rectWidth = Math.min(420, vw * 0.7);
-      const rectHeight = Math.min(220, vh * 0.35);
-
-      for (let i = 0; i < NUM_DOTS; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('particle-dot');
-        particlesContainer.appendChild(dot);
-
-        // Position de départ aléatoire
-        const startX = Math.random() * vw;
-        const startY = Math.random() * vh;
-        gsap.set(dot, {
-          x: startX,
-          y: startY,
-          scale: gsap.utils.random(0.7, 1.3),
-          opacity: 0
-        });
-
-        // Cible : sur les bords du rectangle
-        const side = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
-        const t = Math.random(); // position le long du côté [0,1]
-        let targetX, targetY;
-
-        switch (side) {
-          case 0: // top
-            targetX = cx + (t - 0.5) * rectWidth;
-            targetY = cy - rectHeight / 2;
-            break;
-          case 1: // right
-            targetX = cx + rectWidth / 2;
-            targetY = cy + (t - 0.5) * rectHeight;
-            break;
-          case 2: // bottom
-            targetX = cx + (t - 0.5) * rectWidth;
-            targetY = cy + rectHeight / 2;
-            break;
-          case 3: // left
-          default:
-            targetX = cx - rectWidth / 2;
-            targetY = cy + (t - 0.5) * rectHeight;
-            break;
-        }
-
-        dots.push(dot);
-        targets.push({ x: targetX, y: targetY });
-      }
-
-      // 3. Timeline : les points se rassemblent en un cadre + scintillent, puis logo apparaît
-      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-
-      // Phase A : apparition / mouvement vers le cadre
-      tl.to(dots, {
-        duration: 1.8,
-        x: (i) => targets[i].x,
-        y: (i) => targets[i].y,
-        opacity: 1,
-        stagger: {
-          each: 0.02,
-          from: 'random'
-        }
-      });
-
-      // Phase B : scintillement subtil en continu
-      tl.to(dots, {
-        duration: 2.0,
-        opacity: () => gsap.utils.random(0.3, 0.9),
-        scale: () => gsap.utils.random(0.8, 1.4),
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1
-      }, '-=1.0'); // commence pendant la fin de la phase A
-
-      // Phase C : révélation du logo
-      tl.fromTo(logo, {
-        opacity: 0,
-        scale: 1.05,
-        filter: 'blur(4px)'
-      }, {
-        opacity: 1,
-        scale: 1,
-        filter: 'blur(0px)',
-        duration: 1.3,
-        ease: 'power2.out'
-      }, '-=1.0');
-
-      // Phase D : hint qui apparaît légèrement après
-      tl.fromTo(hint, {
-        opacity: 0,
-        y: 6
-      }, {
-        opacity: 0.55,
-        y: 0,
-        duration: 0.9,
-        ease: 'power2.out'
-      }, '-=0.6');
-    });
-
-    /* --- REDIRECTION SUR CLIC --- */
-    function enterSite() {
-      gsap.killTweensOf('*');
-
-      gsap.to(document.body, {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => {
-          localStorage.setItem(STORAGE_KEY_THEME, 'light');
-          window.location.href = 'home.html';
-        }
-      });
+(function initBackgroundNow() {
+  const bgEl = document.getElementById('bgImage');
+  if (bgEl) {
+    let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+    if (!currentBg || !bgImages.includes(currentBg)) {
+      const randomIndex = Math.floor(Math.random() * bgImages.length);
+      currentBg = bgImages[randomIndex];
+      sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
     }
-  </script>
+    bgEl.src = currentBg; 
+    bgEl.onerror = function() { sessionStorage.removeItem(STORAGE_KEY_BG); };
+  }
+})();
+
+/* --- 2. GENERATION DU GRAPHIQUE BOURSIER / MONTAGNE --- */
+function generateStockPath() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    // Paramètres de la courbe
+    const segments = 15; // Nombre de points intermédiaires (plus il y en a, plus c'est dentelé)
+    const stepX = width / segments;
+    
+    // Point de départ : Bas Gauche (avec un petit padding)
+    let pathData = `M 0,${height} `; 
+    
+    let currentX = 0;
+    let currentY = height;
+
+    for (let i = 1; i <= segments; i++) {
+        // Avance en X
+        currentX = i * stepX;
+        
+        // Calcule le Y idéal (une ligne droite qui monte vers 0)
+        // On vise le coin haut droit (y=0) à la fin
+        const targetY = height - (height * (i / segments));
+        
+        // Ajoute du "bruit" (volatilité boursière)
+        // Plus on est proche du début ou de la fin, moins on met de bruit pour bien viser les coins
+        let noise = (Math.random() - 0.5) * (height * 0.4); // 40% de la hauteur en volatilité max
+        
+        // On s'assure que le dernier point est exactement en haut à droite sans bruit
+        if (i === segments) {
+            currentY = 0; 
+            currentX = width; // Force le coin exact
+        } else {
+            currentY = targetY + noise;
+        }
+        
+        pathData += `L ${currentX},${currentY} `;
+    }
+
+    return pathData;
+}
+
+
+/* --- 3. ANIMATION GSAP --- */
+document.addEventListener('DOMContentLoaded', () => {
+    const logo = document.querySelector('.logo-main');
+    const progressPercent = document.getElementById('progressPercent');
+    const screenOverlay = document.getElementById('screenOverlay');
+    const path = document.getElementById('stockPath');
+    
+    // Générer le tracé SVG
+    path.setAttribute('d', generateStockPath());
+    
+    // Calculer la longueur du tracé pour l'animation "dessin"
+    const pathLength = path.getTotalLength();
+    
+    // Préparation CSS via GSAP
+    gsap.set(path, { 
+        strokeDasharray: pathLength,
+        strokeDashoffset: pathLength, // La ligne est invisible (toute en offset)
+        opacity: 1
+    });
+    
+    gsap.set(logo, { opacity: 0, pointerEvents: 'none' });
+    gsap.set(progressPercent, { opacity: 0 });
+
+    // --- TIMELINE ---
+    const masterTL = gsap.timeline({ delay: 0.5 });
+
+    // 1. Apparition du pourcentage
+    masterTL.to(progressPercent, { opacity: 1, duration: 0.5 })
+    
+    // 2. Le tracé de la courbe (Action Principale)
+    // Synchronisé avec le compteur
+    .to(path, {
+        strokeDashoffset: 0, // On ramène l'offset à 0 (la ligne se dessine)
+        duration: 3.5,
+        ease: "power2.inOut" // Démarrage doux, accélération, fin douce
+    }, "start")
+    
+    .to({ value: 0 }, {
+        value: 100,
+        duration: 3.5,
+        ease: "power2.inOut",
+        onUpdate: function() {
+            progressPercent.textContent = Math.round(this.targets()[0].value) + '%';
+        }
+    }, "start")
+
+    // 3. Disparition des éléments de chargement
+    .to([progressPercent, path], {
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.in"
+    })
+    
+    // 4. Révélation du site (Overlay noir disparait + Logo apparait)
+    .to(screenOverlay, {
+        opacity: 0,
+        duration: 1.5,
+        ease: "power2.inOut"
+    }, "reveal")
+    
+    .fromTo(logo, 
+        { opacity: 0, scale: 0.9, y: 20 },
+        { 
+            opacity: 1, scale: 1, y: 0, 
+            duration: 1.5, 
+            ease: "power3.out",
+            onComplete: () => {
+                logo.style.pointerEvents = 'auto';
+                screenOverlay.remove(); // On nettoie le DOM
+            }
+        }, 
+        "reveal+=0.2" // Léger décalage pour que le fond apparaisse une fraction de seconde avant le logo
+    );
+    
+    // Recalculer le tracé si on redimensionne la fenêtre pendant le chargement (optionnel mais propre)
+    window.addEventListener('resize', () => {
+        if(masterTL.progress() < 1) { // Seulement si l'intro n'est pas finie
+             path.setAttribute('d', generateStockPath());
+        }
+    });
+});
+
+
+/* --- REDIRECTION --- */
+function enterSite() {
+    gsap.to(document.body, { 
+        opacity: 0, 
+        duration: 0.5, 
+        onComplete: () => {
+            localStorage.setItem(STORAGE_KEY_THEME, 'light'); 
+            window.location.href = "home.html"; 
+        }
+    });
+}
+</script>
 </body>
 </html>
