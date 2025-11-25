@@ -338,20 +338,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }, ">");
 
   // 4. Fade out de l'overlay noir
-/*  tl.to(loaderOverlay, {
+  tl.to(loaderOverlay, {
     opacity: 0,
     duration: 0.8,
     ease: "power2.inOut",
     onComplete: () => loaderOverlay.remove()
-  }, "<+=0.1");*/
+  }, "<+=0.1");
 
   // 5. Apparition du fond + logo
-  tl.to(bgImage, {
+ /* tl.to(bgImage, {
     opacity: 1,
     scale: 1,
     duration: 1.5,
     ease: "power2.out"
-  }, "reveal");
+  }, "reveal");*/
 
   tl.fromTo(finalLogo,
     { scale: 0.9, opacity: 0, y: 20 },
