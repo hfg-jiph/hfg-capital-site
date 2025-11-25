@@ -162,12 +162,23 @@
       position: absolute;
       inset: 0;
       display: flex;
+      flex-direction: column;  
       align-items: center;
       justify-content: center;
       z-index: 10;
       pointer-events: auto;
     }
 
+      .click-hint {
+        margin-top: 10px;
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-white);
+        opacity: 0;                      /* géré par GSAP */
+        pointer-events: none;
+      }
+    
     .logo-main {
      /* max-width: 70%;
       max-height: 150px;*/
@@ -225,6 +236,7 @@
   <main onclick="enterSite()">
     <!-- Remplace le src par ton logo si besoin -->
     <img src="img/logo_gold.jpg" alt="HFG CAPITAL" class="logo-main" id="finalLogo">
+    <div id="clickHint" class="click-hint"></div>
   </main>
 
 <script>
@@ -517,6 +529,20 @@ const taxonomy = [
   }
 ];
 
+const clickPhrases = {
+  fr: "Cliquez sur le logo",
+  en: "Click the logo",
+  es: "Haz clic en el logo",
+  de: "Klicken Sie auf das Logo",
+  it: "Clicca sul logo",
+  ru: "Нажмите на логотип",
+  ja: "ロゴをクリック",
+  zh: "点击徽标",
+  vi: "Nhấp vào le logo",
+  id: "Klik logo"
+};
+
+  
 /* ---------- 3. ANIMATION GSAP + LOGIQUE SOUS-FAMILLES ---------- */
 
 let subInterval = null;
@@ -565,6 +591,47 @@ function startSubFamilyLoop(familyIndex) {
   subInterval = setInterval(updateSubfamily, 280);
 }
 
+let clickHintInterval = null;
+
+function startClickHintLoop() {
+  const hintEl = document.getElementById('clickHint');
+  if (!hintEl) return;
+
+  // on ne garde que les langues pour lesquelles on a une phrase
+  const availableLangs = languages.filter(l => clickPhrases[l.key]);
+  if (!availableLangs.length) return;
+
+  let idx = 0;
+
+  function updateHint() {
+    const lang = availableLangs[idx % availableLangs.length];
+    const phrase = clickPhrases[lang.key] || clickPhrases.en;
+
+    // reset
+    gsap.killTweensOf(hintEl);
+    hintEl.style.opacity = 0;
+
+    // texte type : "Cliquez sur le logo (FR)"
+    hintEl.textContent = `${phrase} (${lang.code})`;
+
+    gsap.to(hintEl, {
+      opacity: 0.8,
+      duration: 0.3,
+      ease: "power2.out"
+    });
+
+    idx++;
+  }
+
+  // première phrase tout de suite
+  updateHint();
+
+  // puis une nouvelle toutes les 2 secondes
+  if (clickHintInterval) clearInterval(clickHintInterval);
+  clickHintInterval = setInterval(updateHint, 2000);
+}
+
+  
 document.addEventListener('DOMContentLoaded', () => {
   const progressCircle = document.getElementById('progressCircle');
   const loaderOverlay  = document.getElementById('loaderOverlay');
@@ -688,10 +755,17 @@ document.addEventListener('DOMContentLoaded', () => {
     { opacity: 1, scale: 1, y: 0, duration: 1.5, ease: "power3.out" },
     "reveal-=0.5"
   );
+  
+  tl.call(startClickHintLoop, null, "reveal+=0.7");
+  
 });
 
 /* ---------- 4. REDIRECTION ---------- */
 function enterSite() {
+  if (clickHintInterval) {
+    clearInterval(clickHintInterval);
+    clickHintInterval = null;
+  }
   gsap.to(document.body, {
     opacity: 0,
     duration: 0.6,
