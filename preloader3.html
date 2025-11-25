@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>HFG CAPITAL</title>
+  <title>HFG CAPITAL | Preloader</title>
   <meta name="description" content="HFG CAPITAL - Private Investment Office" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
@@ -17,119 +17,189 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
   <style>
-    /* --- 1. VARIABLES & BASE --- */
     :root {
       --bg-color: #000000;
       --gold-accent: #D4AF37;
       --text-white: #ffffff;
+      --text-muted: #999999;
       --font-main: 'Montserrat', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: var(--font-main);
-      height: 100vh; width: 100vw;
+      height: 100vh;
+      width: 100vw;
       overflow: hidden;
       background-color: var(--bg-color);
       position: relative;
+      color: var(--text-white);
     }
 
-    /* --- 2. BACKGROUND IMAGE (Caché sous l'overlay au début) --- */
+    /* --- BACKGROUND IMAGE (cachée au début) --- */
     .bg-container {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0; /* Au fond */
+      position: fixed;
+      inset: 0;
+      z-index: 0;
     }
 
     .bg-image {
-      width: 100%; height: 100%; object-fit: cover;
-      opacity: 0; /* Caché au début, géré par GSAP */
-      transform: scale(1.1); /* Zoom initial */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 1.5s ease, transform 1.5s ease;
     }
 
-    /* --- 3. L'ECRAN DE CHARGEMENT (L'Overlay) --- */
+    /* --- OVERLAY DE CHARGEMENT --- */
     .loader-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-color: #000;
-      z-index: 20; /* Tout au dessus */
-      display: flex; justify-content: center; align-items: center;
+      position: fixed;
+      inset: 0;
+      background-color: #000000;
+      z-index: 20;
+      display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Le Cercle SVG */
     .loader-ring-container {
       position: relative;
-      width: 200px; height: 200px;
+      width: 220px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     svg.loader-ring {
-      width: 100%; height: 100%;
-      transform: rotate(-90deg); /* Commence en haut */
-      filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.4)); /* Lueur dorée subtile */
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+      filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.35));
     }
 
     circle {
       fill: none;
-      stroke-width: 1.5; /* Fin pour l'élégance */
+      stroke-width: 1.8;
       stroke-linecap: square;
     }
 
-    .circle-bg { stroke: #1a1a1a; } /* Cercle gris sombre en fond */
-    .circle-progress { stroke: var(--gold-accent); } /* Cercle doré qui avance */
+    .circle-bg {
+      stroke: #1a1a1a;
+    }
 
-    /* Le Texte Central (Asset Classes) */
+    .circle-progress {
+      stroke: var(--gold-accent);
+    }
+
     .loader-text-container {
       position: absolute;
-      top: 50%; left: 50%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      width: 100%;
+      width: 90%;
       text-align: center;
       overflow: hidden;
-      height: 32px; /* Hauteur fixe pour le défilement */
-      display: flex; justify-content: center; align-items: center;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .asset-name {
-      font-family: var(--font-main);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 400;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text-white);
-      position: relative;
       opacity: 0;
       white-space: nowrap;
     }
 
-    /* --- 4. LE LOGO FINAL --- */
+    .sub-asset-container {
+      margin-top: 18px;
+      text-align: center;
+      min-height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .sub-asset-label {
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      white-space: nowrap;
+    }
+
+    .sub-asset-lang {
+      font-size: 10px;
+      color: var(--text-muted);
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      white-space: nowrap;
+    }
+
+    .sub-asset-container.visible .sub-asset-label,
+    .sub-asset-container.visible .sub-asset-lang {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- LOGO FINAL --- */
     main {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      z-index: 10; cursor: pointer;
-      width: 100%; text-align: center;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      pointer-events: auto;
     }
 
     .logo-main {
-      width: auto; max-width: 70%; max-height: 140px;
-      opacity: 0; /* Apparaît à la fin */
+      max-width: 70%;
+      max-height: 150px;
+      opacity: 0;
+      cursor: pointer;
     }
-    
+
     @media (max-width: 600px) {
-      .loader-ring-container { width: 160px; height: 160px; }
-      .asset-name { font-size: 8.5px; letter-spacing: 1.5px; }
+      .loader-ring-container {
+        width: 180px;
+        height: 180px;
+      }
+      .asset-name {
+        font-size: 9.5px;
+        letter-spacing: 1.7px;
+      }
+      .sub-asset-container {
+        font-size: 10px;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- BACKGROUND IMAGE -->
   <div class="bg-container">
     <img id="bgImage" class="bg-image" alt="Background">
   </div>
 
+  <!-- OVERLAY / PRELOADER -->
   <div id="loaderOverlay" class="loader-overlay">
-    
     <div class="loader-ring-container">
       <div class="loader-text-container">
-        <!-- Texte unique, mis à jour par JS en fonction de la taxonomie -->
         <span class="asset-name" id="assetText"></span>
       </div>
 
@@ -139,238 +209,492 @@
       </svg>
     </div>
 
+    <div class="sub-asset-container" id="subAssetContainer">
+      <span class="sub-asset-label" id="subAssetText"></span>
+      <span class="sub-asset-lang" id="subAssetLang"></span>
+    </div>
   </div>
 
+  <!-- LOGO / PAGE PRINCIPALE -->
   <main onclick="enterSite()">
+    <!-- Remplace le src par ton logo si besoin -->
     <img src="img/logo_noir.jpg" alt="HFG CAPITAL" class="logo-main" id="finalLogo">
   </main>
 
-
 <script>
-/* --- 1. GESTION DU FOND ALEATOIRE --- */
+/* ---------- 1. BACKGROUND ALEATOIRE ---------- */
 const bgImages = [
   "img/rouge_02.png", "img/rouge_04.png", "img/jaune_01.png", "img/jaune_02.png", 
   "img/jaune_04.png", "img/vert_01.png", "img/vert_02.png", "img/bleu_02.png",  
   "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png", "img/orange_02.png", 
   "img/violet_01.png", "img/violet_03.png"
 ];
+
 const STORAGE_KEY_BG = 'hfg_bg_session';
 const STORAGE_KEY_THEME = 'hfg_theme';
 
 (function initBackgroundNow() {
   const bgEl = document.getElementById('bgImage');
-  if (bgEl) {
-    let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
-    if (!currentBg || !bgImages.includes(currentBg)) {
-      const randomIndex = Math.floor(Math.random() * bgImages.length);
-      currentBg = bgImages[randomIndex];
-      sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
-    }
-    bgEl.src = currentBg; 
+  if (!bgEl) return;
+
+  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+  if (!currentBg || !bgImages.includes(currentBg)) {
+    const randomIndex = Math.floor(Math.random() * bgImages.length);
+    currentBg = bgImages[randomIndex];
+    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
   }
+  bgEl.src = currentBg;
 })();
 
-/* --- 2. TAXONOMIE DES ACTIFS POUR L'ANIMATION --- */
-/* 5 FAMILLES -> 20% de l'anneau par famille, avec défilement des sous-familles */
+/* ---------- 2. TAXONOMIE + LANGUES ---------- */
+
+// 10 langues : FR, EN, ES, DE, IT, RU, JA, ZH, VI, ID
+const languages = [
+  { code: "FR", key: "fr" },
+  { code: "EN", key: "en" },
+  { code: "ES", key: "es" },
+  { code: "DE", key: "de" },
+  { code: "IT", key: "it" },
+  { code: "RU", key: "ru" },
+  { code: "JA", key: "ja" },
+  { code: "ZH", key: "zh" },
+  { code: "VI", key: "vi" },
+  { code: "ID", key: "id" }
+];
+
+// 4 familles + sous-familles, avec traduction multilingue
 const taxonomy = [
   {
     family: "LISTED MARKETS",
-    items: [
-      "Actions",
-      "Obligations",
-      "ETF & Dérivés"
+    subFamilies: [
+      {
+        id: "stocks",
+        labels: {
+          en: "Stocks",
+          fr: "Actions",
+          es: "Acciones",
+          de: "Aktien",
+          it: "Azioni",
+          ru: "Акции",
+          ja: "株式",
+          zh: "股票",
+          vi: "Cổ phiếu",
+          id: "Saham"
+        }
+      },
+      {
+        id: "bonds",
+        labels: {
+          en: "Bonds",
+          fr: "Obligations",
+          es: "Bonos",
+          de: "Anleihen",
+          it: "Obbligazioni",
+          ru: "Облигации",
+          ja: "債券",
+          zh: "债券",
+          vi: "Trái phiếu",
+          id: "Obligasi"
+        }
+      },
+      {
+        id: "etf",
+        labels: {
+          en: "ETFs",
+          fr: "Trackers & ETF",
+          es: "ETF",
+          de: "ETFs",
+          it: "ETF",
+          ru: "ETF",
+          ja: "ETF",
+          zh: "ETF",
+          vi: "Quỹ ETF",
+          id: "Reksa Dana ETF"
+        }
+      },
+      {
+        id: "derivatives",
+        labels: {
+          en: "Derivatives",
+          fr: "Produits dérivés",
+          es: "Derivados",
+          de: "Derivate",
+          it: "Derivati",
+          ru: "Производные",
+          ja: "デリバティブ",
+          zh: "衍生品",
+          vi: "Phái sinh",
+          id: "Derivatif"
+        }
+      }
     ]
   },
   {
     family: "PRIVATE MARKETS",
-    items: [
-      "Private Equity",
-      "Venture Capital",
-      "Private Debt & Secondaires"
+    subFamilies: [
+      {
+        id: "pe",
+        labels: {
+          en: "Private Equity",
+          fr: "Capital-investissement",
+          es: "Capital privado",
+          de: "Private Equity",
+          it: "Private Equity",
+          ru: "Частный капитал",
+          ja: "プライベート・エクイティ",
+          zh: "私募股权",
+          vi: "Vốn tư nhân",
+          id: "Ekuitas Swasta"
+        }
+      },
+      {
+        id: "vc",
+        labels: {
+          en: "Venture Capital",
+          fr: "Capital-risque",
+          es: "Capital riesgo",
+          de: "Venture Capital",
+          it: "Venture Capital",
+          ru: "Венчурный капитал",
+          ja: "ベンチャーキャピタル",
+          zh: "风险投资",
+          vi: "Vốn mạo hiểm",
+          id: "Modal Ventura"
+        }
+      },
+      {
+        id: "pd",
+        labels: {
+          en: "Private Debt",
+          fr: "Dette privée",
+          es: "Deuda privada",
+          de: "Private Debt",
+          it: "Debito privato",
+          ru: "Частный долг",
+          ja: "プライベートデット",
+          zh: "私募债务",
+          vi: "Nợ tư nhân",
+          id: "Utang Swasta"
+        }
+      },
+      {
+        id: "secondary",
+        labels: {
+          en: "Secondaries",
+          fr: "Secondaires",
+          es: "Secundarios",
+          de: "Secondaries",
+          it: "Secondaries",
+          ru: "Вторичный рынок",
+          ja: "セカンダリー",
+          zh: "二级市场基金",
+          vi: "Thị trường thứ cấp",
+          id: "Pasar Sekunder"
+        }
+      }
     ]
   },
   {
     family: "REAL ASSETS",
-    items: [
-      "Immobilier Direct",
-      "Infrastructures Physiques",
-      "Actifs Productifs"
+    subFamilies: [
+      {
+        id: "direct_re",
+        labels: {
+          en: "Direct Real Estate",
+          fr: "Immobilier direct",
+          es: "Inmobiliario directo",
+          de: "Direkte Immobilien",
+          it: "Immobiliare diretto",
+          ru: "Прямая недвижимость",
+          ja: "ダイレクト不動産",
+          zh: "直接房地产",
+          vi: "Bất động sản trực tiếp",
+          id: "Properti langsung"
+        }
+      },
+      {
+        id: "infra",
+        labels: {
+          en: "Physical Infrastructure",
+          fr: "Infrastructures physiques",
+          es: "Infraestructuras físicas",
+          de: "Physische Infrastrukturen",
+          it: "Infrastrutture fisiche",
+          ru: "Физическая инфраструктура",
+          ja: "物理インフラ",
+          zh: "实体基础设施",
+          vi: "Hạ tầng vật chất",
+          id: "Infrastruktur fisik"
+        }
+      },
+      {
+        id: "productive",
+        labels: {
+          en: "Productive Assets",
+          fr: "Actifs productifs",
+          es: "Activos productivos",
+          de: "Produktive Vermögenswerte",
+          it: "Attivi produttivi",
+          ru: "Производственные активы",
+          ja: "生産資産",
+          zh: "生产性资产",
+          vi: "Tài sản sản xuất",
+          id: "Aset produktif"
+        }
+      }
     ]
   },
   {
     family: "ALTERNATIVE ASSETS",
-    items: [
-      "Immobilier Indirect",
-      "Crypto & Matières Premières",
-      "Collectibles & Produits Structurés"
+    subFamilies: [
+      {
+        id: "indirect_re",
+        labels: {
+          en: "Indirect Real Estate",
+          fr: "Immobilier indirect (SCPI & OPCI)",
+          es: "Inmobiliario indirecto",
+          de: "Indirekte Immobilien",
+          it: "Immobiliare indiretto",
+          ru: "Косвенная недвижимость",
+          ja: "間接不動産",
+          zh: "间接房地产",
+          vi: "Bất động sản gián tiếp",
+          id: "Properti tidak langsung"
+        }
+      },
+      {
+        id: "crypto",
+        labels: {
+          en: "Crypto Assets",
+          fr: "Actifs crypto",
+          es: "Activos cripto",
+          de: "Krypto-Assets",
+          it: "Asset cripto",
+          ru: "Криптоактивы",
+          ja: "暗号資産",
+          zh: "加密资产",
+          vi: "Tài sản crypto",
+          id: "Aset kripto"
+        }
+      },
+      {
+        id: "commodities",
+        labels: {
+          en: "Commodities",
+          fr: "Matières premières",
+          es: "Materias primas",
+          de: "Rohstoffe",
+          it: "Materie prime",
+          ru: "Сырьевые товары",
+          ja: "コモディティ",
+          zh: "大宗商品",
+          vi: "Hàng hóa",
+          id: "Komoditas"
+        }
+      },
+      {
+        id: "collectibles",
+        labels: {
+          en: "Collectibles",
+          fr: "Actifs de collection",
+          es: "Coleccionables",
+          de: "Sammlerobjekte",
+          it: "Collezionabili",
+          ru: "Коллекционные активы",
+          ja: "コレクティブル",
+          zh: "收藏品",
+          vi: "Tài sản sưu tầm",
+          id: "Koleksi"
+        }
+      }
     ]
   }
 ];
 
+/* ---------- 3. ANIMATION GSAP + LOGIQUE SOUS-FAMILLES ---------- */
 
+let subInterval = null;
+let currentFamilyIndex = 0;
 
-/* --- 3. ANIMATION GSAP --- */
+function startSubFamilyLoop(familyIndex) {
+  const container = document.getElementById('subAssetContainer');
+  const labelEl = document.getElementById('subAssetText');
+  const langEl  = document.getElementById('subAssetLang');
+
+  if (!container || !labelEl || !langEl) return;
+
+  // Stop interval précédent
+  if (subInterval) {
+    clearInterval(subInterval);
+    subInterval = null;
+  }
+
+  const family = taxonomy[familyIndex];
+  if (!family) return;
+
+  let idx = 0;
+
+  function updateSubfamily() {
+    const sub = family.subFamilies[idx % family.subFamilies.length];
+
+    // langue aléatoire
+    const lang = languages[Math.floor(Math.random() * languages.length)];
+    const label = sub.labels[lang.key] || sub.labels['en'] || '';
+
+    // petite animation via CSS
+    container.classList.remove('visible');
+    void container.offsetWidth; // force reflow
+
+    labelEl.textContent = label;
+    langEl.textContent = "• " + lang.code;
+
+    container.classList.add('visible');
+
+    idx++;
+  }
+
+  // Première maj immédiate
+  updateSubfamily();
+  // Puis toutes les 280ms (rapide)
+  subInterval = setInterval(updateSubfamily, 280);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const progressCircle = document.getElementById('progressCircle');
-  const loaderOverlay = document.getElementById('loaderOverlay');
-  const finalLogo = document.getElementById('finalLogo');
-  const bgImage = document.getElementById('bgImage');
-  const ringContainer = document.querySelector('.loader-ring-container');
-  const assetText = document.getElementById('assetText');
+  const loaderOverlay  = document.getElementById('loaderOverlay');
+  const finalLogo      = document.getElementById('finalLogo');
+  const bgImage        = document.getElementById('bgImage');
+  const assetText      = document.getElementById('assetText');
 
-  // Config SVG
   const radius = 48;
   const circumference = 2 * Math.PI * radius;
-  gsap.set(progressCircle, { strokeDasharray: circumference, strokeDashoffset: circumference });
+  gsap.set(progressCircle, {
+    strokeDasharray: circumference,
+    strokeDashoffset: circumference
+  });
+
+  const ringContainer = document.querySelector('.loader-ring-container');
   gsap.set(ringContainer, { transformOrigin: "50% 50%" });
 
-  const tl = gsap.timeline({ delay: 0.5 });
-
-  // Paramètres d'animation
-  let currentOffset = circumference;
   const familyCount = taxonomy.length;
-  const familySegment = circumference / familyCount;
-  const stepDuration = 0.45; // durée pour chaque item (texte + progression)
+  const segment = circumference / familyCount;
 
-  // Boucle principale sur les 5 familles
-  taxonomy.forEach((group, familyIndex) => {
-    const groupTotalSteps = 1 + group.items.length; // 1 pour le titre de famille + items
+  const tl = gsap.timeline({ delay: 0.4 });
 
-    // 1) Titre de la famille
-    const familyStepKey = `family_${familyIndex}`;
-    const familyNextOffset = currentOffset - (familySegment / groupTotalSteps);
+  let currentOffset = circumference;
+  const familyDisplayDuration = 1.4; // ~1.4s par famille (rapide)
 
-    tl.add(familyStepKey);
+  taxonomy.forEach((group, index) => {
+    const stepLabel = "family_" + index;
+    const nextOffset = circumference - segment * (index + 1);
+
+    tl.add(stepLabel);
 
     tl.call(() => {
+      currentFamilyIndex = index;
       assetText.textContent = group.family;
-    }, null, familyStepKey);
-
-    tl.fromTo(assetText,
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.22, ease: "power2.out" },
-      familyStepKey
-    );
+      gsap.fromTo(assetText,
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+      );
+      startSubFamilyLoop(index);
+    }, null, stepLabel);
 
     tl.to(progressCircle, {
-      strokeDashoffset: familyNextOffset,
-      duration: stepDuration,
+      strokeDashoffset: nextOffset,
+      duration: familyDisplayDuration,
       ease: "none"
-    }, familyStepKey);
+    }, stepLabel);
 
     tl.to(assetText, {
       opacity: 0,
-      y: -10,
-      duration: 0.22,
+      y: -8,
+      duration: 0.3,
       ease: "power2.in"
-    }, familyStepKey + "+=0.23");
+    }, stepLabel + "+=" + (familyDisplayDuration - 0.3));
 
-    currentOffset = familyNextOffset;
-
-    // 2) Items de la famille
-    group.items.forEach((label, itemIndex) => {
-      const stepKey = `family_${familyIndex}_item_${itemIndex}`;
-      const nextOffset = currentOffset - (familySegment / groupTotalSteps);
-
-      tl.add(stepKey);
-
-      tl.call(() => {
-        assetText.textContent = label;
-      }, null, stepKey);
-
-      tl.fromTo(assetText,
-        { opacity: 0, y: 8 },
-        { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" },
-        stepKey
-      );
-
-      tl.to(progressCircle, {
-        strokeDashoffset: nextOffset,
-        duration: stepDuration,
-        ease: "none"
-      }, stepKey);
-
-      tl.to(assetText, {
-        opacity: 0,
-        y: -8,
-        duration: 0.2,
-        ease: "power2.in"
-      }, stepKey + "+=0.22");
-
-      currentOffset = nextOffset;
-    });
+    currentOffset = nextOffset;
   });
 
-  // --- PARTIE FINALE : HFG CAPITAL + SHOCKWAVE --- //
-  tl.addLabel("complete");
+  // FIN : message HFG + shockwave
+  tl.add("complete");
 
   tl.call(() => {
+    if (subInterval) {
+      clearInterval(subInterval);
+      subInterval = null;
+    }
+    const container = document.getElementById('subAssetContainer');
+    if (container) {
+      container.classList.remove('visible');
+    }
     assetText.textContent = "MULTI-ASSET FAMILY OFFICE";
   }, null, "complete");
 
-  tl.to(assetText, {
-    opacity: 1,
-    scale: 1.05,
-    duration: 0.4,
-    color: '#D4AF37',
-    ease: "power2.out"
-  }, "complete");
+  tl.fromTo(assetText,
+    { opacity: 0, scale: 0.9, y: 6 },
+    { opacity: 1, scale: 1.05, y: 0, duration: 0.45, ease: "power2.out" },
+    "complete"
+  );
 
-  // 1. Contraction
+  // contraction
   tl.to(ringContainer, {
     scale: 0.8,
     duration: 0.4,
     ease: "back.in(2)"
   }, "complete+=0.4");
 
-  // 2. Disparition du texte
+  // disparition texte
   tl.to(assetText, {
     opacity: 0,
     duration: 0.2
   }, ">");
 
-  // 3. Explosion / expansion du cercle (shockwave)
+  // explosion cercle
   tl.to(ringContainer, {
-    scale: 15,
+    scale: 14,
     opacity: 0,
     duration: 0.7,
     ease: "power2.in"
   }, ">");
 
-  // 4. Fade out de l'overlay noir
+  // fade out overlay
   tl.to(loaderOverlay, {
     opacity: 0,
     duration: 0.8,
     ease: "power2.inOut",
-    onComplete: () => loaderOverlay.remove()
+    onComplete: () => {
+      loaderOverlay.remove();
+    }
   }, "<+=0.1");
 
-  // 5. Apparition du fond + logo
- /* tl.to(bgImage, {
+  // fond + logo
+  tl.to(bgImage, {
     opacity: 1,
     scale: 1,
     duration: 1.5,
     ease: "power2.out"
-  }, "reveal");*/
+  }, "reveal");
 
   tl.fromTo(finalLogo,
-    { scale: 0.9, opacity: 0, y: 20 },
-    { scale: 1, opacity: 1, y: 0, duration: 1.5, ease: "power3.out" },
+    { opacity: 0, scale: 0.9, y: 20 },
+    { opacity: 1, scale: 1, y: 0, duration: 1.5, ease: "power3.out" },
     "reveal-=0.5"
   );
 });
 
-/* --- REDIRECTION --- */
+/* ---------- 4. REDIRECTION ---------- */
 function enterSite() {
-  gsap.to(document.body, { 
-    opacity: 0, 
-    duration: 0.6, 
+  gsap.to(document.body, {
+    opacity: 0,
+    duration: 0.6,
     onComplete: () => {
-      localStorage.setItem(STORAGE_KEY_THEME, 'light'); 
-      window.location.href = "home.html"; 
+      localStorage.setItem(STORAGE_KEY_THEME, 'light');
+      window.location.href = "home.html"; // adapte si nécessaire
     }
   });
 }
 </script>
+
 </body>
 </html>
