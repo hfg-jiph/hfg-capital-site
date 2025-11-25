@@ -67,7 +67,7 @@
       text-align: center;
       width: 100%;
       padding: 0 20px;
-      z-index: 5;
+      z-index: 5; /* Niveau du logo */
       filter: initial; 
       cursor: pointer; 
     }
@@ -77,45 +77,90 @@
       max-width: 85%;
       max-height: 160px;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-      /* Opacité et pointer-events gérés par GSAP */
     }
 
-    /* --- LIGNE HORIZONTALE ET POURCENTAGE --- */
+    /* --- ORBITES AUTOUR DU LOGO --- */
+    .logo-orbit-wrapper {
+      position: relative;
+      display: inline-block;
+      z-index: 5;
+    }
+
+    .orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .orbit-1 { width: 160px; height: 160px; margin: -80px 0 0 -80px; }
+    .orbit-2 { width: 220px; height: 220px; margin: -110px 0 0 -110px; }
+    .orbit-3 { width: 280px; height: 280px; margin: -140px 0 0 -140px; }
+
+    .orbit-dot {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+      transform: translate(-50%, -50%);
+    }
+
+    /* --- LIGNE HORIZONTALE ET POURCENTAGE (Loader) --- */
     
-    /* Conteneur de la ligne, centré verticalement */
+    /* Conteneur de la ligne */
     .line-container {
         position: absolute;
-        top: 50%;
-        width: 100%;
-        height: 2px; /* Hauteur de la ligne */
+        top: 50%; 
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(420px, 80vw); 
+        height: 2px;
         overflow: hidden;
-        z-index: 5;
-        opacity: 0;
-    }
-    
-    /* La ligne elle-même, cachée et de 100% de large */
-    .loading-line {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: var(--text-light);
-        transform: scaleX(0); /* Commence à largeur 0 */
-        transform-origin: left center; /* S'étire de gauche à droite */
+        z-index: 20;
+        opacity: 0; 
     }
 
-    /* Le pourcentage, centré sur la ligne, décalé de 5px vers le haut */
+    /* Ligne qui se remplit */
+    .loading-line {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(212,175,55,0.1), var(--gold-accent), rgba(212,175,55,0.1));
+        transform-origin: left center;
+        transform: scaleX(0);
+        box-shadow: 0 0 12px rgba(212,175,55,0.6);
+    }
+
+    /* Pourcentage au-dessus de la ligne */
     .progress-percent {
         position: absolute;
-        top: 50%;
+        top: calc(50% - 40px); 
         left: 50%;
-        /* Décalage de -50% pour centrer + -5px vers le haut */
-        transform: translate(-50%, calc(-50% - 5px)); 
-        font-family: var(--font-sans);
-        font-size: 16px;
+        transform: translateX(-50%);
+        font-size: 14px;
+        letter-spacing: 0.1em;
         color: var(--text-light);
-        font-weight: 300;
-        z-index: 6;
-        opacity: 0; /* Caché initialement */
+        text-shadow: 0 0 8px rgba(0,0,0,0.7);
+        opacity: 0;
+        z-index: 21;
+    }
+
+    /* --- NOUVEAU : OVERLAY NOIR PLEIN ÉCRAN pour cacher le logo --- */
+    .screen-overlay {
+        position: fixed; 
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+        z-index: 10; /* Sous le loader (20/21) mais au-dessus du logo (5) */
+        opacity: 1; 
     }
 
     /* --- RESPONSIVE --- */
@@ -129,16 +174,28 @@
   <div class="bg-container">
     <img id="bgImage" class="bg-image" alt="Background">
   </div>
+  
+  <div id="screenOverlay" class="screen-overlay"></div>
 
   <main onclick="enterSite()">
-    <img src="img/logo_noir.jpg" alt="HFG CAPITAL" class="logo-main">
+    <div class="logo-orbit-wrapper">
+      <img src="img/logo_noir.jpg" alt="HFG CAPITAL" class="logo-main">
+      <div class="orbit orbit-1">
+        <div class="orbit-dot"></div>
+      </div>
+      <div class="orbit orbit-2">
+        <div class="orbit-dot"></div>
+      </div>
+      <div class="orbit orbit-3">
+        <div class="orbit-dot"></div>
+      </div>
+    </div>
   </main>
   
   <div class="line-container" id="lineContainer">
     <div class="loading-line" id="loadingLine"></div>
   </div>
   <div id="progressPercent" class="progress-percent">0%</div>
-
 
 <script>
 /* --- FOND ET LOGIQUE DE REDIRECTION --- */
@@ -153,6 +210,43 @@ const STORAGE_KEY_BG = 'hfg_bg_session';
 const STORAGE_KEY_THEME = 'hfg_theme';
 const STORAGE_KEY_LANG = 'hfg_lang';
 
+/* --- ANIMATION DES ORBITES AUTOUR DU LOGO --- */
+function initOrbits() {
+  const orbits = gsap.utils.toArray('.orbit');
+
+  orbits.forEach((orbit, index) => {
+    const baseDuration = 16 + index * 4;
+    const direction = index % 2 === 0 ? 1 : -1;
+
+    gsap.to(orbit, {
+      rotation: direction * 360,
+      duration: baseDuration,
+      ease: 'none',
+      repeat: -1,
+      transformOrigin: '50% 50%'
+    });
+  });
+
+  const wrapper = document.querySelector('.logo-orbit-wrapper');
+  if (wrapper) {
+    wrapper.addEventListener('mouseenter', () => {
+      gsap.to('.orbit', {
+        scale: 1.08,
+        duration: 0.6,
+        ease: 'power2.out'
+      });
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+      gsap.to('.orbit', {
+        scale: 1,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    });
+  }
+}
+
 /* --- LOGIQUE DE CHARGEMENT RAPIDE DU FOND (Sélection aléatoire et stockage) --- */
 (function initBackgroundNow() {
   const bgEl = document.getElementById('bgImage');
@@ -164,20 +258,23 @@ const STORAGE_KEY_LANG = 'hfg_lang';
       currentBg = bgImages[randomIndex];
       sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
     }
-    bgEl.src = currentBg; // Charge l'image en arrière-plan, mais la structure BG reste cachée
-    bgEl.onerror = function() {
-      sessionStorage.removeItem(STORAGE_KEY_BG);
+
+    bgEl.src = currentBg;
+    bgEl.onload = () => {
+      const container = document.querySelector('.bg-container');
+      if (container) container.style.visibility = 'visible';
+      bgEl.style.display = 'block';
+      bgEl.style.opacity = '1';
     };
   }
 })();
 
-
-/* --- LOGIQUE D'ANIMATION GSAP & INIT --- */
 document.addEventListener('DOMContentLoaded', () => {
     const logo = document.querySelector('.logo-main');
     const lineContainer = document.getElementById('lineContainer');
     const loadingLine = document.getElementById('loadingLine');
     const progressPercent = document.getElementById('progressPercent');
+    const screenOverlay = document.getElementById('screenOverlay'); // Le nouvel overlay noir
 
     // 1. Définir la langue par défaut (Logique existante)
     if (!localStorage.getItem(STORAGE_KEY_LANG)) {
@@ -188,10 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Préparation initiale des éléments
-    // Le logo doit être 100% invisible
     gsap.set(logo, { opacity: 0, pointerEvents: 'none' }); 
-    // Le conteneur de la ligne et la ligne sont prêts
     gsap.set(lineContainer, { opacity: 1 }); 
+    // Assure que l'overlay est opaque pour couvrir tout
+    gsap.set(screenOverlay, { opacity: 1 }); 
     
     // Timeline pour organiser les animations
     const masterTL = gsap.timeline({ delay: 0.5 }); 
@@ -205,29 +302,29 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // B. Progression du pourcentage et extension de la ligne (Synchronisé)
     .to(loadingLine, {
-        scaleX: 1, // Étend la ligne de 0% à 100%
-        duration: 3.0, // Durée de progression
+        scaleX: 1, 
+        duration: 3.0, 
         ease: 'power2.inOut',
-    }, "<") // Commence en même temps que l'incrémentation du %
+    }, "<") 
     
     .to({ value: 0 }, {
         value: 100,
-        duration: 3.0, // Durée de progression (Identique à la ligne)
+        duration: 3.0, 
         ease: 'power2.inOut',
         roundProps: 'value', 
         onUpdate: function() {
             progressPercent.textContent = Math.round(this.targets()[0].value) + '%';
         }
-    }, "<") // Commence en même temps que la ligne
-
-    // C. Disparition du pourcentage et de la ligne
-    .to([progressPercent, lineContainer], {
+    }, "<")
+    
+    // C. Disparition du pourcentage, de la ligne ET DE L'OVERLAY NOIR
+    .to([progressPercent, lineContainer, screenOverlay], {
         opacity: 0,
         duration: 0.8,
         ease: 'power1.out'
-    }, ">-0.4") // Commence 0.4s avant la fin du pourcentage/ligne pour une transition fluide
+    }, ">-0.4")
     
-    // D. Révélation du logo (commence strictement après la disparition du loader)
+    // D. Révélation du logo (commence en même temps que la disparition de l'écran noir)
     .fromTo(logo, 
         {
             opacity: 0.1, scale: 1.05, filter: 'blur(5px)',
@@ -237,27 +334,26 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: 2, 
             ease: "power2.out", 
             onComplete: () => {
-                // Rend le logo cliquable après l'animation
                 logo.style.opacity = 1; 
                 logo.style.pointerEvents = 'auto'; 
+                // Nettoyer l'overlay du DOM après le fondu pour éviter tout problème de superposition
+                screenOverlay.remove();
+                // Lancer l'animation des orbites une fois que tout est en place
+                initOrbits();
             }
         }, 
-        "<" // Commence EXACTEMENT en même temps que la disparition de la ligne/pourcentage (étape C)
+        "<" 
     );
 });
 
-
 /* --- REDIRECTION SUR CLIC --- */
 function enterSite() {
-    // Tuer toutes les animations GSAP en cours
     gsap.killTweensOf("*"); 
     
-    // Animation de fondu rapide du corps avant la redirection
     gsap.to(document.body, { 
         opacity: 0, 
         duration: 0.3, 
         onComplete: () => {
-            // Force le mode clair (pour enlever l'obscurcissement sur home.html)
             localStorage.setItem(STORAGE_KEY_THEME, 'light'); 
             window.location.href = "home.html"; 
         }
