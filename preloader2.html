@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>HFG CAPITAL</title>
+  <meta name="description" content="HFG CAPITAL - Private Investment Office" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="shortcut icon" href="favicon/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    :root {
+      --primary-dark: #050506;
+      --gold-accent: #D4AF37;
+      --text-light: #ffffff;
+      --text-muted: #c0c0c0;
+      --font-sans: 'Montserrat', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      height: 100vh;
+      height: 100dvh;
+      width: 100vw;
+      overflow: hidden;
+      background-color: #000;
+      position: relative;
+      color: var(--text-light);
+    }
+
+    /* --- BACKGROUND --- */
+    .bg-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      visibility: hidden;
+    }
+
+    .bg-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: opacity 1.2s ease;
+      animation: bgZoom 45s infinite alternate linear;
+      will-change: transform;
+      display: none;
+      opacity: 0;
+    }
+
+    @keyframes bgZoom {
+      from { transform: scale(1); }
+      to   { transform: scale(1.12); }
+    }
+
+    /* --- OVERLAY NOIR PLEIN ÉCRAN --- */
+    .screen-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 10;
+      opacity: 1;
+    }
+
+    /* --- MAIN / LOGO + MANIFESTE --- */
+    main {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100%;
+      max-width: 700px;
+      padding: 0 24px;
+      z-index: 5;
+      cursor: pointer;
+    }
+
+    .logo-block {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .logo-main {
+      width: auto;
+      max-width: 85vw;
+      max-height: 160px;
+      filter: drop-shadow(0 18px 30px rgba(0,0,0,0.7));
+    }
+
+    /* Lignes cérémonielles sous le logo */
+    .logo-lines {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .logo-line {
+      height: 1px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        rgba(212,175,55,0.0),
+        rgba(212,175,55,0.9),
+        rgba(212,175,55,0.0)
+      );
+      box-shadow: 0 0 12px rgba(0,0,0,0.7);
+    }
+
+    .logo-line-1 { width: 70px; opacity: 0.55; }
+    .logo-line-2 { width: 110px; opacity: 0.8; }
+    .logo-line-3 { width: 70px; opacity: 0.55; }
+
+    /* --- MANIFESTE (Option 6) --- */
+    .manifesto {
+      margin-top: 14px;
+      max-width: 560px;
+    }
+
+    .manifesto-latin {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .manifesto-fr {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-light);
+      min-height: 3em;
+      white-space: pre-wrap;
+    }
+
+    .click-hint {
+      margin-top: 20px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .click-hint::after {
+      content: " ↗";
+      opacity: 0.7;
+    }
+
+    /* --- LOADER : ligne d’horizon + pourcentage --- */
+    .line-container {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(420px, 80vw);
+      height: 2px;
+      overflow: hidden;
+      z-index: 20;
+      opacity: 0;
+    }
+
+    .loading-line {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        rgba(212,175,55,0.0),
+        rgba(212,175,55,0.3),
+        rgba(212,175,55,0.9),
+        rgba(212,175,55,0.3),
+        rgba(212,175,55,0.0)
+      );
+      transform-origin: center center;
+      transform: scaleX(0);
+      box-shadow: 0 0 16px rgba(212,175,55,0.7);
+    }
+
+    .progress-percent {
+      position: absolute;
+      top: calc(52% - 36px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      text-shadow: 0 0 8px rgba(0,0,0,0.9);
+      opacity: 0;
+      z-index: 21;
+    }
+
+    @media (max-width: 600px) {
+      .logo-main { max-height: 110px; }
+      .manifesto-fr { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BACKGROUND -->
+  <div class="bg-container">
+    <img id="bgImage" class="bg-image" alt="Background">
+  </div>
+
+  <!-- OVERLAY NOIR -->
+  <div id="screenOverlay" class="screen-overlay"></div>
+
+  <!-- CONTENU CENTRAL -->
+  <main onclick="enterSite()">
+    <div class="logo-block">
+      <img src="img/logo_noir.jpg" alt="HFG CAPITAL" class="logo-main">
+
+      <div class="logo-lines" id="logoLines">
+        <span class="logo-line logo-line-1"></span>
+        <span class="logo-line logo-line-2"></span>
+        <span class="logo-line logo-line-3"></span>
+      </div>
+
+      <div class="manifesto">
+        <div class="manifesto-latin">
+          PATRIMONIUM CUSTODIRE, AUGERE ET TRADERE.
+        </div>
+        <div class="manifesto-fr" id="manifestoText"></div>
+      </div>
+    </div>
+
+    <div class="click-hint">Entrer sur le site</div>
+  </main>
+
+  <!-- LOADER -->
+  <div class="line-container" id="lineContainer">
+    <div class="loading-line" id="loadingLine"></div>
+  </div>
+  <div id="progressPercent" class="progress-percent">0%</div>
+
+<script>
+/* --- FOND & STOCKAGE SESSION --- */
+const bgImages = [
+  "img/rouge_02.png", "img/rouge_04.png", "img/jaune_01.png", "img/jaune_02.png",
+  "img/jaune_04.png", "img/vert_01.png", "img/vert_02.png", "img/bleu_02.png",
+  "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png", "img/orange_02.png",
+  "img/violet_01.png", "img/violet_03.png"
+];
+
+const STORAGE_KEY_BG   = 'hfg_bg_session';
+const STORAGE_KEY_THEME = 'hfg_theme';
+const STORAGE_KEY_LANG  = 'hfg_lang';
+
+/* Initialisation du background dès que possible */
+(function initBackgroundNow() {
+  const bgEl = document.getElementById('bgImage');
+  if (!bgEl) return;
+
+  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+  if (!currentBg || !bgImages.includes(currentBg)) {
+    const randomIndex = Math.floor(Math.random() * bgImages.length);
+    currentBg = bgImages[randomIndex];
+    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
+  }
+
+  bgEl.src = currentBg;
+  bgEl.onload = () => {
+    const container = document.querySelector('.bg-container');
+    if (container) container.style.visibility = 'visible';
+    bgEl.style.display = 'block';
+    requestAnimationFrame(() => {
+      bgEl.style.opacity = '1';
+    });
+  };
+})();
+
+/* --- TYPEWRITER DU MANIFESTE FR --- */
+const manifestoFullText =
+  "Préserver le capital aujourd'hui, le faire croître avec discipline, le transmettre avec sagesse.";
+
+function startTypewriter() {
+  const el = document.getElementById('manifestoText');
+  if (!el) return;
+
+  el.textContent = "";
+  let index = 0;
+  const delay = 35; // ms par caractère
+
+  function typeNext() {
+    if (index <= manifestoFullText.length) {
+      el.textContent = manifestoFullText.slice(0, index);
+      index++;
+      setTimeout(typeNext, delay);
+    }
+  }
+  typeNext();
+}
+
+/* --- ANIMATION GLOBALE --- */
+document.addEventListener('DOMContentLoaded', () => {
+  const logo           = document.querySelector('.logo-main');
+  const logoLines      = document.getElementById('logoLines');
+  const lineContainer  = document.getElementById('lineContainer');
+  const loadingLine    = document.getElementById('loadingLine');
+  const progressPercent= document.getElementById('progressPercent');
+  const screenOverlay  = document.getElementById('screenOverlay');
+
+  // langue par défaut
+  if (!localStorage.getItem(STORAGE_KEY_LANG)) {
+    const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    let initialLang = browserLang.startsWith('fr') ? 'fr' : 'en';
+    localStorage.setItem(STORAGE_KEY_LANG, initialLang);
+  }
+
+  // états initiaux
+  gsap.set(logo,       { opacity: 0, scale: 1.06, filter: 'blur(6px)' });
+  gsap.set(logoLines,  { opacity: 0, y: 6 });
+  gsap.set(lineContainer, { opacity: 1 });
+  gsap.set(screenOverlay, { opacity: 1 });
+
+  const masterTL = gsap.timeline({ delay: 0.4 });
+
+  // Apparition rapide du loader
+  masterTL
+    .to([progressPercent, loadingLine], {
+      opacity: 1,
+      duration: 0.4,
+      ease: 'power1.out'
+    })
+
+    // Ligne qui se déploie depuis le centre + pourcentage
+    .to(loadingLine, {
+      scaleX: 1,
+      duration: 2.7,
+      ease: 'power2.inOut'
+    }, "<")
+
+    .to({ value: 0 }, {
+      value: 100,
+      duration: 2.7,
+      ease: 'power2.inOut',
+      onUpdate: function() {
+        progressPercent.textContent = Math.round(this.targets()[0].value) + "%";
+      }
+    }, "<")
+
+    // Fondu du loader + overlay, apparition des lignes sous le logo
+    .to([progressPercent, lineContainer, screenOverlay], {
+      opacity: 0,
+      duration: 0.9,
+      ease: 'power1.out'
+    }, ">-0.2")
+
+    .to(logoLines, {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: 'power2.out'
+    }, "<+0.1")
+
+    // Reveal du logo avec blur -> net
+    .to(logo, {
+      opacity: 1,
+      scale: 1,
+      filter: 'blur(0px)',
+      duration: 1.8,
+      ease: 'power2.out',
+      onComplete: () => {
+        // Nettoyage overlay du DOM une fois transparent
+        if (screenOverlay && screenOverlay.parentNode) {
+          screenOverlay.parentNode.removeChild(screenOverlay);
+        }
+        // Lancement de l'effet machine à écrire
+        startTypewriter();
+      }
+    }, "<-0.4");
+});
+
+/* --- REDIRECTION SUR CLIC --- */
+function enterSite() {
+  gsap.killTweensOf("*");
+  gsap.to(document.body, {
+    opacity: 0,
+    duration: 0.35,
+    ease: 'power1.out',
+    onComplete: () => {
+      localStorage.setItem(STORAGE_KEY_THEME, 'light');
+      window.location.href = "home.html";
+    }
+  });
+}
+</script>
+</body>
+</html>
