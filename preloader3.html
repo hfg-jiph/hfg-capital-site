@@ -174,50 +174,23 @@ const STORAGE_KEY_THEME = 'hfg_theme';
 /* 5 FAMILLES -> 20% de l'anneau par famille, avec défilement des sous-familles */
 const taxonomy = [
   {
-    family: "LISTED MARKETS — MARCHÉS COTÉS",
-    items: [
-      "Actions",
-      "Obligations",
-      "ETF & Fonds indiciels",
-      "Dérivés",
-    ]
+    family: "LISTED MARKETS",
+    items: ["Actions", "Obligations", "ETF", "Dérivés"]
   },
   {
-    family: "PRIVATE MARKETS — MARCHÉS PRIVÉS",
-    items: [
-      "Private Equity",
-      "Venture Capital",
-      "Secondaires",
-      "Private Debt",
-      "Infrastructure",
-    ]
+    family: "PRIVATE MARKETS",
+    items: ["Private Equity", "Venture Capital", "Secondaires", "Private Debt", "Infrastructure Equity"]
   },
   {
-    family: "ALTERNATIVE MARKETS",
-    items: [
-      "Immobilier indirect",
-      "Crypto",
-      "Matières Premières",
-      "Collectibles",
-      "Produits Structurés",
-    ]
+    family: "REAL ASSETS",
+    items: ["Immobilier Direct", "Infrastructures Physiques", "Actifs Productifs"]
   },
   {
-    family: "REAL ASSETS — MONDE RÉEL",
-    items: [
-      "Immobilier direct",
-      "Infrastructures",
-      "Actifs productifs",
-    ]
-  },
-  {
-    family: "TRÉSORERIE & LIQUIDITÉS",
-    items: [
-      "Cash",
-      "Devises",
-    ]
+    family: "ALTERNATIVE ASSETS",
+    items: ["SCPI", "Crowdlending", "Crypto", "Matières Premières", "Collectibles"]
   }
 ];
+
 
 /* --- 3. ANIMATION GSAP --- */
 document.addEventListener('DOMContentLoaded', () => {
