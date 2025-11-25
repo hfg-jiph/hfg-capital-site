@@ -169,15 +169,40 @@
       pointer-events: auto;
     }
 
-      .click-hint {
-        margin-top: 10px;
-        font-size: 11px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: var(--text-white);
-        opacity: 0;                      /* géré par GSAP */
-        pointer-events: none;
-      }
+.click-hint {
+  margin-top: 10px;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  opacity: 0;              /* géré en JS */
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+  .click-hint-label {
+    color: var(--text-white);
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  }
+  
+  .click-hint-lang {
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  }
+  
+  .click-hint.visible .click-hint-label,
+  .click-hint.visible .click-hint-lang {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
     
     .logo-main {
      /* max-width: 70%;
@@ -236,7 +261,11 @@
   <main onclick="enterSite()">
     <!-- Remplace le src par ton logo si besoin -->
     <img src="img/logo_gold.jpg" alt="HFG CAPITAL" class="logo-main" id="finalLogo">
-    <div id="clickHint" class="click-hint"></div>
+    <div id="clickHint" class="click-hint">
+      <span id="clickHintLabel" class="click-hint-label"></span>
+      <span id="clickHintLang" class="click-hint-lang"></span>
+    </div>
+
   </main>
 
 <script>
@@ -594,10 +623,11 @@ function startSubFamilyLoop(familyIndex) {
 let clickHintInterval = null;
 
 function startClickHintLoop() {
-  const hintEl = document.getElementById('clickHint');
-  if (!hintEl) return;
+  const container = document.getElementById('clickHint');
+  const labelEl   = document.getElementById('clickHintLabel');
+  const langEl    = document.getElementById('clickHintLang');
+  if (!container || !labelEl || !langEl) return;
 
-  // on ne garde que les langues pour lesquelles on a une phrase
   const availableLangs = languages.filter(l => clickPhrases[l.key]);
   if (!availableLangs.length) return;
 
@@ -605,31 +635,34 @@ function startClickHintLoop() {
 
   function updateHint() {
     const lang = availableLangs[idx % availableLangs.length];
-    const phrase = clickPhrases[lang.key] || clickPhrases.en;
+    const phrase = clickPhrases[lang.key] || clickPhrases['en'];
 
-    // reset
-    gsap.killTweensOf(hintEl);
-    hintEl.style.opacity = 0;
+    // reset animation
+    container.classList.remove('visible');
+    void container.offsetWidth; // reflow
 
-    // texte type : "Cliquez sur le logo (FR)"
-    hintEl.textContent = `${phrase} (${lang.code})`;
+    labelEl.textContent = phrase;
+    langEl.textContent  = "• " + lang.code;
 
-    gsap.to(hintEl, {
-      opacity: 0.8,
-      duration: 0.3,
-      ease: "power2.out"
-    });
+    container.classList.add('visible');
 
     idx++;
   }
 
-  // première phrase tout de suite
+  // première phrase immédiatement
   updateHint();
 
-  // puis une nouvelle toutes les 2 secondes
+  // rendu global du bloc (opacité)
+  gsap.to(container, {
+    opacity: 0.85,
+    duration: 0.3,
+    ease: "power2.out"
+  });
+
   if (clickHintInterval) clearInterval(clickHintInterval);
   clickHintInterval = setInterval(updateHint, 2000);
 }
+
 
   
 document.addEventListener('DOMContentLoaded', () => {
