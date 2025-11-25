@@ -70,8 +70,8 @@
 
     circle {
       fill: none;
-      stroke-width: 1.5; /* Très fin pour l'élégance */
-      stroke-linecap: square; 
+      stroke-width: 1.5; /* Fin pour l'élégance */
+      stroke-linecap: square;
     }
 
     .circle-bg { stroke: #1a1a1a; } /* Cercle gris sombre en fond */
@@ -84,19 +84,19 @@
       transform: translate(-50%, -50%);
       width: 100%;
       text-align: center;
-      overflow: hidden; /* Pour couper le texte qui sort */
-      height: 30px; /* Hauteur fixe pour le défilement */
+      overflow: hidden;
+      height: 32px; /* Hauteur fixe pour le défilement */
       display: flex; justify-content: center; align-items: center;
     }
 
     .asset-name {
       font-family: var(--font-main);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 400;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text-white);
-      position: absolute;
+      position: relative;
       opacity: 0;
       white-space: nowrap;
     }
@@ -114,8 +114,8 @@
     }
     
     @media (max-width: 600px) {
-        .loader-ring-container { width: 160px; height: 160px; }
-        .asset-name { font-size: 9px; letter-spacing: 1.5px; }
+      .loader-ring-container { width: 160px; height: 160px; }
+      .asset-name { font-size: 8.5px; letter-spacing: 1.5px; }
     }
   </style>
 </head>
@@ -129,11 +129,8 @@
     
     <div class="loader-ring-container">
       <div class="loader-text-container">
-        <span class="asset-name">Private Equity</span>
-        <span class="asset-name">Venture Capital</span>
-        <span class="asset-name">Real Estate</span>
-        <span class="asset-name">Structured Debt</span>
-        <span class="asset-name">HFG Capital</span>
+        <!-- Texte unique, mis à jour par JS en fonction de la taxonomie -->
+        <span class="asset-name" id="assetText"></span>
       </div>
 
       <svg class="loader-ring" viewBox="0 0 100 100">
@@ -173,109 +170,330 @@ const STORAGE_KEY_THEME = 'hfg_theme';
   }
 })();
 
-/* --- 2. ANIMATION L'ARCHITECTE --- */
+/* --- 2. TAXONOMIE DES ACTIFS POUR L'ANIMATION --- */
+/* 5 FAMILLES -> 20% de l'anneau par famille, avec défilement des sous-familles */
+const taxonomy = [
+  {
+    family: "LISTED MARKETS — MARCHÉS COTÉS",
+    items: [
+      "Actions — Large Cap",
+      "Actions — Mid Cap",
+      "Actions — Small Cap",
+      "Actions — Micro Cap",
+      "Actions — Growth",
+      "Actions — Value",
+      "Actions — Dividendes",
+      "Actions sectorielles — Tech",
+      "Actions sectorielles — Santé",
+      "Actions sectorielles — Industrie",
+      "Actions sectorielles — Énergies & Utilities",
+      "Actions sectorielles — Finance",
+      "Actions sectorielles — Consommation",
+      "Immobilier coté — REITs",
+      "Actions — Europe",
+      "Actions — US",
+      "Actions — Asie & Japon",
+      "Actions — Marchés émergents",
+      "Obligations souveraines — Court terme",
+      "Obligations souveraines — Moyen / long terme",
+      "Obligations souveraines — Inflation-indexées",
+      "Obligations corporate — Investment Grade",
+      "Obligations corporate — High Yield",
+      "Obligations corporate — Fallen Angels",
+      "Obligations datées — Maturity Funds",
+      "Obligations convertibles",
+      "Obligations — Emerging Markets Debt",
+      "ETF — Actions",
+      "ETF — Obligations",
+      "ETF — Thématiques",
+      "ETN / ETP",
+      "Trackers de matières premières",
+      "Dérivés — Options (Call / Put / Covered)",
+      "Dérivés — Futures",
+      "Dérivés — Leverage / Short",
+      "Produits structurés cotés",
+      "Contrats de capitalisation — Fonds €",
+      "Contrats de capitalisation — Unités de compte"
+    ]
+  },
+  {
+    family: "PRIVATE MARKETS — MARCHÉS PRIVÉS",
+    items: [
+      "Private Equity — LBO Large Cap",
+      "Private Equity — LBO Mid Cap",
+      "Private Equity — LBO Small Cap",
+      "Private Equity — Growth Equity",
+      "Private Equity — Infrastructure Equity",
+      "Private Equity — Co-investissements directs",
+      "Venture Capital — Pre-Seed",
+      "Venture Capital — Seed",
+      "Venture Capital — Series A",
+      "Venture Capital — Series B–C+",
+      "Venture Capital — Late Stage / Pre-IPO",
+      "Venture Capital — Fintech",
+      "Venture Capital — SaaS",
+      "Venture Capital — MedTech",
+      "Venture Capital — DeepTech",
+      "Secondaires — LP (rachat de parts de fonds)",
+      "Secondaires — GP-led single asset",
+      "Secondaires — GP-led multi asset",
+      "Secondaires — Tenders & restructurations",
+      "Secondaires — Pré-IPO (Revolut, SpaceX, Stripe…)",
+      "Private Debt — Direct Lending (Senior Secured)",
+      "Private Debt — Unitranche",
+      "Private Debt — Mezzanine",
+      "Private Debt — Distressed Debt",
+      "Private Debt — Special Situations",
+      "Private Debt — Real Asset / Infrastructure Debt",
+      "Private Debt — Venture Debt",
+      "Private Debt — Asset-Backed Lending (ABL)",
+      "Private Debt — Trade Finance",
+      "Infrastructure non cotée — Énergie (solaire, éolien, hydro)",
+      "Infrastructure non cotée — Transport (routes, ports, rails)",
+      "Infrastructure non cotée — Télécom (fibre, data centers)",
+      "Infrastructure non cotée — Social (hôpitaux, écoles)",
+      "Private Real Estate — Fonds immobiliers non cotés",
+      "Private Real Estate — Club deals immobiliers",
+      "Private Real Estate — Développement / promotion",
+      "Private Real Estate — Core / Core+",
+      "Private Real Estate — Value-add / Opportunistic"
+    ]
+  },
+  {
+    family: "ALTERNATIVE MARKETS",
+    items: [
+      "Immobilier indirect — SCPI Bureaux",
+      "Immobilier indirect — SCPI Santé",
+      "Immobilier indirect — SCPI Logistique",
+      "Immobilier indirect — SCPI Pan-européennes",
+      "Immobilier indirect — OPCI",
+      "Immobilier indirect — SCI à capital variable",
+      "Immobilier indirect — REITs (borderline listed)",
+      "Crowdlending — Immobilier résidentiel (promotion)",
+      "Crowdlending — Immobilier tertiaire",
+      "Crowdlending — Marchands de biens",
+      "Crowdlending — Bridge financing",
+      "Crowdlending — Prêts corporate",
+      "Crowdlending — P2P consommation",
+      "Crypto — Layer 1 (BTC, ETH, SOL, ADA…)",
+      "Crypto — Layer 2 (ARB, OP, MATIC/POL…)",
+      "DeFi — Lending (Aave, Morpho…)",
+      "DeFi — DEX tokens (UNI, DYDX…)",
+      "DeFi — Liquid staking (stETH, eETH…)",
+      "DeFi — Restaking (EigenLayer, Ethena…)",
+      "Stablecoins — USDC / USDT / DAI / EUROC",
+      "CeFi yield — Nexo",
+      "CeFi yield — Coinbase Earn",
+      "RWA tokenisés — T-Bills tokenisés",
+      "RWA tokenisés — Immobilier tokenisé",
+      "Matières premières — Or / Argent / Palladium",
+      "Matières premières — Pétrole / Gaz",
+      "Matières premières — Softs (cacao, café, blé…)",
+      "Collectibles — Art",
+      "Collectibles — Montres",
+      "Collectibles — Vin & Whisky",
+      "Collectibles — Voitures de collection",
+      "Collectibles — NFT (borderline crypto)",
+      "Produits structurés non cotés — Autocall",
+      "Produits structurés non cotés — Titrisations privées",
+      "Produits structurés non cotés — Notes crédit privées"
+    ]
+  },
+  {
+    family: "REAL ASSETS — MONDE RÉEL",
+    items: [
+      "Immobilier direct — Résidentiel",
+      "Immobilier direct — Commerces",
+      "Immobilier direct — Logistique",
+      "Immobilier direct — Locatif meublé",
+      "Immobilier direct — Promotion en direct",
+      "Immobilier direct — Foncières privées",
+      "Infrastructures physiques — Énergies renouvelables",
+      "Infrastructures physiques — Terrains & forêts",
+      "Infrastructures physiques — Exploitations agricoles",
+      "Actifs productifs — Machines",
+      "Actifs productifs — Flottes (camions, avions – leasing)",
+      "Actifs productifs — Hydrocarbures (royalties)"
+    ]
+  },
+  {
+    family: "TRÉSORERIE & LIQUIDITÉS",
+    items: [
+      "Trésorerie — Comptes à terme",
+      "Trésorerie — Monétaire court terme",
+      "Trésorerie — T-Bills",
+      "Trésorerie — Euro-monétaire",
+      "Trésorerie — Dépôts rémunérés (fintech)",
+      "Devises — USD",
+      "Devises — CHF",
+      "Devises — JPY",
+      "Devises — Autres devises fortes",
+      "Stratégies — Couverture FX"
+    ]
+  }
+];
+
+/* --- 3. ANIMATION GSAP --- */
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // Éléments DOM
-    const progressCircle = document.getElementById('progressCircle');
-    const assetNames = document.querySelectorAll('.asset-name');
-    const loaderOverlay = document.getElementById('loaderOverlay');
-    const finalLogo = document.getElementById('finalLogo');
-    const bgImage = document.getElementById('bgImage');
-    const ringContainer = document.querySelector('.loader-ring-container');
+  const progressCircle = document.getElementById('progressCircle');
+  const loaderOverlay = document.getElementById('loaderOverlay');
+  const finalLogo = document.getElementById('finalLogo');
+  const bgImage = document.getElementById('bgImage');
+  const ringContainer = document.querySelector('.loader-ring-container');
+  const assetText = document.getElementById('assetText');
 
-    // Configuration SVG
-    // Dasharray = circonférence (2 * PI * r) -> r=48 -> ~301.59
-    const circumference = 2 * Math.PI * 48;
-    gsap.set(progressCircle, { strokeDasharray: circumference, strokeDashoffset: circumference });
+  // Config SVG
+  const radius = 48;
+  const circumference = 2 * Math.PI * radius;
+  gsap.set(progressCircle, { strokeDasharray: circumference, strokeDashoffset: circumference });
+  gsap.set(ringContainer, { transformOrigin: "50% 50%" });
 
-    // Timeline Principale
-    const tl = gsap.timeline({ delay: 0.5 });
-    
-    // --- PARTIE 1 : LE CHARGEMENT SÉQUENTIEL ---
-    // On divise le temps total par le nombre d'étapes de texte (sauf le dernier qui est le final)
-    const stepDuration = 0.8; 
-    
-    // Boucle sur les textes d'actifs (sauf le dernier "HFG")
-    assetNames.forEach((text, index) => {
-        if(index < assetNames.length - 1) {
-            
-            // Calcul du progrès du cercle pour cette étape
-            const progressTarget = circumference - ((index + 1) / (assetNames.length - 1)) * circumference;
-            
-            tl.to(text, { 
-                y: 0, opacity: 1, duration: 0.3, ease: "power2.out" 
-            }, "step_" + index)
-            
-            .to(progressCircle, { 
-                strokeDashoffset: progressTarget, 
-                duration: stepDuration, 
-                ease: "linear" 
-            }, "step_" + index)
-            
-            .to(text, { 
-                y: -10, opacity: 0, duration: 0.3, ease: "power2.in", delay: stepDuration - 0.3 
-            }, "step_" + index);
-        }
-    });
+  const tl = gsap.timeline({ delay: 0.5 });
 
-    // --- PARTIE 2 : LA FINALISATION (100%) ---
-    tl.addLabel("complete");
+  // Paramètres d'animation
+  let currentOffset = circumference;
+  const familyCount = taxonomy.length;
+  const familySegment = circumference / familyCount;
+  const stepDuration = 0.45; // durée pour chaque item (texte + progression)
 
-    // Affiche le dernier texte "HFG CAPITAL" au centre fixe
-    const lastText = assetNames[assetNames.length - 1];
-    
-    tl.to(lastText, { opacity: 1, scale: 1.1, duration: 0.1, color: '#D4AF37' }, "complete")
-    
-    // --- PARTIE 3 : L'EFFET SHOCKWAVE / REVEAL ---
-    
-    // 1. Contraction (Tension)
-    .to(ringContainer, { 
-        scale: 0.8, 
-        duration: 0.4, 
-        ease: "back.in(2)" 
-    }, "complete+=0.5")
-    
-    // 2. Disparition du texte
-    .to(lastText, { opacity: 0, duration: 0.1 }, ">")
-    
-    // 3. Explosion / Expansion (Release)
-    .to(ringContainer, { 
-        scale: 15, // Agrandissement massif du cercle pour "sortir" de l'écran
-        opacity: 0, 
-        duration: 0.6, 
-        ease: "power2.in" 
-    }, ">")
-    
-    // 4. Fade Out de l'écran noir simultané
-    .to(loaderOverlay, { 
-        opacity: 0, 
-        duration: 0.8, 
-        ease: "power2.inOut",
-        onComplete: () => loaderOverlay.remove() // Nettoyage DOM
-    }, "<+=0.1") // Commence légèrement après le début de l'expansion
-    
-    // 5. Apparition majestueuse du Logo et du Fond
-    .to(bgImage, { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }, "reveal")
-    .fromTo(finalLogo, 
-        { scale: 0.9, opacity: 0, y: 20 },
-        { scale: 1, opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }, 
-        "reveal-=0.5" // Le logo arrive pendant que le fond se stabilise
+  // Boucle principale sur les 5 familles
+  taxonomy.forEach((group, familyIndex) => {
+    const groupTotalSteps = 1 + group.items.length; // 1 pour le titre de famille + items
+
+    // 1) Titre de la famille
+    const familyStepKey = `family_${familyIndex}`;
+    const familyNextOffset = currentOffset - (familySegment / groupTotalSteps);
+
+    tl.add(familyStepKey);
+
+    tl.call(() => {
+      assetText.textContent = group.family;
+    }, null, familyStepKey);
+
+    tl.fromTo(assetText,
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.22, ease: "power2.out" },
+      familyStepKey
     );
 
-});
+    tl.to(progressCircle, {
+      strokeDashoffset: familyNextOffset,
+      duration: stepDuration,
+      ease: "none"
+    }, familyStepKey);
 
+    tl.to(assetText, {
+      opacity: 0,
+      y: -10,
+      duration: 0.22,
+      ease: "power2.in"
+    }, familyStepKey + "+=0.23");
+
+    currentOffset = familyNextOffset;
+
+    // 2) Items de la famille
+    group.items.forEach((label, itemIndex) => {
+      const stepKey = `family_${familyIndex}_item_${itemIndex}`;
+      const nextOffset = currentOffset - (familySegment / groupTotalSteps);
+
+      tl.add(stepKey);
+
+      tl.call(() => {
+        assetText.textContent = label;
+      }, null, stepKey);
+
+      tl.fromTo(assetText,
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" },
+        stepKey
+      );
+
+      tl.to(progressCircle, {
+        strokeDashoffset: nextOffset,
+        duration: stepDuration,
+        ease: "none"
+      }, stepKey);
+
+      tl.to(assetText, {
+        opacity: 0,
+        y: -8,
+        duration: 0.2,
+        ease: "power2.in"
+      }, stepKey + "+=0.22");
+
+      currentOffset = nextOffset;
+    });
+  });
+
+  // --- PARTIE FINALE : HFG CAPITAL + SHOCKWAVE --- //
+  tl.addLabel("complete");
+
+  tl.call(() => {
+    assetText.textContent = "HFG CAPITAL — MULTI-ASSET FAMILY OFFICE";
+  }, null, "complete");
+
+  tl.to(assetText, {
+    opacity: 1,
+    scale: 1.05,
+    duration: 0.4,
+    color: '#D4AF37',
+    ease: "power2.out"
+  }, "complete");
+
+  // 1. Contraction
+  tl.to(ringContainer, {
+    scale: 0.8,
+    duration: 0.4,
+    ease: "back.in(2)"
+  }, "complete+=0.4");
+
+  // 2. Disparition du texte
+  tl.to(assetText, {
+    opacity: 0,
+    duration: 0.2
+  }, ">");
+
+  // 3. Explosion / expansion du cercle (shockwave)
+  tl.to(ringContainer, {
+    scale: 15,
+    opacity: 0,
+    duration: 0.7,
+    ease: "power2.in"
+  }, ">");
+
+  // 4. Fade out de l'overlay noir
+  tl.to(loaderOverlay, {
+    opacity: 0,
+    duration: 0.8,
+    ease: "power2.inOut",
+    onComplete: () => loaderOverlay.remove()
+  }, "<+=0.1");
+
+  // 5. Apparition du fond + logo
+  tl.to(bgImage, {
+    opacity: 1,
+    scale: 1,
+    duration: 1.5,
+    ease: "power2.out"
+  }, "reveal");
+
+  tl.fromTo(finalLogo,
+    { scale: 0.9, opacity: 0, y: 20 },
+    { scale: 1, opacity: 1, y: 0, duration: 1.5, ease: "power3.out" },
+    "reveal-=0.5"
+  );
+});
 
 /* --- REDIRECTION --- */
 function enterSite() {
-    gsap.to(document.body, { 
-        opacity: 0, 
-        duration: 0.6, 
-        onComplete: () => {
-            localStorage.setItem(STORAGE_KEY_THEME, 'light'); 
-            window.location.href = "home.html"; 
-        }
-    });
+  gsap.to(document.body, { 
+    opacity: 0, 
+    duration: 0.6, 
+    onComplete: () => {
+      localStorage.setItem(STORAGE_KEY_THEME, 'light'); 
+      window.location.href = "home.html"; 
+    }
+  });
 }
 </script>
 </body>
