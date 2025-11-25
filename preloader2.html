@@ -30,18 +30,16 @@
     body {
       font-family: var(--font-sans);
       height: 100vh;
-      height: 100dvh;
       width: 100vw;
       overflow: hidden;
       background-color: #000;
       position: relative; 
     }
 
-    /* --- BACKGROUND (Caché au début) --- */
+    /* --- BACKGROUND --- */
     .bg-container {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -1; overflow: hidden;
-      /* On laisse l'opacité à 1, c'est l'overlay noir qui cache tout */
+      z-index: -1;
     }
 
     .bg-image {
@@ -55,14 +53,14 @@
       to { transform: scale(1.15); }
     }
 
-    /* --- OVERLAY NOIR (Cache l'image de fond) --- */
+    /* --- OVERLAY NOIR --- */
     .screen-overlay {
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
         background-color: #000;
         z-index: 10; 
     }
 
-    /* --- MAIN LOGO (Apparaît à la fin) --- */
+    /* --- MAIN LOGO --- */
     main {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       text-align: center; width: 100%; padding: 0 20px;
@@ -74,36 +72,37 @@
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
     }
 
-    /* --- SVG CHART / MOUNTAIN --- */
-    /* Le SVG prend tout l'écran, par dessus le noir */
+    /* --- CHART / MOUNTAIN SVG --- */
     .chart-container {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         z-index: 20; pointer-events: none;
+        /* Ajout d'un léger flou lumineux global sur le conteneur pour l'ambiance */
+        filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3)); 
     }
 
-    /* Style de la ligne */
     #stockPath {
         fill: none;
-        stroke: var(--text-light); /* Ou var(--gold-accent) si tu veux du doré */
-        stroke-width: 2;
+        stroke: url(#lineGradient); /* Utilise le dégradé défini dans le HTML */
+        stroke-width: 2.5; /* Légèrement plus épais pour l'élégance */
         stroke-linecap: round;
         stroke-linejoin: round;
-        vector-effect: non-scaling-stroke; /* Garde l'épaisseur constante même si on redimensionne */
+        vector-effect: non-scaling-stroke;
     }
 
-    /* --- POURCENTAGE --- */
+    /* --- POURCENTAGE (Style d'origine) --- */
     .progress-percent {
         position: absolute;
-        top: 50%; left: 50%; transform: translate(-50%, -50%);
+        top: 50%; left: 50%;
+        /* Décalage exact de votre fichier d'origine */
+        transform: translate(-50%, calc(-50% - 10px)); 
         font-family: var(--font-sans);
-        font-size: 24px; /* Un peu plus gros pour l'impact */
+        font-size: 16px; /* Retour à la taille discrète */
         color: var(--text-light);
         font-weight: 300;
-        z-index: 21; opacity: 0;
-        letter-spacing: 2px;
+        z-index: 21; 
+        opacity: 0; 
     }
     
-    /* --- RESPONSIVE --- */
     @media (max-width: 600px) {
       .logo-main { max-height: 100px; } 
     }
@@ -123,6 +122,10 @@
   
   <div class="chart-container">
     <svg id="chartSvg" width="100%" height="100%" preserveAspectRatio="none">
+        <defs>
+            <linearGradient id="lineGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#D4AF37; stop-opacity:0.6" /> <stop offset="50%" style="stop-color:#D4AF37; stop-opacity:1" /> <stop offset="100%" style="stop-color:#ffffff; stop-opacity:1" /> </linearGradient>
+        </defs>
         <path id="stockPath" d="" />
     </svg>
   </div>
@@ -131,7 +134,7 @@
 
 
 <script>
-/* --- 1. GESTION DU FOND (Ton code existant) --- */
+/* --- 1. GESTION DU FOND --- */
 const bgImages = [
   "img/rouge_02.png", "img/rouge_04.png", "img/jaune_01.png", "img/jaune_02.png", 
   "img/jaune_04.png", "img/vert_01.png", "img/vert_02.png", "img/bleu_02.png",  
@@ -140,7 +143,6 @@ const bgImages = [
 ];
 const STORAGE_KEY_BG = 'hfg_bg_session';
 const STORAGE_KEY_THEME = 'hfg_theme';
-const STORAGE_KEY_LANG = 'hfg_lang';
 
 (function initBackgroundNow() {
   const bgEl = document.getElementById('bgImage');
@@ -156,39 +158,40 @@ const STORAGE_KEY_LANG = 'hfg_lang';
   }
 })();
 
-/* --- 2. GENERATION DU GRAPHIQUE BOURSIER / MONTAGNE --- */
+/* --- 2. GENERATION DU GRAPHIQUE BOURSIER --- */
 function generateStockPath() {
     const width = window.innerWidth;
     const height = window.innerHeight;
     
-    // Paramètres de la courbe
-    const segments = 15; // Nombre de points intermédiaires (plus il y en a, plus c'est dentelé)
+    // On augmente le nombre de segments pour une ligne moins brisée, plus fluide
+    const segments = 20; 
     const stepX = width / segments;
     
-    // Point de départ : Bas Gauche (avec un petit padding)
+    // Départ strict en bas à gauche
     let pathData = `M 0,${height} `; 
     
     let currentX = 0;
-    let currentY = height;
-
+    
     for (let i = 1; i <= segments; i++) {
-        // Avance en X
         currentX = i * stepX;
         
-        // Calcule le Y idéal (une ligne droite qui monte vers 0)
-        // On vise le coin haut droit (y=0) à la fin
+        // Ligne directrice : diagonale parfaite
         const targetY = height - (height * (i / segments));
         
-        // Ajoute du "bruit" (volatilité boursière)
-        // Plus on est proche du début ou de la fin, moins on met de bruit pour bien viser les coins
-        let noise = (Math.random() - 0.5) * (height * 0.4); // 40% de la hauteur en volatilité max
+        // Volatilité contrôlée (plus faible aux extrémités pour l'esthétique)
+        let volatilityFactor = 0.3; // 30% de la hauteur max
         
-        // On s'assure que le dernier point est exactement en haut à droite sans bruit
+        // On réduit le bruit au début et à la fin pour que ça "atterrisse" proprement
+        if (i < 3 || i > segments - 3) volatilityFactor = 0.1;
+        
+        let noise = (Math.random() - 0.5) * (height * volatilityFactor); 
+        
+        let currentY = targetY + noise;
+
+        // Force le point final en haut à droite (0)
         if (i === segments) {
             currentY = 0; 
-            currentX = width; // Force le coin exact
-        } else {
-            currentY = targetY + noise;
+            currentX = width;
         }
         
         pathData += `L ${currentX},${currentY} `;
@@ -205,34 +208,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const screenOverlay = document.getElementById('screenOverlay');
     const path = document.getElementById('stockPath');
     
-    // Générer le tracé SVG
     path.setAttribute('d', generateStockPath());
-    
-    // Calculer la longueur du tracé pour l'animation "dessin"
     const pathLength = path.getTotalLength();
     
-    // Préparation CSS via GSAP
-    gsap.set(path, { 
-        strokeDasharray: pathLength,
-        strokeDashoffset: pathLength, // La ligne est invisible (toute en offset)
-        opacity: 1
-    });
-    
+    // Initialisation
+    gsap.set(path, { strokeDasharray: pathLength, strokeDashoffset: pathLength, opacity: 1 });
     gsap.set(logo, { opacity: 0, pointerEvents: 'none' });
     gsap.set(progressPercent, { opacity: 0 });
 
-    // --- TIMELINE ---
     const masterTL = gsap.timeline({ delay: 0.5 });
 
-    // 1. Apparition du pourcentage
+    // A. Apparition
     masterTL.to(progressPercent, { opacity: 1, duration: 0.5 })
     
-    // 2. Le tracé de la courbe (Action Principale)
-    // Synchronisé avec le compteur
+    // B. Tracé de la ligne et Compteur
     .to(path, {
-        strokeDashoffset: 0, // On ramène l'offset à 0 (la ligne se dessine)
+        strokeDashoffset: 0,
         duration: 3.5,
-        ease: "power2.inOut" // Démarrage doux, accélération, fin douce
+        ease: "power2.inOut" // Mouvement fluide
     }, "start")
     
     .to({ value: 0 }, {
@@ -244,14 +237,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, "start")
 
-    // 3. Disparition des éléments de chargement
+    // C. Sortie
     .to([progressPercent, path], {
         opacity: 0,
-        duration: 0.6,
+        duration: 0.8,
         ease: "power2.in"
     })
     
-    // 4. Révélation du site (Overlay noir disparait + Logo apparait)
+    // D. Révélation Finale
     .to(screenOverlay, {
         opacity: 0,
         duration: 1.5,
@@ -259,27 +252,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }, "reveal")
     
     .fromTo(logo, 
-        { opacity: 0, scale: 0.9, y: 20 },
+        { opacity: 0, scale: 0.95, filter: 'blur(5px)' }, // Ajout d'un petit flou au début
         { 
-            opacity: 1, scale: 1, y: 0, 
-            duration: 1.5, 
-            ease: "power3.out",
+            opacity: 1, scale: 1, filter: 'blur(0px)',
+            duration: 1.8, 
+            ease: "power2.out",
             onComplete: () => {
                 logo.style.pointerEvents = 'auto';
-                screenOverlay.remove(); // On nettoie le DOM
+                screenOverlay.remove();
             }
         }, 
-        "reveal+=0.2" // Léger décalage pour que le fond apparaisse une fraction de seconde avant le logo
+        "reveal+=0.1" 
     );
     
-    // Recalculer le tracé si on redimensionne la fenêtre pendant le chargement (optionnel mais propre)
     window.addEventListener('resize', () => {
-        if(masterTL.progress() < 1) { // Seulement si l'intro n'est pas finie
-             path.setAttribute('d', generateStockPath());
-        }
+        if(masterTL.progress() < 1) path.setAttribute('d', generateStockPath());
     });
 });
-
 
 /* --- REDIRECTION --- */
 function enterSite() {
