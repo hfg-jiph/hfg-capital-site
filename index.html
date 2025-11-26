@@ -180,6 +180,7 @@
   opacity: 0;              /* géré en JS */
   pointer-events: none;
   white-space: nowrap;
+  pointer-events: none;
 }
 
   .click-hint-label {
@@ -187,6 +188,7 @@
     opacity: 0;
     transform: translateY(5px);
     transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+    pointer-events: none;
   }
   
   .click-hint-lang {
@@ -195,6 +197,7 @@
     opacity: 0;
     transform: translateY(5px);
     transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+    pointer-events: none;
   }
   
   .click-hint.visible .click-hint-label,
@@ -214,6 +217,7 @@
       
       opacity: 0;
       cursor: pointer;
+      pointer-events: none;
     }
 
     @media (max-width: 600px) {
@@ -231,7 +235,7 @@
     }
   </style>
 </head>
-<body>
+<body onclick="enterSite()">
 
   <!-- BACKGROUND IMAGE -->
   <div class="bg-container">
@@ -258,7 +262,7 @@
   </div>
 
   <!-- LOGO / PAGE PRINCIPALE -->
-  <main onclick="enterSite()">
+  <main>
     <!-- Remplace le src par ton logo si besoin -->
     <img src="img/logo_gold.jpg" alt="HFG CAPITAL" class="logo-main" id="finalLogo">
     <div id="clickHint" class="click-hint">
