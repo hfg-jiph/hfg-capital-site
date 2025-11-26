@@ -12,275 +12,938 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
   <style>
-    /* --- VARIABLES & RESET --- */
     :root {
-      --primary-dark: #1a1a1a;
+      --bg-color: #000000;
       --gold-accent: #D4AF37;
-      --text-light: #ffffff;
-      --font-sans: 'Montserrat', sans-serif;
+      --text-white: #ffffff;
+      --text-muted: #999999;
+      --font-main: 'Montserrat', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      font-family: var(--font-sans);
+      font-family: var(--font-main);
       height: 100vh;
       width: 100vw;
       overflow: hidden;
-      background-color: #000;
-      position: relative; 
+      background-color: var(--bg-color);
+      position: relative;
+      color: var(--text-white);
     }
 
-    /* --- BACKGROUND --- */
+    /* --- BACKGROUND IMAGE (cachée au début) --- */
     .bg-container {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -1;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
     }
 
     .bg-image {
-      width: 100%; height: 100%; object-fit: cover; object-position: center center;
-      transition: opacity 1s ease; animation: zoomIn 40s infinite alternate linear;
-      will-change: transform; display: none; 
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 1.5s ease, transform 1.5s ease;
     }
 
-    @keyframes zoomIn {
-      from { transform: scale(1); }
-      to { transform: scale(1.15); }
+    /* --- OVERLAY DE CHARGEMENT --- */
+    .loader-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: #000000;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* --- OVERLAY NOIR --- */
-    .screen-overlay {
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background-color: #000;
-        z-index: 10; 
+    .loader-ring-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* --- MAIN LOGO --- */
+    svg.loader-ring {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+      filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.35));
+    }
+
+    circle {
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: square;
+    }
+
+    .circle-bg {
+      stroke: #1a1a1a;
+    }
+
+    .circle-progress {
+      stroke: var(--gold-accent);
+    }
+
+    .loader-text-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      text-align: center;
+      overflow: hidden;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .asset-name {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-accent);
+      opacity: 0;
+      white-space: nowrap;
+    }
+
+    .sub-asset-container {
+      margin-top: 18px;
+      text-align: center;
+      min-height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .sub-asset-label {
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      white-space: nowrap;
+    }
+
+    .sub-asset-lang {
+      font-size: 10px;
+      color: var(--text-muted);
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      white-space: nowrap;
+    }
+
+    .sub-asset-container.visible .sub-asset-label,
+    .sub-asset-container.visible .sub-asset-lang {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- PARTICULES ORBITALES AUTOUR DU CERCLE --- */
+    .orbital-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .orbital-dot {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--gold-accent);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.7);
+      opacity: 0.15;
+      transform-origin: 50% 50%;
+    }
+
+    /* --- LOGO FINAL --- */
     main {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      text-align: center; width: 100%; padding: 0 20px;
-      z-index: 5; cursor: pointer; 
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      pointer-events: auto;
+    }
+
+    .click-hint {
+      margin-top: 10px;
+      min-height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .click-hint-label {
+      color: var(--text-white);
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      pointer-events: none;
+    }
+
+    .click-hint-lang {
+      font-size: 10px;
+      color: var(--text-muted);
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      pointer-events: none;
+    }
+
+    .click-hint.visible .click-hint-label,
+    .click-hint.visible .click-hint-lang {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Wrapper + effets autour du logo */
+    .logo-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Glow derrière le logo */
+    .logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 260px;
+      height: 260px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.4), transparent 60%);
+      filter: blur(18px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Faisceau lumineux qui balaye le logo */
+    .logo-sweep {
+      position: absolute;
+      inset: -20%;
+      background: linear-gradient(
+        75deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.28) 45%,
+        rgba(255, 255, 255, 0.65) 50%,
+        rgba(255, 255, 255, 0.28) 55%,
+        transparent 100%
+      );
+      mix-blend-mode: screen;
+      opacity: 0;
+      transform: translateX(-60%) rotate(12deg);
+      pointer-events: none;
     }
 
     .logo-main {
-      width: auto; max-width: 85%; max-height: 160px;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+      width: auto;
+      max-width: 85%;
+      max-height: 160px;
+      margin-bottom: 50px;
+      opacity: 0;
+      cursor: pointer;
+      pointer-events: none;
     }
 
-    /* --- CHART / MOUNTAIN SVG --- */
-    .chart-container {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        z-index: 20; pointer-events: none;
-        /* Ajout d'un léger flou lumineux global sur le conteneur pour l'ambiance */
-        filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3)); 
-    }
-
-    #stockPath {
-        fill: none;
-        stroke: url(#lineGradient); /* Utilise le dégradé défini dans le HTML */
-        stroke-width: 2.5; /* Légèrement plus épais pour l'élégance */
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        vector-effect: non-scaling-stroke;
-    }
-
-    /* --- POURCENTAGE (Style d'origine) --- */
-    .progress-percent {
-        position: absolute;
-        top: 50%; left: 50%;
-        /* Décalage exact de votre fichier d'origine */
-        transform: translate(-50%, calc(-50% - 10px)); 
-        font-family: var(--font-sans);
-        font-size: 16px; /* Retour à la taille discrète */
-        color: var(--text-light);
-        font-weight: 300;
-        z-index: 21; 
-        opacity: 0; 
-    }
-    
     @media (max-width: 600px) {
-      .logo-main { max-height: 100px; } 
+      .loader-ring-container {
+        width: 180px;
+        height: 180px;
+      }
+      .asset-name {
+        font-size: 9.5px;
+        letter-spacing: 1.7px;
+      }
+      .sub-asset-container {
+        font-size: 10px;
+      }
     }
   </style>
 </head>
-<body>
+<body onclick="enterSite()">
 
+  <!-- BACKGROUND IMAGE -->
   <div class="bg-container">
     <img id="bgImage" class="bg-image" alt="Background">
   </div>
-  
-  <div id="screenOverlay" class="screen-overlay"></div>
 
-  <main onclick="enterSite()">
-    <img src="img/logo_noir.jpg" alt="HFG CAPITAL" class="logo-main">
-  </main>
-  
-  <div class="chart-container">
-    <svg id="chartSvg" width="100%" height="100%" preserveAspectRatio="none">
-        <defs>
-            <linearGradient id="lineGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:#D4AF37; stop-opacity:0.6" /> <stop offset="50%" style="stop-color:#D4AF37; stop-opacity:1" /> <stop offset="100%" style="stop-color:#ffffff; stop-opacity:1" /> </linearGradient>
-        </defs>
-        <path id="stockPath" d="" />
-    </svg>
+  <!-- OVERLAY / PRELOADER -->
+  <div id="loaderOverlay" class="loader-overlay">
+    <div class="loader-ring-container">
+      <!-- PARTICULES ORBITALES -->
+      <div class="orbital-layer" id="orbitalLayer"></div>
+
+      <div class="loader-text-container">
+        <span class="asset-name" id="assetText"></span>
+      </div>
+
+      <svg class="loader-ring" viewBox="0 0 100 100">
+        <circle class="circle-bg" cx="50" cy="50" r="48"></circle>
+        <circle id="progressCircle" class="circle-progress" cx="50" cy="50" r="48"></circle>
+      </svg>
+    </div>
+
+    <div class="sub-asset-container" id="subAssetContainer">
+      <span class="sub-asset-label" id="subAssetText"></span>
+      <span class="sub-asset-lang" id="subAssetLang"></span>
+    </div>
   </div>
 
-  <div id="progressPercent" class="progress-percent">0%</div>
+  <!-- LOGO / PAGE PRINCIPALE -->
+  <main>
+    <div class="logo-wrapper">
+      <div class="logo-glow" id="logoGlow"></div>
+      <img src="img/logo_gold.jpg" alt="HFG CAPITAL" class="logo-main" id="finalLogo">
+      <div class="logo-sweep" id="logoSweep"></div>
+    </div>
 
+    <div id="clickHint" class="click-hint">
+      <span id="clickHintLabel" class="click-hint-label"></span>
+      <span id="clickHintLang" class="click-hint-lang"></span>
+    </div>
+  </main>
 
 <script>
-/* --- 1. GESTION DU FOND --- */
+/* ---------- 1. BACKGROUND ALEATOIRE ---------- */
 const bgImages = [
   "img/rouge_02.png", "img/rouge_04.png", "img/jaune_01.png", "img/jaune_02.png", 
   "img/jaune_04.png", "img/vert_01.png", "img/vert_02.png", "img/bleu_02.png",  
   "img/bleu_03.png", "img/bleu_04.png", "img/bleu_05.png", "img/orange_02.png", 
   "img/violet_01.png", "img/violet_03.png"
 ];
+
 const STORAGE_KEY_BG = 'hfg_bg_session';
 const STORAGE_KEY_THEME = 'hfg_theme';
 
 (function initBackgroundNow() {
   const bgEl = document.getElementById('bgImage');
-  if (bgEl) {
-    let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
-    if (!currentBg || !bgImages.includes(currentBg)) {
-      const randomIndex = Math.floor(Math.random() * bgImages.length);
-      currentBg = bgImages[randomIndex];
-      sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
-    }
-    bgEl.src = currentBg; 
-    bgEl.onerror = function() { sessionStorage.removeItem(STORAGE_KEY_BG); };
+  if (!bgEl) return;
+
+  let currentBg = sessionStorage.getItem(STORAGE_KEY_BG);
+  if (!currentBg || !bgImages.includes(currentBg)) {
+    const randomIndex = Math.floor(Math.random() * bgImages.length);
+    currentBg = bgImages[randomIndex];
+    sessionStorage.setItem(STORAGE_KEY_BG, currentBg);
   }
+  bgEl.src = currentBg;
 })();
 
-/* --- 2. GENERATION DU GRAPHIQUE BOURSIER --- */
-function generateStockPath() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    
-    // On augmente le nombre de segments pour une ligne moins brisée, plus fluide
-    const segments = 20; 
-    const stepX = width / segments;
-    
-    // Départ strict en bas à gauche
-    let pathData = `M 0,${height} `; 
-    
-    let currentX = 0;
-    
-    for (let i = 1; i <= segments; i++) {
-        currentX = i * stepX;
-        
-        // Ligne directrice : diagonale parfaite
-        const targetY = height - (height * (i / segments));
-        
-        // Volatilité contrôlée (plus faible aux extrémités pour l'esthétique)
-        let volatilityFactor = 0.3; // 30% de la hauteur max
-        
-        // On réduit le bruit au début et à la fin pour que ça "atterrisse" proprement
-        if (i < 3 || i > segments - 3) volatilityFactor = 0.1;
-        
-        let noise = (Math.random() - 0.5) * (height * volatilityFactor); 
-        
-        let currentY = targetY + noise;
+/* ---------- 2. TAXONOMIE + LANGUES ---------- */
 
-        // Force le point final en haut à droite (0)
-        if (i === segments) {
-            currentY = 0; 
-            currentX = width;
+// 10 langues : FR, EN, ES, DE, IT, RU, JA, ZH, VI, ID
+const languages = [
+  { code: "FR", key: "fr" },
+  { code: "EN", key: "en" },
+  { code: "ES", key: "es" },
+  { code: "DE", key: "de" },
+  { code: "IT", key: "it" },
+  { code: "RU", key: "ru" },
+  { code: "JA", key: "ja" },
+  { code: "ZH", key: "zh" },
+  { code: "VI", key: "vi" },
+  { code: "ID", key: "id" }
+];
+
+// 4 familles + sous-familles, avec traduction multilingue
+const taxonomy = [
+  {
+    family: "LISTED MARKETS",
+    subFamilies: [
+      {
+        id: "stocks",
+        labels: {
+          en: "Stocks",
+          fr: "Actions",
+          es: "Acciones",
+          de: "Aktien",
+          it: "Azioni",
+          ru: "Акции",
+          ja: "株式",
+          zh: "股票",
+          vi: "Cổ phiếu",
+          id: "Saham"
         }
-        
-        pathData += `L ${currentX},${currentY} `;
+      },
+      {
+        id: "bonds",
+        labels: {
+          en: "Bonds",
+          fr: "Obligations",
+          es: "Bonos",
+          de: "Anleihen",
+          it: "Obbligazioni",
+          ru: "Облигации",
+          ja: "債券",
+          zh: "债券",
+          vi: "Trái phiếu",
+          id: "Obligasi"
+        }
+      },
+      {
+        id: "etf",
+        labels: {
+          en: "ETFs",
+          fr: "Trackers & ETF",
+          es: "ETF",
+          de: "ETFs",
+          it: "ETF",
+          ru: "ETF",
+          ja: "ETF",
+          zh: "ETF",
+          vi: "Quỹ ETF",
+          id: "Reksa Dana ETF"
+        }
+      },
+      {
+        id: "derivatives",
+        labels: {
+          en: "Derivatives",
+          fr: "Produits dérivés",
+          es: "Derivados",
+          de: "Derivate",
+          it: "Derivati",
+          ru: "Производные",
+          ja: "デリバティブ",
+          zh: "衍生品",
+          vi: "Phái sinh",
+          id: "Derivatif"
+        }
+      }
+    ]
+  },
+  {
+    family: "PRIVATE MARKETS",
+    subFamilies: [
+      {
+        id: "pe",
+        labels: {
+          en: "Private Equity",
+          fr: "Capital-investissement",
+          es: "Capital privado",
+          de: "Private Equity",
+          it: "Private Equity",
+          ru: "Частный капитал",
+          ja: "プライベート・エクイティ",
+          zh: "私募股权",
+          vi: "Vốn tư nhân",
+          id: "Ekuitas Swasta"
+        }
+      },
+      {
+        id: "vc",
+        labels: {
+          en: "Venture Capital",
+          fr: "Capital-risque",
+          es: "Capital riesgo",
+          de: "Venture Capital",
+          it: "Venture Capital",
+          ru: "Венчурный капитал",
+          ja: "ベンチャーキャピタル",
+          zh: "风险投资",
+          vi: "Vốn mạo hiểm",
+          id: "Modal Ventura"
+        }
+      },
+      {
+        id: "pd",
+        labels: {
+          en: "Private Debt",
+          fr: "Dette privée",
+          es: "Deuda privada",
+          de: "Private Debt",
+          it: "Debito privato",
+          ru: "Частный долг",
+          ja: "プライベートデット",
+          zh: "私募债务",
+          vi: "Nợ tư nhân",
+          id: "Utang Swasta"
+        }
+      },
+      {
+        id: "secondary",
+        labels: {
+          en: "Secondaries",
+          fr: "Secondaires",
+          es: "Secundarios",
+          de: "Secondaries",
+          it: "Secondaries",
+          ru: "Вторичный рынок",
+          ja: "セカンダリー",
+          zh: "二级市场基金",
+          vi: "Thị trường thứ cấp",
+          id: "Pasar Sekunder"
+        }
+      }
+    ]
+  },
+  {
+    family: "REAL ASSETS",
+    subFamilies: [
+      {
+        id: "direct_re",
+        labels: {
+          en: "Direct Real Estate",
+          fr: "Immobilier direct",
+          es: "Inmobiliario directo",
+          de: "Direkte Immobilien",
+          it: "Immobiliare diretto",
+          ru: "Прямая недвижимость",
+          ja: "ダイレクト不動産",
+          zh: "直接房地产",
+          vi: "Bất động sản trực tiếp",
+          id: "Properti langsung"
+        }
+      },
+      {
+        id: "infra",
+        labels: {
+          en: "Physical Infrastructure",
+          fr: "Infrastructures physiques",
+          es: "Infraestructuras físicas",
+          de: "Physische Infrastrukturen",
+          it: "Infrastrutture fisiche",
+          ru: "Физическая инфраструктура",
+          ja: "物理インフラ",
+          zh: "实体基础设施",
+          vi: "Hạ tầng vật chất",
+          id: "Infrastruktur fisik"
+        }
+      },
+      {
+        id: "productive",
+        labels: {
+          en: "Productive Assets",
+          fr: "Actifs productifs",
+          es: "Activos productivos",
+          de: "Produktive Vermögenswerte",
+          it: "Attivi produttivi",
+          ru: "Производственные активы",
+          ja: "生産資産",
+          zh: "生产性资产",
+          vi: "Tài sản sản xuất",
+          id: "Aset produktif"
+        }
+      }
+    ]
+  },
+  {
+    family: "ALTERNATIVE ASSETS",
+    subFamilies: [
+      {
+        id: "indirect_re",
+        labels: {
+          en: "Indirect Real Estate",
+          fr: "Immobilier indirect (SCPI & OPCI)",
+          es: "Inmobiliario indirecto",
+          de: "Indirekte Immobilien",
+          it: "Immobiliare indiretto",
+          ru: "Косвенная недвижимость",
+          ja: "間接不動産",
+          zh: "间接房地产",
+          vi: "Bất động sản gián tiếp",
+          id: "Properti tidak langsung"
+        }
+      },
+      {
+        id: "crypto",
+        labels: {
+          en: "Crypto Assets",
+          fr: "Actifs crypto",
+          es: "Activos cripto",
+          de: "Krypto-Assets",
+          it: "Asset cripto",
+          ru: "Криптоактивы",
+          ja: "暗号資産",
+          zh: "加密资产",
+          vi: "Tài sản crypto",
+          id: "Aset kripto"
+        }
+      },
+      {
+        id: "commodities",
+        labels: {
+          en: "Commodities",
+          fr: "Matières premières",
+          es: "Materias primas",
+          de: "Rohstoffe",
+          it: "Materie prime",
+          ru: "Сырьевые товары",
+          ja: "コモディティ",
+          zh: "大宗商品",
+          vi: "Hàng hóa",
+          id: "Komoditas"
+        }
+      },
+      {
+        id: "collectibles",
+        labels: {
+          en: "Collectibles",
+          fr: "Actifs de collection",
+          es: "Coleccionables",
+          de: "Sammlerobjekte",
+          it: "Collezionabili",
+          ru: "Коллекционные активы",
+          ja: "コレクティブル",
+          zh: "收藏品",
+          vi: "Tài sản sưu tầm",
+          id: "Koleksi"
+        }
+      }
+    ]
+  }
+];
+
+const clickPhrases = {
+  fr: "Entrer",
+  en: "Enter",
+  es: "Entrar",
+  de: "Eintreten",
+  it: "Entrare",
+  ru: "Войти",
+  ja: "入る",
+  zh: "进入",
+  vi: "Vào",
+  id: "Masuk"
+};
+
+/* ---------- 3. ANIMATION GSAP + LOGIQUE SOUS-FAMILLES ---------- */
+
+let subInterval = null;
+let currentFamilyIndex = 0;
+
+function startSubFamilyLoop(familyIndex) {
+  const container = document.getElementById('subAssetContainer');
+  const labelEl = document.getElementById('subAssetText');
+  const langEl  = document.getElementById('subAssetLang');
+
+  if (!container || !labelEl || !langEl) return;
+
+  // Stop interval précédent
+  if (subInterval) {
+    clearInterval(subInterval);
+    subInterval = null;
+  }
+
+  const family = taxonomy[familyIndex];
+  if (!family) return;
+
+  let idx = 0;
+
+  function updateSubfamily() {
+    const sub = family.subFamilies[idx % family.subFamilies.length];
+
+    // langue aléatoire
+    const lang = languages[Math.floor(Math.random() * languages.length)];
+    const label = sub.labels[lang.key] || sub.labels['en'] || '';
+
+    // petite animation via CSS
+    container.classList.remove('visible');
+    void container.offsetWidth; // force reflow
+
+    labelEl.textContent = label;
+    langEl.textContent = "• " + lang.code;
+
+    container.classList.add('visible');
+
+    idx++;
+  }
+
+  // Première maj immédiate
+  updateSubfamily();
+  // Puis toutes les 280ms (rapide)
+  subInterval = setInterval(updateSubfamily, 280);
+}
+
+let clickHintInterval = null;
+
+function startClickHintLoop() {
+  const container = document.getElementById('clickHint');
+  const labelEl   = document.getElementById('clickHintLabel');
+  const langEl    = document.getElementById('clickHintLang');
+  if (!container || !labelEl || !langEl) return;
+
+  const availableLangs = languages.filter(l => clickPhrases[l.key]);
+  if (!availableLangs.length) return;
+
+  let idx = 0;
+
+  function updateHint() {
+    const lang = availableLangs[idx % availableLangs.length];
+    const phrase = clickPhrases[lang.key] || clickPhrases['en'];
+
+    // reset animation
+    container.classList.remove('visible');
+    void container.offsetWidth; // reflow
+
+    labelEl.textContent = phrase;
+    langEl.textContent  = "• " + lang.code;
+
+    container.classList.add('visible');
+
+    idx++;
+  }
+
+  // première phrase immédiatement
+  updateHint();
+
+  // rendu global du bloc (opacité)
+  gsap.to(container, {
+    opacity: 0.85,
+    duration: 0.3,
+    ease: "power2.out"
+  });
+
+  if (clickHintInterval) clearInterval(clickHintInterval);
+  clickHintInterval = setInterval(updateHint, 2000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const progressCircle = document.getElementById('progressCircle');
+  const loaderOverlay  = document.getElementById('loaderOverlay');
+  const finalLogo      = document.getElementById('finalLogo');
+  const bgImage        = document.getElementById('bgImage');
+  const assetText      = document.getElementById('assetText');
+
+  const radius = 48;
+  const circumference = 2 * Math.PI * radius;
+  gsap.set(progressCircle, {
+    strokeDasharray: circumference,
+    strokeDashoffset: circumference
+  });
+
+  const ringContainer = document.querySelector('.loader-ring-container');
+  gsap.set(ringContainer, { transformOrigin: "50% 50%" });
+
+  // --- PARTICULES ORBITALES ---
+  const orbitalLayer = document.getElementById('orbitalLayer');
+  if (orbitalLayer) {
+    const dotCount = 14;
+    const orbitRadius = 48; // même rayon que le cercle
+    for (let i = 0; i < dotCount; i++) {
+      const dot = document.createElement('span');
+      dot.classList.add('orbital-dot');
+      const angle = (360 / dotCount) * i;
+      // On place la particule sur un cercle
+      dot.style.transform = `rotate(${angle}deg) translate(${orbitRadius}px)`;
+      orbitalLayer.appendChild(dot);
     }
 
-    return pathData;
-}
+    // Timeline de rotation + pulsation
+    const orbitTl = gsap.timeline({ repeat: -1 });
 
+    // Rotation globale de la couronne
+    orbitTl.to(orbitalLayer, {
+      rotation: 360,
+      duration: 16,
+      ease: "none"
+    }, 0);
 
-/* --- 3. ANIMATION GSAP --- */
-document.addEventListener('DOMContentLoaded', () => {
-    const logo = document.querySelector('.logo-main');
-    const progressPercent = document.getElementById('progressPercent');
-    const screenOverlay = document.getElementById('screenOverlay');
-    const path = document.getElementById('stockPath');
-    
-    path.setAttribute('d', generateStockPath());
-    const pathLength = path.getTotalLength();
-    
-    // Initialisation
-    gsap.set(path, { strokeDasharray: pathLength, strokeDashoffset: pathLength, opacity: 1 });
-    gsap.set(logo, { opacity: 0, pointerEvents: 'none' });
-    gsap.set(progressPercent, { opacity: 0 });
+    // Pulsation douce des points
+    orbitTl.to(".orbital-dot", {
+      opacity: 0.4,
+      duration: 1.4,
+      stagger: {
+        each: 0.08,
+        yoyo: true,
+        repeat: 1
+      },
+      ease: "sine.inOut"
+    }, 0);
+  }
 
-    const masterTL = gsap.timeline({ delay: 0.5 });
+  const familyCount = taxonomy.length;
+  const segment = circumference / familyCount;
 
-    // A. Apparition
-    masterTL.to(progressPercent, { opacity: 1, duration: 0.5 })
-    
-    // B. Tracé de la ligne et Compteur
-    .to(path, {
-        strokeDashoffset: 0,
-        duration: 3.5,
-        ease: "power2.inOut" // Mouvement fluide
-    }, "start")
-    
-    .to({ value: 0 }, {
-        value: 100,
-        duration: 3.5,
-        ease: "power2.inOut",
-        onUpdate: function() {
-            progressPercent.textContent = Math.round(this.targets()[0].value) + '%';
-        }
-    }, "start")
+  const tl = gsap.timeline({ delay: 0.4 });
 
-    // C. Sortie
-    .to([progressPercent, path], {
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.in"
-    })
-    
-    // D. Révélation Finale
-    .to(screenOverlay, {
-        opacity: 0,
-        duration: 1.5,
-        ease: "power2.inOut"
-    }, "reveal")
-    
-    .fromTo(logo, 
-        { opacity: 0, scale: 0.95, filter: 'blur(5px)' }, // Ajout d'un petit flou au début
-        { 
-            opacity: 1, scale: 1, filter: 'blur(0px)',
-            duration: 1.8, 
-            ease: "power2.out",
-            onComplete: () => {
-                logo.style.pointerEvents = 'auto';
-                screenOverlay.remove();
-            }
-        }, 
-        "reveal+=0.1" 
+  let currentOffset = circumference;
+  const familyDisplayDuration = 1.4; // ~1.4s par famille (rapide)
+
+  taxonomy.forEach((group, index) => {
+    const stepLabel = "family_" + index;
+    const nextOffset = circumference - segment * (index + 1);
+
+    tl.add(stepLabel);
+
+    tl.call(() => {
+      currentFamilyIndex = index;
+      assetText.textContent = group.family;
+      gsap.fromTo(assetText,
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+      );
+      startSubFamilyLoop(index);
+    }, null, stepLabel);
+
+    tl.to(progressCircle, {
+      strokeDashoffset: nextOffset,
+      duration: familyDisplayDuration,
+      ease: "none"
+    }, stepLabel);
+
+    tl.to(assetText, {
+      opacity: 0,
+      y: -8,
+      duration: 0.3,
+      ease: "power2.in"
+    }, stepLabel + "+=" + (familyDisplayDuration - 0.3));
+
+    currentOffset = nextOffset;
+  });
+
+  // FIN : message HFG + shockwave
+  tl.add("complete");
+
+  tl.call(() => {
+    if (subInterval) {
+      clearInterval(subInterval);
+      subInterval = null;
+    }
+    const container = document.getElementById('subAssetContainer');
+    if (container) {
+      container.classList.remove('visible');
+    }
+    assetText.textContent = "✦";
+  }, null, "complete");
+
+  tl.fromTo(assetText,
+    { opacity: 0, scale: 0.9, y: 6 },
+    { opacity: 1, scale: 1.9, y: 0, duration: 0.45, ease: "power2.out" },
+    "complete"
+  );
+
+  // les particules se font aspirer par la shockwave
+  tl.to(".orbital-dot", {
+    opacity: 0,
+    scale: 0.4,
+    duration: 0.4,
+    ease: "power2.in"
+  }, "complete+=0.5");
+
+  // contraction
+  tl.to(ringContainer, {
+    scale: 0.8,
+    duration: 0.4,
+    ease: "back.in(2)"
+  }, "complete+=0.4");
+
+  // disparition texte
+  tl.to(assetText, {
+    opacity: 0,
+    duration: 0.2
+  }, ">");
+
+  // explosion cercle
+  tl.to(ringContainer, {
+    scale: 14,
+    opacity: 0,
+    duration: 0.7,
+    ease: "power2.in"
+  }, ">");
+
+  // fade out overlay
+  tl.to(loaderOverlay, {
+    opacity: 0,
+    duration: 0.8,
+    ease: "power2.inOut",
+    onComplete: () => {
+      loaderOverlay.remove();
+    }
+  }, "<+=0.1");
+
+  // Ajout du label "reveal" pour la phase logo
+  tl.add("reveal", ">");
+
+  // fond (si tu veux réactiver plus tard)
+  // tl.to(bgImage, {
+  //   opacity: 1,
+  //   scale: 1,
+  //   duration: 1.5,
+  //   ease: "power2.out"
+  // }, "reveal");
+
+  // Logo principal
+  tl.fromTo(finalLogo,
+    { opacity: 0, scale: 0.9, y: 20 },
+    { opacity: 1, scale: 1, y: 0, duration: 1.5, ease: "power3.out" },
+    "reveal-=0.5"
+  );
+
+  // Glow + faisceau lumineux
+  const logoGlow = document.getElementById('logoGlow');
+  const logoSweep = document.getElementById('logoSweep');
+
+  if (logoGlow) {
+    tl.fromTo(logoGlow,
+      { opacity: 0, scale: 0.6 },
+      { opacity: 0.9, scale: 1.15, duration: 1.2, ease: "power2.out" },
+      "reveal-=0.3"
     );
-    
-    window.addEventListener('resize', () => {
-        if(masterTL.progress() < 1) path.setAttribute('d', generateStockPath());
-    });
+    tl.to(logoGlow, {
+      opacity: 0.18,
+      duration: 1.2,
+      ease: "power2.out"
+    }, "reveal+0.7");
+  }
+
+  if (logoSweep) {
+    tl.fromTo(logoSweep,
+      { opacity: 0, x: "-60%" },
+      { opacity: 1, x: "160%", duration: 1.1, ease: "power2.inOut" },
+      "reveal+0.1"
+    );
+    tl.to(logoSweep, {
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.out"
+    }, "reveal+1.0");
+  }
+
+  tl.call(startClickHintLoop, null, "reveal+=0.7");
 });
 
-/* --- REDIRECTION --- */
+/* ---------- 4. REDIRECTION ---------- */
 function enterSite() {
-    gsap.to(document.body, { 
-        opacity: 0, 
-        duration: 0.5, 
-        onComplete: () => {
-            localStorage.setItem(STORAGE_KEY_THEME, 'light'); 
-            window.location.href = "home.html"; 
-        }
-    });
+  if (clickHintInterval) {
+    clearInterval(clickHintInterval);
+    clickHintInterval = null;
+  }
+  gsap.to(document.body, {
+    opacity: 0,
+    duration: 0.6,
+    onComplete: () => {
+      localStorage.setItem(STORAGE_KEY_THEME, 'light');
+      window.location.href = "home.html"; // adapte si nécessaire
+    }
+  });
 }
 </script>
+
 </body>
 </html>
